@@ -67,7 +67,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/domain/weather.ts`: 現在地の今の外の天気（気温・相対湿度・降水量・風速・昼夜・観測時刻・取得時刻）と、取得元（`fetchCurrent`）の型。権限の拒否・オフライン・APIの失敗ではnullを返し、画面は「外の天気なし」で動かす。
 - `src/data/weather/OpenMeteoWeatherSource.ts`: Open-Meteo の `current` を取得する。位置は小数2桁（約1km）に丸めて送る。取得から30分は AsyncStorage（キー `weather:v1`）のキャッシュを返し、位置もAPIも使わない。失敗はキャッシュしない。
 - `src/data/weather/deviceLocation.ts`: expo-location で使用中のみの位置権限を要求し、直近1時間の位置か、精度 Low の現在地を返す。拒否されたら null。
-- `src/hooks/useOutdoorWeather.ts`: 起動時とフォアグラウンド復帰時に天気を取得する。
+- `src/hooks/useOutdoorWeather.ts`: 起動時・フォアグラウンド復帰時と、フォアグラウンドにいる間は5分ごと（`WEATHER_REFRESH_MS`）に天気を取得する。キャッシュが残っていればそれが返るので、開いたままでも30分を過ぎたら取り直される。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
