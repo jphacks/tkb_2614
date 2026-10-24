@@ -3,6 +3,7 @@
 // 起動時に Wi-Fi に接続して NTP で時刻を合わせ、Wi-Fi を切る。
 // その後は MEASURE_INTERVAL_MS ごとに温湿度を測り、LittleFS に記録する。
 // BLE で "chiikabi" としてアドバタイズし、未送信件数を載せる。
+// スマホが接続して送信要求を書くと記録を Notify で送り、ACK を受けたら削除する（ble.h 参照）。
 // シリアル（115200 baud）で help と打つとコマンド一覧が出る。
 // Wi-Fi の設定は secrets.h（secrets.example.h をコピーして作る）に書く。
 
@@ -57,7 +58,7 @@ void printHelp() {
   Serial.println("  ack N    通し番号 N 以下の記録を削除");
   Serial.println("  clear    記録をすべて削除（通し番号は続きから）");
   Serial.println("  sync     NTP 時刻同期をやり直す");
-  Serial.println("  ble      BLE アドバタイズの状態");
+  Serial.println("  ble      BLE の状態（接続・送信の進み具合）");
 }
 
 void printStatus() {

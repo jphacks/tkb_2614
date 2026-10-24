@@ -208,6 +208,47 @@ bool logstoreRead(uint32_t index, LogRecord& rec) {
   return ok;
 }
 
+uint32_t logstoreFirstSeq() {
+  LogRecord rec;
+  return logstoreRead(0, rec) ? rec.seq : 0;
+}
+
+uint32_t logstoreReadRaw(uint32_t index, uint8_t* buf, uint32_t maxRecords) {
+  if (index >= recordCount) {
+    return 0;
+  }
+  uint32_t n = min(maxRecords, recordCount - index);
+  File f = LittleFS.open(LOG_PATH, FILE_READ);
+  if (!f) {
+    return 0;
+  }
+  size_t got = 0;
+  if (f.seek((size_t)index * LOG_RECORD_SIZE)) {
+    got = f.read(buf, (size_t)n * LOG_RECORD_SIZE);
+  }
+  f.close();
+  return got / LOG_RECORD_SIZE;
+}
+
+uint32_t logstoreFindIndex(uint32_t seq) {
+  // 記録は通し番号の昇順に並んでいるので二分探索する
+  uint32_t lo = 0;
+  uint32_t hi = recordCount;
+  LogRecord rec;
+  while (lo < hi) {
+    uint32_t mid = lo + (hi - lo) / 2;
+    if (!logstoreRead(mid, rec)) {
+      return recordCount;
+    }
+    if (rec.seq < seq) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+}
+
 uint32_t logstoreAck(uint32_t seq) {
   // 記録は通し番号の昇順に並んでいるので、先頭から seq 以下を数える
   uint32_t skip = 0;

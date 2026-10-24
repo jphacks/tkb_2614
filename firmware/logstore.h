@@ -33,8 +33,18 @@ uint32_t logstoreCount();
 // 最後に振った通し番号（記録が1件もなければ 0）
 uint32_t logstoreLastSeq();
 
+// 残っている中で最も古い通し番号（記録が1件もなければ 0）
+uint32_t logstoreFirstSeq();
+
 // 古い方から index 番目（0 始まり）の記録を読む
 bool logstoreRead(uint32_t index, LogRecord& rec);
+
+// 古い方から index 番目以降の記録を、保存形式（12 バイト単位）のまま最大 maxRecords 件読む。
+// 読めた件数を返す。BLE でそのまま送るのに使う
+uint32_t logstoreReadRaw(uint32_t index, uint8_t* buf, uint32_t maxRecords);
+
+// 通し番号が seq 以上の最初の記録の index。なければ logstoreCount() を返す
+uint32_t logstoreFindIndex(uint32_t seq);
 
 // 通し番号 seq 以下の記録を削除し、削除した件数を返す
 uint32_t logstoreAck(uint32_t seq);
