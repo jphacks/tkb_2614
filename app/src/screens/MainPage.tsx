@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import type { SyncStatus } from '../hooks/useMeasurements';
 import { space, useScheme } from '../theme/theme';
@@ -7,12 +7,11 @@ import { Character } from '../ui/Character';
 import type { HomeState } from '../ui/homeState';
 import { Reading } from '../ui/Reading';
 
-/** キャラ・湿度とカメラARへの入口。更新は pull-to-refresh で行う。 */
-export function MainPage({ home, status, onRefresh, onOpenAR, bottomInset }: {
+/** キャラと湿度だけを置く。更新は pull-to-refresh で行う。 */
+export function MainPage({ home, status, onRefresh, bottomInset }: {
   home: HomeState;
   status: SyncStatus;
   onRefresh: () => void;
-  onOpenAR: () => void;
   bottomInset: number;
 }) {
   const scheme = useScheme();
@@ -34,7 +33,6 @@ export function MainPage({ home, status, onRefresh, onOpenAR, bottomInset }: {
     >
       <Character mood={home.mood} size={276} />
       <Reading state={home.reading} />
-      <Button title="AR画面を開く" onPress={onOpenAR} color={scheme.primary} />
     </ScrollView>
   );
 }

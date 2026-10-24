@@ -18,8 +18,8 @@ const MAIN_PAGE = 1;
 // インジケーター（高さ32）の上に空ける余白。
 const INDICATOR_AREA = 32 + space.s24;
 
-/** [グラフ] ← [メイン] → [ARプレビュー] を横スワイプし、ボタンでカメラARを開く。 */
-export function HomeScreen({ services, onOpenAR }: { services: AppServices; onOpenAR: () => void }) {
+/** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。 */
+export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, refresh } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const now = useNow(60_000);
@@ -30,6 +30,7 @@ export function HomeScreen({ services, onOpenAR }: { services: AppServices; onOp
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
+  const [currentPage, setCurrentPage] = useState(MAIN_PAGE);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -44,15 +45,25 @@ export function HomeScreen({ services, onOpenAR }: { services: AppServices; onOp
           contentOffset={{ x: width * MAIN_PAGE, y: 0 }}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
           scrollEventThrottle={16}
+          onMomentumScrollEnd={({ nativeEvent }) => {
+            setCurrentPage(Math.round(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width));
+          }}
+          onScrollBeginDrag={() => setCurrentPage(-1)}
+          onMomentumScrollBegin={() => setCurrentPage(-1)}
+          onScrollEndDrag={({ nativeEvent }) => {
+            const offset = nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width;
+            // 慣性が発生せず元のページに戻るドラッグも扱う。
+            if (Math.abs(offset - Math.round(offset)) < 0.001) setCurrentPage(Math.round(offset));
+          }}
         >
           <View style={{ width }}>
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} status={status} onRefresh={refresh} onOpenAR={onOpenAR} bottomInset={bottomInset} />
+            <MainPage home={home} status={status} onRefresh={refresh} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} onOpenAR={onOpenAR} bottomInset={bottomInset} />
+            <ARPage risk={home.risk} mood={home.mood} isVisible={currentPage === 2} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
