@@ -41,12 +41,14 @@ BLE には NimBLE-Arduino（2.x）を使う。esp32 コア同梱の `BLEDevice.h
 ```bash
 cd app
 pnpm install
-pnpm start                     # Metro を起動する
+pnpm start:mock                # モックで Metro を起動する（Expo Go 用）
+pnpm ios / pnpm android        # development build を実機に入れて起動する（BLE）
+pnpm start                     # 入れた development build 用に Metro を起動する
 pnpm exec tsc --noEmit         # 型チェック
 pnpm expo install <package>    # パッケージ追加は pnpm add ではなくこれを使う
 ```
 
-BLE ライブラリ（react-native-ble-plx など）はネイティブコードを含むため、導入すると Expo Go では動かなくなり、development build（`pnpm expo run:ios` / `run:android`）が必要になる。iOS シミュレータでは BLE が使えないので、動作確認は実機で行う。
+BLE ライブラリ（react-native-ble-plx）はネイティブコードを含むため Expo Go では動かず、development build（`pnpm ios` / `pnpm android`）が必要になる。Expo Go で UI だけ確認するときは `pnpm start:mock` を使う。手順は `docs/app-foundation.md` を参照。iOS シミュレータでは BLE が使えないので、動作確認は実機で行う。
 
 ## パッケージ管理
 

@@ -31,8 +31,7 @@ export function deriveHomeState(
   if (!latest || latest.relativeHumidityPercent === null) {
     return { risk: null, mood: 'sleep', reading: { kind: status === 'loading' ? 'searching' : 'empty' } };
   }
-  const measuredAt = latest.measuredAt === null ? null : Date.parse(latest.measuredAt);
-  const stale = status === 'error' || (measuredAt !== null && now - measuredAt > STALE_AFTER_MS);
+  const stale = status === 'error' || now - Date.parse(latest.measuredAt) > STALE_AFTER_MS;
   const risk = prediction?.riskLevel ?? null;
   return {
     risk,
