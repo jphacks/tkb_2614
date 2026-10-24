@@ -12,17 +12,21 @@ import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
+import type { SpotId } from '../ui/roomGeometry';
 import { ARPage } from './ARPage';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
+import { RoomPage } from './RoomPage';
 
 const MAIN_PAGE = 1;
-const AR_PAGE = 2;
-const PAGE_COUNT = 3;
+// AR の1つ手前。ここにいるだけではカメラを起動しない。
+const ROOM_PAGE = 2;
+const AR_PAGE = 3;
+const PAGE_COUNT = 4;
 // インジケーター（高さ32）の上に空ける余白。
 const INDICATOR_AREA = 32 + space.s24;
 
-/** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
+/** [グラフ] ← [メイン] → [部屋] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, lastSyncedAt } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
@@ -34,6 +38,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
   const [character, setCharacter] = useState<CharacterKind>('mimi');
+  const [selectedSpot, setSelectedSpot] = useState<SpotId | null>(null);
   useWidgetSync({ measurements, status, prediction, lastSyncedAt, character });
   const [activePage, setActivePage] = useState(MAIN_PAGE);
   const activePageRef = useRef(MAIN_PAGE);
@@ -72,9 +77,10 @@ export function HomeScreen({ services }: { services: AppServices }) {
             activePageRef.current = next;
             setActivePage(next);
             // Preserve AR startup while entering the page, and request camera
-            // permission only once it is fully in view.
+            // permission only once it is fully in view. Staying on the room page
+            // (the one before AR) must not start the camera.
             const x = event.nativeEvent.contentOffset.x;
-            setArVisible(x > width * MAIN_PAGE + 1);
+            setArVisible(x > width * ROOM_PAGE + 1);
             setArSettled(x >= width * AR_PAGE - 1);
           }}
           scrollEventThrottle={16}
@@ -84,6 +90,9 @@ export function HomeScreen({ services }: { services: AppServices }) {
           </View>
           <View style={{ width }}>
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
+          </View>
+          <View style={{ width }}>
+            <RoomPage selected={selectedSpot} onSelect={setSelectedSpot} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
             <ARPage risk={home.risk} mood={home.mood} character={character} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />
