@@ -8,7 +8,9 @@
 
 ## 起動と確認
 
-Node.jsはExpo CLIが要求する22.13.0以上の対応LTS、パッケージ管理はpnpmを使用する（corepackは使わない）。
+`app/.prototools` に合わせてNode.js 24系・pnpm 11系を使用する（corepackは使わない）。protoを導入している場合は `app/` で `proto install` を実行して指定バージョンを用意する。
+
+pnpm 11で開発ツールをインストールできるよう、`app/pnpm-workspace.yaml` の `allowBuilds` で `esbuild`（tsx用）と `unrs-resolver`（lint用）のビルドを許可している。
 
 ```sh
 cd app
