@@ -19,8 +19,9 @@ function CameraFeed({ onError }: { onError: () => void }) {
   );
 }
 
-/** ARページが選択されている間だけマウントする。 */
-export function ARCamera({ isActive, children, bottomInset }: {
+/** シーンの親を維持し、ARが見える間だけカメラと権限処理を動かす。 */
+export function ARCamera({ isVisible, isActive, children, bottomInset }: {
+  isVisible: boolean;
   isActive: boolean;
   children: ReactNode;
   bottomInset: number;
@@ -31,7 +32,7 @@ export function ARCamera({ isActive, children, bottomInset }: {
   const busy = useRef(false);
 
   useEffect(() => {
-    if (!isActive) return;
+    if (!isVisible || !isActive) return;
     let cancelled = false;
     async function prepare() {
       try {
@@ -51,7 +52,7 @@ export function ARCamera({ isActive, children, bottomInset }: {
     }
     void prepare();
     return () => { cancelled = true; };
-  }, [isActive, getPermission, requestPermission]);
+  }, [isVisible, isActive, getPermission, requestPermission]);
 
   async function retry() {
     if (busy.current) return;
@@ -62,7 +63,7 @@ export function ARCamera({ isActive, children, bottomInset }: {
         await getPermission();
       } else if (permission.granted) {
         setFailed(false);
-      } else if (permission?.canAskAgain) {
+      } else if (permission.canAskAgain) {
         setFailed(false);
         await requestPermission();
       } else if (Platform.OS !== 'web') {
@@ -78,12 +79,12 @@ export function ARCamera({ isActive, children, bottomInset }: {
   }
 
   const denied = permission?.status === 'denied';
-  const needsAction = isActive && (denied || failed);
+  const needsAction = isVisible && isActive && (denied || failed);
   const actionLabel = permission?.granted ? 'カメラを再試行' : permission?.canAskAgain ? 'カメラを許可' : 'カメラの設定を開く';
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      {isActive && permission?.granted && !failed && <CameraFeed onError={() => setFailed(true)} />}
+      {isVisible && isActive && permission?.granted && !failed && <CameraFeed onError={() => setFailed(true)} />}
       {children}
       {needsAction && (
         <View style={[styles.recovery, { backgroundColor: scheme.surface, paddingBottom: bottomInset }]}>
@@ -93,10 +94,10 @@ export function ARCamera({ isActive, children, bottomInset }: {
             </View>
           </Pressable>
           {denied && (
-            <Text style={[type.label, styles.message, { color: scheme.onSurfaceVariant }]}>
+            <Text style={[type.body, styles.message, { color: scheme.onSurfaceVariant }]}>
               {Platform.OS === 'web' && !permission.canAskAgain
                 ? 'ブラウザの設定でカメラを許可してください。'
-                : 'カメラを許可するにはキャラをタップしてください。'}
+                : 'タップしてカメラを許可'}
             </Text>
           )}
         </View>

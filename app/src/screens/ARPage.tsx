@@ -60,7 +60,7 @@ export function ARPage({ risk, mood, isVisible, bottomInset }: {
         <Path d="M0 690 L90 600 L402 600 L402 874 L0 874 Z" fill={scheme.surfaceContainerHighest} />
         <Path d="M90 596 L402 596 L402 604 L90 604 Z" fill={scheme.outlineVariant} />
       </Svg>
-      {isVisible ? <ARCamera isActive={isActive} bottomInset={bottomInset}>{scene}</ARCamera> : scene}
+      <ARCamera isVisible={isVisible} isActive={isActive} bottomInset={bottomInset}>{scene}</ARCamera>
     </View>
   );
 }

@@ -18,7 +18,7 @@ const MAIN_PAGE = 1;
 // インジケーター（高さ32）の上に空ける余白。
 const INDICATOR_AREA = 32 + space.s24;
 
-/** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。 */
+/** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, refresh } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
@@ -30,7 +30,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
-  const [currentPage, setCurrentPage] = useState(MAIN_PAGE);
+  const [arVisible, setArVisible] = useState(false);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -43,18 +43,18 @@ export function HomeScreen({ services }: { services: AppServices }) {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           contentOffset={{ x: width * MAIN_PAGE, y: 0 }}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+              useNativeDriver: false,
+              listener: (event: { nativeEvent: { contentOffset: { x: number } } }) => {
+                // ARが画面に入り始めたら起動し、メインに戻り切るまで維持する。
+                const visible = event.nativeEvent.contentOffset.x > width * MAIN_PAGE + 1;
+                setArVisible((previous) => previous === visible ? previous : visible);
+              },
+            },
+          )}
           scrollEventThrottle={16}
-          onMomentumScrollEnd={({ nativeEvent }) => {
-            setCurrentPage(Math.round(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width));
-          }}
-          onScrollBeginDrag={() => setCurrentPage(-1)}
-          onMomentumScrollBegin={() => setCurrentPage(-1)}
-          onScrollEndDrag={({ nativeEvent }) => {
-            const offset = nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width;
-            // 慣性が発生せず元のページに戻るドラッグも扱う。
-            if (Math.abs(offset - Math.round(offset)) < 0.001) setCurrentPage(Math.round(offset));
-          }}
         >
           <View style={{ width }}>
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
@@ -63,7 +63,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} status={status} onRefresh={refresh} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} isVisible={currentPage === 2} bottomInset={bottomInset} />
+            <ARPage risk={home.risk} mood={home.mood} isVisible={arVisible} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
