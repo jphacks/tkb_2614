@@ -2,9 +2,11 @@
 //
 // 起動時に Wi-Fi に接続して NTP で時刻を合わせ、Wi-Fi を切る。
 // その後は MEASURE_INTERVAL_MS ごとに温湿度を測り、LittleFS に記録する。
+// BLE で "chiikabi" としてアドバタイズし、未送信件数を載せる。
 // シリアル（115200 baud）で help と打つとコマンド一覧が出る。
 // Wi-Fi の設定は secrets.h（secrets.example.h をコピーして作る）に書く。
 
+#include "ble.h"
 #include "logstore.h"
 #include "sensor.h"
 #include "timesync.h"
@@ -55,6 +57,7 @@ void printHelp() {
   Serial.println("  ack N    通し番号 N 以下の記録を削除");
   Serial.println("  clear    記録をすべて削除（通し番号は続きから）");
   Serial.println("  sync     NTP 時刻同期をやり直す");
+  Serial.println("  ble      BLE アドバタイズの状態");
 }
 
 void printStatus() {
@@ -117,6 +120,8 @@ void handleCommand(String line) {
     Serial.println(logstoreClear() ? "全件削除しました" : "削除失敗");
   } else if (cmd == "sync") {
     Serial.println(syncClock() ? "時刻同期成功" : "時刻同期失敗");
+  } else if (cmd == "ble") {
+    blePrintStatus();
   } else {
     Serial.printf("不明なコマンド: %s（help で一覧）\n", cmd.c_str());
   }
@@ -153,6 +158,13 @@ void setup() {
   } else {
     Serial.println("時刻同期失敗（未同期のまま動作します）");
   }
+
+  // Wi-Fi を切った後に始める（起動時の同期と無線を取り合わないように）
+  if (bleBegin()) {
+    Serial.printf("BLE アドバタイズ開始: %s\n", BLE_DEVICE_NAME);
+  } else {
+    Serial.println("BLE の初期化に失敗しました");
+  }
   Serial.println("help でコマンド一覧");
 
   // 起動直後に1件記録し、以降は一定間隔で記録する
@@ -167,4 +179,6 @@ void loop() {
     lastMeasureMs += MEASURE_INTERVAL_MS;
     measureAndStore();
   }
+
+  bleLoop();
 }

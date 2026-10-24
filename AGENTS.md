@@ -18,19 +18,19 @@ JPHACKS のチームリポジトリ。ESP32 と BME280 で室内の温度・湿�
 
 ## firmware
 
-チームは VSCode の Arduino 拡張（中身は arduino-cli）で Verify/Upload している。ボード設定は `firmware/.vscode/arduino.json` にある（今は汎用の `esp32:esp32:esp32`）。Arduino の制約で、スケッチのフォルダ名と `.ino` のファイル名は一致させる必要がある。
+チームは VSCode の Arduino 拡張（中身は arduino-cli）で Verify/Upload している。ボード設定は `.vscode/arduino.json` と `firmware/.vscode/arduino.json` にある（汎用の `esp32:esp32:esp32`）。NimBLE を入れるとデフォルトのパーティションではプログラム領域が足りなくなるので、パーティションは `huge_app`（プログラム 3MB、OTA なし）にしている。パーティションを変えると LittleFS の記録は消える。Arduino の制約で、スケッチのフォルダ名と `.ino` のファイル名は一致させる必要がある。
 
 arduino-cli は PATH に入っていない場合がある。CLI から操作する場合のコマンドは以下（リポジトリのルートで実行する）。
 
 ```bash
 arduino-cli core install esp32:esp32
-arduino-cli lib install "Adafruit BME280 Library"
-arduino-cli compile --fqbn esp32:esp32:esp32 firmware
-arduino-cli upload -p <port> --fqbn esp32:esp32:esp32 firmware
+arduino-cli lib install "NimBLE-Arduino@2.5.1"
+arduino-cli compile --fqbn esp32:esp32:esp32:PartitionScheme=huge_app firmware
+arduino-cli upload -p <port> --fqbn esp32:esp32:esp32:PartitionScheme=huge_app firmware
 arduino-cli monitor -p <port> -c baudrate=115200
 ```
 
-BLE には esp32 コアに同梱の `BLEDevice.h` を使う。
+BLE には NimBLE-Arduino（2.x）を使う。esp32 コア同梱の `BLEDevice.h` より軽い。
 
 ## app
 
