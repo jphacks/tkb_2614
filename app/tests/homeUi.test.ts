@@ -35,20 +35,39 @@ test('同期失敗中と、古い計測値は stale にする', () => {
 });
 
 test('グラフは最新の計測を右端に直近24hだけ描き、欠測で線を切る', () => {
-  const box = { width: 240, height: 120, padding: 20 };
+  const box = { left: 20, top: 10, width: 240, height: 120 };
   const history = [record(0, 70), record(1, 60), record(2, null), record(3, 50), record(4, 55), record(30, 90)];
   const chart = buildChart(history, 'humidity', box);
   assert.equal(chart.points.length, 4);
   assert.equal(chart.paths.length, 2);
   assert.equal(chart.latest?.value, 70);
-  assert.equal(chart.latest?.x, box.width - box.padding);
+  assert.equal(chart.latest?.x, box.left + box.width);
   assert.equal(chart.latest?.y, chart.dangerY);
-  assert.deepEqual(chart.gridX, [20, 70, 120, 170]);
   assert.equal(buildChart(history, 'temperature', box).dangerY, null);
 });
 
+test('湿度が低くても下端に張り付かない', () => {
+  const box = { left: 0, top: 0, width: 240, height: 120 };
+  const chart = buildChart([record(0, 25), record(1, 32)], 'humidity', box);
+  assert.ok(chart.latest !== null && chart.latest.y < box.height);
+  assert.ok(chart.dangerY !== null && chart.dangerY > 0);
+  assert.equal(buildChart([record(0, 60)], 'humidity', box).latest?.y, box.height * (1 - 20 / 50));
+});
+
+test('グラフの縦線はローカル時刻の6時間おきの正時に引く', () => {
+  const box = { left: 0, top: 0, width: 240, height: 120 };
+  const { grid } = buildChart([record(0, 60)], 'humidity', box);
+  assert.equal(grid.length, 4);
+  for (const g of grid) {
+    assert.equal(g.hour % 6, 0);
+    const at = end - 24 * hour + (g.x / box.width) * 24 * hour;
+    assert.equal(new Date(at).getHours(), g.hour);
+    assert.ok(g.x > 0 && g.x <= box.width);
+  }
+});
+
 test('履歴がなければグラフを描かない', () => {
-  const chart = buildChart([], 'humidity', { width: 100, height: 100, padding: 0 });
+  const chart = buildChart([], 'humidity', { left: 0, top: 0, width: 100, height: 100 });
   assert.equal(chart.latest, null);
   assert.deepEqual(chart.paths, []);
 });

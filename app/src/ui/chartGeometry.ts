@@ -1,7 +1,8 @@
 import type { Measurement } from '../domain/measurement';
 
 export const CHART_WINDOW_MS = 24 * 60 * 60 * 1000;
-const GRID_STEP_MS = 6 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const GRID_STEP_HOURS = 6;
 
 /**
  * 湿度グラフで塗る危険帯の下限。部屋の湿度が70%だと、冬に3〜4℃低い壁際の表面は80%以上になり、
@@ -16,20 +17,28 @@ export interface ChartPoint {
   readonly y: number;
 }
 
+export interface ChartGridLine {
+  readonly x: number;
+  /** 端末のローカル時刻の時（0, 6, 12, 18）。 */
+  readonly hour: number;
+}
+
 export interface ChartGeometry {
   /** 欠測で線を切るため、連続した区間ごとのパス。 */
   readonly paths: readonly string[];
   readonly points: readonly ChartPoint[];
   readonly latest: (ChartPoint & { readonly value: number }) | null;
-  readonly gridX: readonly number[];
+  readonly grid: readonly ChartGridLine[];
   /** 危険帯の下端の y。温度グラフでは null。 */
   readonly dangerY: number | null;
 }
 
+/** 線を描く矩形。 */
 interface Box {
+  readonly left: number;
+  readonly top: number;
   readonly width: number;
   readonly height: number;
-  readonly padding: number;
 }
 
 function valueOf(m: Measurement, kind: ChartKind) {
@@ -37,10 +46,24 @@ function valueOf(m: Measurement, kind: ChartKind) {
 }
 
 function rangeOf(values: readonly number[], kind: ChartKind): [number, number] {
-  if (kind === 'humidity') return [30, 90];
   const min = Math.min(...values);
   const max = Math.max(...values);
-  return [Math.floor(min) - 2, Math.ceil(max) + 2];
+  // 湿度は危険帯が見えるよう40〜90%を基本にし、外れる値があれば下端・上端に張り付かないよう10%刻みで広げる。
+  if (kind === 'humidity') {
+    return [Math.max(0, Math.min(40, Math.floor((min - 5) / 10) * 10)), Math.min(100, Math.max(90, Math.ceil((max + 5) / 10) * 10))];
+  }
+  return [Math.floor(min) - 1, Math.ceil(max) + 1];
+}
+
+/** start より後、end 以前で、ローカル時刻が6時間おきの正時になる時刻。 */
+function gridTimes(start: number, end: number) {
+  const t = new Date(start);
+  t.setMinutes(0, 0, 0);
+  const times: number[] = [];
+  for (let at = t.getTime(); at <= end; at += HOUR_MS) {
+    if (at > start && new Date(at).getHours() % GRID_STEP_HOURS === 0) times.push(at);
+  }
+  return times;
 }
 
 /** 最新順の履歴から、最新の計測時刻を右端とする直近24hのグラフ形状を作る。 */
@@ -49,15 +72,13 @@ export function buildChart(measurements: readonly Measurement[], kind: ChartKind
     .map((m) => ({ t: Date.parse(m.measuredAt), v: valueOf(m, kind) }))
     .sort((a, b) => a.t - b.t);
   const end = timed.at(-1)?.t;
-  if (end === undefined) return { paths: [], points: [], latest: null, gridX: [], dangerY: null };
+  if (end === undefined) return { paths: [], points: [], latest: null, grid: [], dangerY: null };
   const start = end - CHART_WINDOW_MS;
   const inWindow = timed.filter((p) => p.t >= start);
   const values = inWindow.flatMap((p) => (p.v === null ? [] : [p.v]));
   const [lo, hi] = values.length ? rangeOf(values, kind) : [0, 1];
-  const plotWidth = box.width - 2 * box.padding;
-  const plotHeight = box.height - 2 * box.padding;
-  const x = (t: number) => box.padding + (plotWidth * (t - start)) / CHART_WINDOW_MS;
-  const y = (v: number) => box.padding + plotHeight * (1 - (Math.min(Math.max(v, lo), hi) - lo) / (hi - lo));
+  const x = (t: number) => box.left + (box.width * (t - start)) / CHART_WINDOW_MS;
+  const y = (v: number) => box.top + box.height * (1 - (Math.min(Math.max(v, lo), hi) - lo) / (hi - lo));
 
   const paths: string[] = [];
   const points: ChartPoint[] = [];
@@ -75,12 +96,11 @@ export function buildChart(measurements: readonly Measurement[], kind: ChartKind
   if (segment.length > 1) paths.push(segment.join(' '));
 
   const last = [...inWindow].reverse().find((p) => p.v !== null);
-  const gridX = [0, 1, 2, 3].map((i) => x(start + i * GRID_STEP_MS));
   return {
     paths,
     points,
     latest: last && last.v !== null ? { x: x(last.t), y: y(last.v), value: last.v } : null,
-    gridX,
+    grid: gridTimes(start, end).map((t) => ({ x: x(t), hour: new Date(t).getHours() })),
     dangerY: kind === 'humidity' ? y(HUMIDITY_DANGER_PERCENT) : null,
   };
 }
