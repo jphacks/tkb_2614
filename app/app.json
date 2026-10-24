@@ -6,6 +6,26 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
+    "plugins": [
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "部屋の映像にキャラクターを表示するため、カメラを使用します。",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "neverForLocation": true,
+          "bluetoothAlwaysPermission": "部屋の温湿度センサーから記録を受け取るために Bluetooth を使います。"
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,17 +40,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-font",
-      [
-        "react-native-ble-plx",
-        {
-          "isBackgroundEnabled": false,
-          "neverForLocation": true,
-          "bluetoothAlwaysPermission": "部屋の温湿度センサーから記録を受け取るために Bluetooth を使います。"
-        }
-      ]
-    ]
+    }
   }
 }
