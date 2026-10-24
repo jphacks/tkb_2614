@@ -45,6 +45,29 @@ function riskLevel(moldIndex: number): MoldRiskLevel {
   return moldIndex < 1 ? 'low' : moldIndex < 3 ? 'medium' : 'high';
 }
 
+function mean(values: readonly (number | null)[]) {
+  const present = values.filter((v): v is number => v !== null);
+  return present.length === 0 ? null : present.reduce((a, b) => a + b, 0) / present.length;
+}
+
+/** 計測間隔が1時間より短くても1時間ずつ進めるよう、同じ時台の記録を平均して1件にする。最新順で返す。 */
+function toHourly(measurements: readonly Measurement[]): Measurement[] {
+  const byHour = new Map<number, Measurement[]>();
+  for (const record of measurements) {
+    const hour = Math.floor(Date.parse(record.measuredAt) / HOUR_MS);
+    const bucket = byHour.get(hour);
+    if (bucket) bucket.push(record);
+    else byHour.set(hour, [record]);
+  }
+  return [...byHour].sort(([a], [b]) => b - a).map(([hour, records]) => ({
+    deviceId: records[0].deviceId,
+    temperatureC: mean(records.map((r) => r.temperatureC)),
+    relativeHumidityPercent: mean(records.map((r) => r.relativeHumidityPercent)),
+    measuredAt: new Date(hour * HOUR_MS).toISOString(),
+    receivedAt: records.map((r) => r.receivedAt).sort().at(-1)!,
+  }));
+}
+
 function hoursBetween(previous: Measurement, next: Measurement) {
   return Math.round((Date.parse(next.measuredAt) - Date.parse(previous.measuredAt)) / HOUR_MS);
 }
@@ -94,7 +117,8 @@ export function createVttMoldPredictor({
   }
 
   return {
-    predict(measurements) {
+    predict(records) {
+      const measurements = toHourly(records);
       const state: GrowthState = { moldIndex: 0, unfavorableHours: 0 };
       let observedHours = 0;
       let last: { record: Measurement; surface: Surface } | null = null;

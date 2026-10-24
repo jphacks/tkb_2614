@@ -90,6 +90,13 @@ test('短い欠測は直前の条件で埋め、長い欠測ではMを保持し�
   assert.equal(withGap(96).isProvisional, true);
 });
 
+test('計測間隔が1時間より短くても、同じ期間・条件なら毎時と同じ予測になる', () => {
+  assert.deepEqual(noDelta.predict(history(hours(humid, 289), { hourOf: (i) => i / 12 })), noDelta.predict(history(hours(humid, 25))));
+  // 同じ時台の記録は平均する。30分ごとに100%と80%なら毎時90%と同じ。
+  const alternating = Array.from({ length: 48 }, (_, i) => ({ temperatureC: 25, relativeHumidityPercent: i % 2 ? 80 : 100 }));
+  assert.deepEqual(noDelta.predict(history(alternating, { hourOf: (i) => i / 2 }))?.moldIndex, noDelta.predict(history(hours(humid, 24)))?.moldIndex);
+});
+
 test('連続した観測が7日未満なら参考値', () => {
   assert.equal(predictor.predict(history(hours(dry, 167)))!.isProvisional, true);
   assert.equal(predictor.predict(history(hours(dry, 168)))!.isProvisional, false);
