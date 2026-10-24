@@ -16,6 +16,8 @@ test('判定の種類ごとにひとことを出し、none なら吹き出しを
   const text = (advice: VentilationAdvice) => ventilationMessage(advice, null, 'medium')?.text;
   assert.equal(text(open), '窓を開けよう！ 35% くらいまで下がりそう');
   assert.equal(text({ kind: 'open', brief: false, predictedIndoorRh: 37.6 }), '窓を開けよう！ 40% くらいまで下がりそう');
+  // 丸めても 0% にはしない。
+  assert.equal(text({ kind: 'open', brief: false, predictedIndoorRh: 1.2 }), '窓を開けよう！ 5% くらいまで下がりそう');
   assert.equal(text({ kind: 'open', brief: true }), '外が寒いから、5〜10分だけ窓を開けよう');
   assert.equal(text({ kind: 'close', reason: 'outdoorWetter' }), '外のほうがジメジメ。窓は閉めておこう');
   assert.equal(text({ kind: 'keep', reason: 'rain' }), '雨だから窓はそのままで');
