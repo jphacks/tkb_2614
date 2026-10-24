@@ -14,7 +14,18 @@ JPHACKS のチームリポジトリ。ESP32 と Si7021 で室内の温度・湿�
 ## firmware と app にまたがる取り決め
 
 - BLE の Service/Characteristic の UUID と payload の形式は、両側にハードコードされる。仕様は `docs/ble-protocol.md` にまとめている。変えるときは `firmware/`・`app/`・`docs/ble-protocol.md` を同じコミットで直す。
-- カビリスクの判定はアプリ側で行い、ESP32 は計測値を送るだけにする。判定基準を変えるたびにファームウェアを書き込み直さなくて済む。
+- カビリスクの判定はアプリ側で行い、ESP32 は計測値を送るだけにする。判定基準を変えるたびにファームウェアを書き込み直さなくて済む。計算方法は `docs/mold-model.md` にまとめている。
+
+## プロダクトの方針
+
+誰に向けて何を作るかは `docs/persona.md` にまとめている。メインのペルソナは B（一度カビが生えて困った、一人暮らしの賃貸住まいの人）で、A と C は「するべきでないこと」の判断に使う。
+
+- 機能、画面、通知、リスク表示の文言を足したり変えたりするときは、`docs/persona.md` の「するべきでないこと」に当たらないか確かめる（`persona-review` スキル）。
+- ヒアリングや実測で新しい情報が入ったら、`persona-study` スキルで `docs/persona.md` を更新する。
+
+## スキル
+
+チームで作ったスキルは `.agents/skills/` に置き、`.claude/skills/` からシンボリックリンクを張る。Claude Code と Codex の両方から同じファイルを読むためである。外部から入れたスキル（material-3）は `skills-lock.json` で管理していて、両方のディレクトリに実体がある。
 
 ## firmware
 
@@ -42,7 +53,9 @@ BLE には NimBLE-Arduino（2.x）を使う。esp32 コア同梱の `BLEDevice.h
 cd app
 pnpm install
 pnpm start                     # Metro を起動する
-pnpm exec tsc --noEmit         # 型チェック
+pnpm typecheck                 # 型チェック（tests/ も含む）
+pnpm lint
+pnpm test
 pnpm expo install <package>    # パッケージ追加は pnpm add ではなくこれを使う
 ```
 
