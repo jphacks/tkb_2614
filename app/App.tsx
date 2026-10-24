@@ -3,15 +3,21 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { EnvironmentScreen } from './src/screens/EnvironmentScreen';
+import { ARScreen } from './src/screens/ARScreen';
 import { createAppServices } from './src/services/createAppServices';
 
 export default function App() {
   const [services] = useState(createAppServices);
+  const [screen, setScreen] = useState<'environment' | 'ar'>('environment');
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
-      <EnvironmentScreen services={services} />
+      <StatusBar style={screen === 'ar' ? 'light' : 'dark'} />
+      {screen === 'ar' ? (
+        <ARScreen onBack={() => setScreen('environment')} />
+      ) : (
+        <EnvironmentScreen services={services} onOpenAR={() => setScreen('ar')} />
+      )}
     </SafeAreaProvider>
   );
 }

@@ -18,7 +18,10 @@ function formatTime(timestamp: string | null) {
   return timestamp === null ? '不明' : new Date(timestamp).toLocaleString('ja-JP');
 }
 
-export function EnvironmentScreen({ services }: { services: AppServices }) {
+export function EnvironmentScreen({ services, onOpenAR }: {
+  services: AppServices;
+  onOpenAR: () => void;
+}) {
   const { measurements, status, error, refresh } = useMeasurements(services);
   const predictionState = useMoldPrediction(services.moldPredictor, measurements);
   const latest = measurements[0];
@@ -27,6 +30,7 @@ export function EnvironmentScreen({ services }: { services: AppServices }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
+        <Button title="AR画面を開く" onPress={onOpenAR} />
         <Text style={styles.title}>室内環境</Text>
         <Text>取得元: {services.measurementSource.label}</Text>
         <Text>状態: {statusLabels[status]}</Text>
