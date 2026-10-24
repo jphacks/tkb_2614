@@ -7,8 +7,11 @@ import { corner, space, type, useScheme } from '../theme/theme';
 import { buildChart, HUMIDITY_DANGER_PERCENT, type ChartKind } from './chartGeometry';
 
 const PLOT_HEIGHT = 140;
-/** 右端の余白。危険帯の境界の数字を、線や最新の点と重ならない位置に置く。 */
-const GUTTER = 48;
+/**
+ * 左端の余白。危険帯の境界の数字を軸の目盛りとして置く。右端に置くと最新値に見えてしまう。
+ * 温度のカードも同じ幅を空け、2つのグラフの時刻の位置をそろえる。
+ */
+const GUTTER = 40;
 /** 端の点が切れないよう、Svg をカードの余白側へはみ出させる幅。最新の点の半径と同じ。 */
 const INSET = 6;
 const AXIS_GAP = space.s8;
@@ -33,12 +36,12 @@ function topRoundedRect(x: number, y: number, width: number, height: number, r: 
 /**
  * 直近24hの推移。湿度か温度かは、最新値の横のアイコン（しずく/温度計）と線の色（primary/tertiary）で区別する。
  * 最新値は線から離してヘッダーに置く。縦の細線はローカル時刻の6時間おきで、下に時刻を出す。
- * 湿度は危険帯を error-container で塗り、境界の数字は右の余白に出す。
+ * 湿度は危険帯を error-container で塗り、境界の数字は左の余白に出す。
  */
 export function ChartCard({ kind, measurements }: { kind: ChartKind; measurements: readonly Measurement[] }) {
   const scheme = useScheme();
   const [width, setWidth] = useState(0);
-  const plot = { left: INSET, top: INSET, width: width - GUTTER, height: PLOT_HEIGHT };
+  const plot = { left: INSET + GUTTER, top: INSET, width: width - GUTTER, height: PLOT_HEIGHT };
   const chart = buildChart(measurements, kind, plot);
   const color = kind === 'humidity' ? scheme.primary : scheme.tertiary;
   const latest = chart.latest;
@@ -60,8 +63,9 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
               <>
                 <Path d={topRoundedRect(plot.left, plot.top, plot.width, chart.dangerY - plot.top, BAND_RADIUS)} fill={scheme.errorContainer} />
                 <SvgText
-                  x={plot.left + plot.width + 14}
+                  x={plot.left - space.s8}
                   y={chart.dangerY + 5}
+                  textAnchor="end"
                   fill={scheme.onSurfaceVariant}
                   fontFamily={type.label.fontFamily}
                   fontSize={type.label.fontSize}

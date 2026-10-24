@@ -46,6 +46,14 @@ test('グラフは最新の計測を右端に直近24hだけ描き、欠測で�
   assert.equal(buildChart(history, 'temperature', box).dangerY, null);
 });
 
+test('湿度が低くても下端に張り付かない', () => {
+  const box = { left: 0, top: 0, width: 240, height: 120 };
+  const chart = buildChart([record(0, 25), record(1, 32)], 'humidity', box);
+  assert.ok(chart.latest !== null && chart.latest.y < box.height);
+  assert.ok(chart.dangerY !== null && chart.dangerY > 0);
+  assert.equal(buildChart([record(0, 60)], 'humidity', box).latest?.y, box.height * (1 - 20 / 50));
+});
+
 test('グラフの縦線はローカル時刻の6時間おきの正時に引く', () => {
   const box = { left: 0, top: 0, width: 240, height: 120 };
   const { grid } = buildChart([record(0, 60)], 'humidity', box);

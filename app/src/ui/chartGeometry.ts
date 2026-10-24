@@ -46,9 +46,12 @@ function valueOf(m: Measurement, kind: ChartKind) {
 }
 
 function rangeOf(values: readonly number[], kind: ChartKind): [number, number] {
-  if (kind === 'humidity') return [40, 90];
   const min = Math.min(...values);
   const max = Math.max(...values);
+  // 湿度は危険帯が見えるよう40〜90%を基本にし、外れる値があれば下端・上端に張り付かないよう10%刻みで広げる。
+  if (kind === 'humidity') {
+    return [Math.max(0, Math.min(40, Math.floor((min - 5) / 10) * 10)), Math.min(100, Math.max(90, Math.ceil((max + 5) / 10) * 10))];
+  }
   return [Math.floor(min) - 1, Math.ceil(max) + 1];
 }
 
