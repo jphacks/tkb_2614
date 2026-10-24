@@ -63,6 +63,10 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
 - `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAtの差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
+- `src/domain/weather.ts`: 現在地の今の外の天気（気温・相対湿度・降水量・風速・昼夜・観測時刻・取得時刻）と、取得元（`fetchCurrent`）の型。権限の拒否・オフライン・APIの失敗ではnullを返し、画面は「外の天気なし」で動かす。
+- `src/data/weather/OpenMeteoWeatherSource.ts`: Open-Meteo の `current` を取得する。位置は小数2桁（約1km）に丸めて送る。取得から30分は AsyncStorage（キー `weather:v1`）のキャッシュを返し、位置もAPIも使わない。失敗はキャッシュしない。
+- `src/data/weather/deviceLocation.ts`: expo-location で使用中のみの位置権限を要求し、直近1時間の位置か、精度 Low の現在地を返す。拒否されたら null。
+- `src/hooks/useOutdoorWeather.ts`: 起動時とフォアグラウンド復帰時に天気を取得する。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
@@ -76,7 +80,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 
 `src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件を作り、配列の値を繰り返す。BLEと同じく、since以上の時刻の記録を返し、再取得しても同じ時刻の計測値は同じ。
 
-`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
+`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。外の天気のモックは `src/data/mock/MockWeatherSource.ts` で、`createMockWeatherSource({ weather: null })` にすると「外の天気なし」を再現できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
 
 ## 今後の実装
 

@@ -2,13 +2,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBleMeasurementSource } from '../data/ble/BleMeasurementSource';
 import { createMeasurementStore } from '../data/measurementStore';
 import { createMockMeasurementSource } from '../data/mock/MockMeasurementSource';
+import { createMockWeatherSource } from '../data/mock/MockWeatherSource';
+import { getCoarseLocation } from '../data/weather/deviceLocation';
+import { createOpenMeteoWeatherSource } from '../data/weather/OpenMeteoWeatherSource';
 import type { MeasurementSource } from '../domain/measurement';
 import { createVttMoldPredictor } from '../domain/moldModel';
 import type { MoldPredictor } from '../domain/prediction';
+import type { WeatherSource } from '../domain/weather';
 import { createMeasurementSync } from './syncMeasurements';
 
 export interface AppServices {
   readonly measurementSource: MeasurementSource;
+  readonly weatherSource: WeatherSource;
   readonly moldPredictor: MoldPredictor;
   readonly syncMeasurements: ReturnType<typeof createMeasurementSync>;
 }
@@ -22,6 +27,9 @@ export function createAppServices(): AppServices {
   const measurementSource = useMock ? createMockMeasurementSource({ delayMs: 300, failEvery: 0 }) : createBleMeasurementSource();
   return {
     measurementSource,
+    weatherSource: useMock
+      ? createMockWeatherSource({ delayMs: 300 })
+      : createOpenMeteoWeatherSource({ getLocation: getCoarseLocation, storage: AsyncStorage }),
     moldPredictor: createVttMoldPredictor(),
     syncMeasurements: createMeasurementSync(measurementSource, createMeasurementStore(AsyncStorage), useMock ? undefined : BLE_TIMEOUT_MS),
   };
