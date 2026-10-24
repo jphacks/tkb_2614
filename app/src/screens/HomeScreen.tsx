@@ -10,6 +10,7 @@ import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
+import type { CharacterKind } from '../ui/mascot/types';
 import { ARPage } from './ARPage';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
@@ -20,7 +21,7 @@ const INDICATOR_AREA = 32 + space.s24;
 
 /** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
-  const { measurements, status, refresh } = useMeasurements(services);
+  const { measurements, status } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
@@ -30,6 +31,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
+  const [character, setCharacter] = useState<CharacterKind>('mimi');
+  const [activePage, setActivePage] = useState(MAIN_PAGE);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -44,15 +47,16 @@ export function HomeScreen({ services }: { services: AppServices }) {
           contentOffset={{ x: width * MAIN_PAGE, y: 0 }}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
           scrollEventThrottle={16}
+          onMomentumScrollEnd={(event) => setActivePage(Math.round(event.nativeEvent.contentOffset.x / width))}
         >
           <View style={{ width }}>
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} status={status} onRefresh={refresh} bottomInset={bottomInset} />
+            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} />
+            <ARPage risk={home.risk} mood={home.mood} character={character} active={activePage === 2} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">

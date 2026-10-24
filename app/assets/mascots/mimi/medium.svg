@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mimi-svg mimi-medium" viewBox="0 0 320 280" width="320" height="280" role="img" aria-labelledby="mimi-title-medium">
+<title id="mimi-title-medium">みみばね・注意の状態</title>
+<style><![CDATA[
+  .mimi-svg{overflow:visible;touch-action:manipulation;user-select:none}
+  .mimi-svg .tap-body{transform-origin:160px 205px}
+  .mimi-svg .breath{transform-origin:160px 210px;animation:mimi-breathe 3.15s ease-in-out infinite}
+  .mimi-svg .ear-left,.mimi-svg .ear-right{transform-box:fill-box}
+  .mimi-svg .ear-left{transform-origin:80% 90%}
+  .mimi-svg .ear-right{transform-origin:20% 90%}
+  .mimi-svg .blink{transform-box:fill-box;transform-origin:center;animation:mimi-blink 6.3s infinite}
+  .mimi-svg .mold-float{animation:mimi-mold-float 3.8s ease-in-out infinite}
+  .mimi-svg .mold-float.delay{animation-delay:-1.6s}
+  .mimi-svg .mold-float.slow{animation-duration:5.1s;animation-delay:-2.3s}
+  @keyframes mimi-breathe{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-2.1px) scale(1.01,1.018)}}
+  @keyframes mimi-blink{0%,38%,40%,81%,83%,100%{transform:scaleY(1)}39%,82%{transform:scaleY(.12)}}
+  @keyframes mimi-mold-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @media(prefers-reduced-motion:reduce){.mimi-svg *, .mimi-svg{animation:none!important;transition:none!important}}
+
+
+  .mimi-medium .breath{animation-duration:4.0s}
+  .mimi-medium .ear-left{animation:mimi-mid-ear-l 5.2s ease-in-out infinite}
+  .mimi-medium .ear-right{animation:mimi-mid-ear-r 5.2s ease-in-out infinite}
+  .mimi-medium.is-tapped .tap-body{animation:mimi-tap-surprise 690ms ease-out 1 both}
+  .mimi-medium.is-tapped .mold-float{animation:mimi-mold-surprise 690ms ease-out 1 both}
+  @keyframes mimi-mid-ear-l{0%,70%,100%{transform:rotate(0)}77%{transform:rotate(5deg)}86%{transform:rotate(0)}}
+  @keyframes mimi-mid-ear-r{0%,70%,100%{transform:rotate(0)}77%{transform:rotate(-5deg)}86%{transform:rotate(0)}}
+  @keyframes mimi-tap-surprise{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
+  @keyframes mimi-mold-surprise{0%,100%{transform:translateY(0)}35%{transform:translateY(-17px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
+]]></style>
+
+  <ellipse cx="160" cy="245" rx="83" ry="7" fill="#35544F" opacity=".10"/>
+  <g class="tap-body">
+    <g class="breath">
+      <g class="ear-left">
+        <path d="M116 155 C89 136 58 150 46 176 C29 212 54 227 84 224 C107 222 122 203 137 183 Z" fill="#9EDFD4"/>
+        <path d="M75 182 Q96 190 112 183" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <g class="ear-right">
+        <path d="M205 155 C232 136 263 150 275 176 C292 212 267 227 237 224 C214 222 199 203 184 183 Z" fill="#9EDFD4"/>
+        <path d="M245 182 Q224 190 208 183" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <path d="M101 196 C98 155 125 138 155 135 C191 132 222 150 225 190 C228 222 210 241 174 241 L137 242 C115 242 101 231 101 196 Z" fill="#FFF9F0"/>
+      <ellipse cx="126" cy="234" rx="9" ry="7" transform="rotate(18 126 234)" fill="#9EDFD4"/>
+      <ellipse cx="194" cy="234" rx="9" ry="7" transform="rotate(-18 194 234)" fill="#9EDFD4"/>
+      <g class="blink">
+        <ellipse cx="139" cy="184" rx="3.5" ry="4" fill="#35544F"/>
+        <ellipse cx="182" cy="184" rx="3.5" ry="4" fill="#35544F"/>
+      </g>
+      <path d="M151 203 Q160 198 169 203" fill="none" stroke="#35544F" stroke-width="3.1" stroke-linecap="round"/>
+      <path d="M200 156 Q192 167 198 173 Q205 174 204 167 Z" fill="#9EDFD4"/>
+    </g>
+  </g>
+  <g transform="translate(264 233) scale(0.78)"><g class="mold-float ">
+      <path d="M-18 1 C-25 -7 -19 -17 -9 -17 C-6 -27 7 -25 12 -17 C25 -18 28 -4 20 4 C25 15 11 22 2 16 C-7 22 -19 15 -18 1 Z" fill="#8FA79C"/>
+      <circle cx="-5.5" cy="0" r="2.25" fill="#35544F"/>
+      <circle cx="7.5" cy="0" r="2.25" fill="#35544F"/>
+      <path d="M-3 8 Q1 11 5 7" fill="none" stroke="#35544F" stroke-width="2.1" stroke-linecap="round"/>
+    </g></g>
+</svg>

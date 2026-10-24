@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-antenna mo-low" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="ふさアンテナ・元気">
+<style><![CDATA[
+ .mo-antenna{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-antenna .tap-body{transform-origin:160px 235px}
+ .mo-antenna .breath{transform-origin:160px 221px;animation:antenna-breath 3.2s ease-in-out infinite}
+ .mo-antenna .blink{transform-box:fill-box;transform-origin:center;animation:antenna-blink 5.8s infinite}
+ .mo-antenna .feature{transform-origin:167px 187px;animation:antenna-feature 4.5s ease-in-out infinite}
+ .mo-antenna .mold-float{animation:antenna-mold 3.5s ease-in-out infinite}
+ .mo-antenna .mold-float.late{animation-delay:-1.5s}
+ .mo-antenna .mold-float.slow{animation-duration:4.7s;animation-delay:-2.1s}
+ .mo-antenna.mo-medium .breath{animation-duration:4.2s}
+ .mo-antenna.mo-high .breath{animation-duration:5.1s}
+ .mo-antenna.mo-medium .feature{animation-duration:5.3s}
+ .mo-antenna.mo-high .feature{animation-duration:6.8s}
+ .mo-antenna.mo-low.is-tapped .tap-body{animation:antenna-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-antenna.mo-medium.is-tapped .tap-body{animation:antenna-startle .69s ease-out 1 both}
+ .mo-antenna.mo-high.is-tapped .tap-body{animation:antenna-weak .78s ease-out 1 both}
+ .mo-antenna.is-tapped .mold-float{animation:antenna-mold-startle .78s ease-out 1 both}
+ @keyframes antenna-breath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.02)}}
+ @keyframes antenna-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes antenna-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(3deg)}74%{transform:rotate(-2deg)}84%{transform:rotate(0)}}
+ @keyframes antenna-mold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+ @keyframes antenna-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-27px) scale(.94,1.09)}67%{transform:translateY(1px) scale(1.09,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+ @keyframes antenna-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
+ @keyframes antenna-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-9px) rotate(-2deg)}46%{transform:translateY(-8px) rotate(2deg)}72%{transform:translateY(-3px) rotate(-1deg)}86%{transform:translateY(-1px)}}
+ @keyframes antenna-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-16px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
+ @media(prefers-reduced-motion:reduce){.mo-antenna *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="160" cy="247" rx="71" ry="7" fill="#395450" opacity=".09"/>
+        <g class="tap-body"><g class="breath">
+        <g class="feature"><path d="M133 154 Q111 111 104 94 Q101 84 91 83" fill="none" stroke="#F7D994" stroke-width="9" stroke-linecap="round"/>
+        <path d="M185 154 Q180 120 191 94 Q195 81 194 75" fill="none" stroke="#F7D994" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="89" cy="80" r="16" fill="#F7D994"/><circle cx="194" cy="72" r="16" fill="#F7D994"/></g>
+        <path d="M222 187 Q249 182 241 199 Q237 210 218 211" fill="#F7D994"/>
+        <ellipse cx="160" cy="191" rx="64" ry="51" fill="#FFF9F1"/>
+        <ellipse cx="124" cy="230" rx="11" ry="8" fill="#F7D994"/><ellipse cx="197" cy="230" rx="11" ry="8" fill="#F7D994"/>
+        <g class="blink"><ellipse cx="140" cy="189" rx="3.5" ry="4.2" fill="#395450"/><ellipse cx="181" cy="189" rx="3.5" ry="4.2" fill="#395450"/></g><path d="M153 205 Q160 212 167 205" fill="none" stroke="#395450" stroke-width="2.8" stroke-linecap="round"/>
+        </g></g>
+</svg>

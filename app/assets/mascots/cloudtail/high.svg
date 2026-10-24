@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-cloudtail mo-high" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="くもりしっぽ・ぐったり">
+<style><![CDATA[
+ .mo-cloudtail{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-cloudtail .tap-body{transform-origin:160px 235px}
+ .mo-cloudtail .breath{transform-origin:160px 221px;animation:cloudtail-breath 3.2s ease-in-out infinite}
+ .mo-cloudtail .blink{transform-box:fill-box;transform-origin:center;animation:cloudtail-blink 5.8s infinite}
+ .mo-cloudtail .feature{transform-origin:167px 187px;animation:cloudtail-feature 4.5s ease-in-out infinite}
+ .mo-cloudtail .mold-float{animation:cloudtail-mold 3.5s ease-in-out infinite}
+ .mo-cloudtail .mold-float.late{animation-delay:-1.5s}
+ .mo-cloudtail .mold-float.slow{animation-duration:4.7s;animation-delay:-2.1s}
+ .mo-cloudtail.mo-medium .breath{animation-duration:4.2s}
+ .mo-cloudtail.mo-high .breath{animation-duration:5.1s}
+ .mo-cloudtail.mo-medium .feature{animation-duration:5.3s}
+ .mo-cloudtail.mo-high .feature{animation-duration:6.8s}
+ .mo-cloudtail.mo-low.is-tapped .tap-body{animation:cloudtail-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-cloudtail.mo-medium.is-tapped .tap-body{animation:cloudtail-startle .69s ease-out 1 both}
+ .mo-cloudtail.mo-high.is-tapped .tap-body{animation:cloudtail-weak .78s ease-out 1 both}
+ .mo-cloudtail.is-tapped .mold-float{animation:cloudtail-mold-startle .78s ease-out 1 both}
+ @keyframes cloudtail-breath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.02)}}
+ @keyframes cloudtail-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes cloudtail-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(3deg)}74%{transform:rotate(-2deg)}84%{transform:rotate(0)}}
+ @keyframes cloudtail-mold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+ @keyframes cloudtail-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-27px) scale(.94,1.09)}67%{transform:translateY(1px) scale(1.09,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+ @keyframes cloudtail-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
+ @keyframes cloudtail-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-9px) rotate(-2deg)}46%{transform:translateY(-8px) rotate(2deg)}72%{transform:translateY(-3px) rotate(-1deg)}86%{transform:translateY(-1px)}}
+ @keyframes cloudtail-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-16px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
+ @media(prefers-reduced-motion:reduce){.mo-cloudtail *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="160" cy="248" rx="107" ry="7" fill="#395450" opacity=".11"/>
+    <g class="tap-body"><g class="breath"><g class="feature">
+    <circle cx="211" cy="223" r="29" fill="#BDD8EF"/><circle cx="251" cy="209" r="28" fill="#BDD8EF"/>
+    <circle cx="255" cy="229" r="18" fill="#BDD8EF"/><circle cx="190" cy="232" r="22" fill="#BDD8EF"/>
+    </g>
+    <path d="M102 219 Q98 207 109 204 L121 220 Z" fill="#BDD8EF"/>
+    <path d="M136 217 Q147 206 154 217 Z" fill="#BDD8EF"/>
+    <path d="M73 224 Q80 208 130 205 Q171 204 193 223 Q198 243 174 244 L99 244 Q75 244 73 224 Z" fill="#FFF9F1"/>
+    <ellipse cx="107" cy="240" rx="10" ry="5" fill="#BDD8EF"/><ellipse cx="169" cy="240" rx="10" ry="5" fill="#BDD8EF"/>
+    <g stroke="#395450" stroke-width="2.8" stroke-linecap="round"><path d="M113 222 l6 6 M119 222 l-6 6"/><path d="M154 222 l6 6 M160 222 l-6 6"/></g><path d="M127 240 Q135 232 143 240" fill="none" stroke="#395450" stroke-width="3" stroke-linecap="round"/><path d="M170 205 Q161 216 165 221 Q174 226 173 217 Z" fill="#BDD8EF" opacity=".88"/>
+    </g></g><g transform="translate(60 239) scale(0.7)"><g class="mold-float slow">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g><g transform="translate(262 226) scale(0.74)"><g class="mold-float late">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g><g transform="translate(235 177) scale(0.75)"><g class="mold-float ">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g>
+</svg>

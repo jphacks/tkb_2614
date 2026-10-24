@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-fin mo-medium" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="しめり背びれ・注意">
+<style><![CDATA[
+ .mo-fin{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-fin .tap-body{transform-origin:160px 235px}
+ .mo-fin .breath{transform-origin:160px 221px;animation:fin-breath 3.2s ease-in-out infinite}
+ .mo-fin .blink{transform-box:fill-box;transform-origin:center;animation:fin-blink 5.8s infinite}
+ .mo-fin .feature{transform-origin:167px 187px;animation:fin-feature 4.5s ease-in-out infinite}
+ .mo-fin .mold-float{animation:fin-mold 3.5s ease-in-out infinite}
+ .mo-fin .mold-float.late{animation-delay:-1.5s}
+ .mo-fin .mold-float.slow{animation-duration:4.7s;animation-delay:-2.1s}
+ .mo-fin.mo-medium .breath{animation-duration:4.2s}
+ .mo-fin.mo-high .breath{animation-duration:5.1s}
+ .mo-fin.mo-medium .feature{animation-duration:5.3s}
+ .mo-fin.mo-high .feature{animation-duration:6.8s}
+ .mo-fin.mo-low.is-tapped .tap-body{animation:fin-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-fin.mo-medium.is-tapped .tap-body{animation:fin-startle .69s ease-out 1 both}
+ .mo-fin.mo-high.is-tapped .tap-body{animation:fin-weak .78s ease-out 1 both}
+ .mo-fin.is-tapped .mold-float{animation:fin-mold-startle .78s ease-out 1 both}
+ @keyframes fin-breath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.02)}}
+ @keyframes fin-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes fin-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(3deg)}74%{transform:rotate(-2deg)}84%{transform:rotate(0)}}
+ @keyframes fin-mold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+ @keyframes fin-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-27px) scale(.94,1.09)}67%{transform:translateY(1px) scale(1.09,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+ @keyframes fin-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
+ @keyframes fin-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-9px) rotate(-2deg)}46%{transform:translateY(-8px) rotate(2deg)}72%{transform:translateY(-3px) rotate(-1deg)}86%{transform:translateY(-1px)}}
+ @keyframes fin-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-16px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
+ @media(prefers-reduced-motion:reduce){.mo-fin *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="161" cy="247" rx="91" ry="7" fill="#395450" opacity=".09"/>
+        <g class="tap-body"><g class="breath"><g class="feature">
+        <path d="M153 192 C168 162 192 136 216 145 C233 151 232 172 220 180 C249 174 261 195 245 211 C266 215 258 229 242 232 L183 239 Z" fill="#CEC2ED"/>
+        </g>
+        <path d="M84 204 C98 174 124 171 146 175 C177 181 202 205 231 221 C247 233 229 243 213 244 L113 244 C89 244 74 232 84 204 Z" fill="#FFF9F1"/>
+        <ellipse cx="113" cy="240" rx="10" ry="6" fill="#CEC2ED"/><ellipse cx="198" cy="240" rx="10" ry="6" fill="#CEC2ED"/>
+        <g class="blink"><ellipse cx="109" cy="210" rx="3.5" ry="4.2" fill="#395450"/><ellipse cx="139" cy="211" rx="3.5" ry="4.2" fill="#395450"/></g><path d="M117 227 Q124 222 131 227" fill="none" stroke="#395450" stroke-width="2.8" stroke-linecap="round"/><path d="M153 191 Q144 202 148 207 Q157 212 156 203 Z" fill="#CEC2ED" opacity=".88"/>
+        </g></g><g transform="translate(260 230) scale(0.78)"><g class="mold-float ">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g>
+</svg>

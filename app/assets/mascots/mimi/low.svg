@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mimi-svg mimi-low" viewBox="0 0 320 280" width="320" height="280" role="img" aria-labelledby="mimi-title-low">
+<title id="mimi-title-low">みみばね・元気の状態</title>
+<style><![CDATA[
+  .mimi-svg{overflow:visible;touch-action:manipulation;user-select:none}
+  .mimi-svg .tap-body{transform-origin:160px 205px}
+  .mimi-svg .breath{transform-origin:160px 210px;animation:mimi-breathe 3.15s ease-in-out infinite}
+  .mimi-svg .ear-left,.mimi-svg .ear-right{transform-box:fill-box}
+  .mimi-svg .ear-left{transform-origin:80% 90%}
+  .mimi-svg .ear-right{transform-origin:20% 90%}
+  .mimi-svg .blink{transform-box:fill-box;transform-origin:center;animation:mimi-blink 6.3s infinite}
+  .mimi-svg .mold-float{animation:mimi-mold-float 3.8s ease-in-out infinite}
+  .mimi-svg .mold-float.delay{animation-delay:-1.6s}
+  .mimi-svg .mold-float.slow{animation-duration:5.1s;animation-delay:-2.3s}
+  @keyframes mimi-breathe{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-2.1px) scale(1.01,1.018)}}
+  @keyframes mimi-blink{0%,38%,40%,81%,83%,100%{transform:scaleY(1)}39%,82%{transform:scaleY(.12)}}
+  @keyframes mimi-mold-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @media(prefers-reduced-motion:reduce){.mimi-svg *, .mimi-svg{animation:none!important;transition:none!important}}
+
+
+  .mimi-low .ear-left{animation:mimi-low-ear-l 5.2s ease-in-out infinite}
+  .mimi-low .ear-right{animation:mimi-low-ear-r 5.2s ease-in-out infinite}
+  .mimi-low .tap-body{transform-origin:160px 230px}
+  .mimi-low.is-tapped .tap-body{animation:mimi-tap-happy 720ms cubic-bezier(.2,.8,.2,1) 1 both}
+  @keyframes mimi-low-ear-l{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(-8deg)}67%{transform:rotate(3deg)}73%{transform:rotate(0)}}
+  @keyframes mimi-low-ear-r{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(8deg)}68%{transform:rotate(-4deg)}73%{transform:rotate(0)}}
+  @keyframes mimi-tap-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-28px) scale(.94,1.1)}67%{transform:translateY(1px) scale(1.1,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+]]></style>
+
+  <ellipse cx="160" cy="244" rx="74" ry="7" fill="#35544F" opacity=".09"/>
+  <g class="tap-body">
+    <g class="breath">
+      <g class="ear-left">
+        <path d="M119 143 C91 141 56 107 52 69 C47 29 65 20 82 33 C105 48 129 92 142 129 Z" fill="#9EDFD4"/>
+        <path d="M91 80 Q103 105 122 119" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <g class="ear-right">
+        <path d="M201 143 C229 141 264 107 268 69 C273 29 255 20 238 33 C215 48 191 92 178 129 Z" fill="#9EDFD4"/>
+        <path d="M229 80 Q217 105 198 119" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <path d="M102 203 Q93 213 95 226 Q98 240 113 237 L126 220 Z" fill="#9EDFD4"/>
+      <path d="M218 203 Q227 213 225 226 Q222 240 207 237 L194 220 Z" fill="#9EDFD4"/>
+      <path d="M96 186 C90 151 115 125 153 123 C191 119 217 140 228 174 C242 214 216 239 179 242 C138 248 106 236 96 211 C92 201 93 194 96 186 Z" fill="#FFF9F0"/>
+      <ellipse cx="126" cy="233" rx="10" ry="8" transform="rotate(22 126 233)" fill="#9EDFD4"/>
+      <ellipse cx="196" cy="233" rx="10" ry="8" transform="rotate(-22 196 233)" fill="#9EDFD4"/>
+      <g class="blink">
+        <ellipse cx="138" cy="180" rx="3.5" ry="4.5" fill="#35544F"/>
+        <ellipse cx="183" cy="180" rx="3.5" ry="4.5" fill="#35544F"/>
+      </g>
+      <path d="M151 196 Q160 203 169 196" fill="none" stroke="#35544F" stroke-width="3.1" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
