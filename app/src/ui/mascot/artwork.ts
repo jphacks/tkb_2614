@@ -76,7 +76,7 @@ export const artwork: Artwork = {
                         "at": 0.62,
                         "x": 0,
                         "y": 0,
-                        "rotation": -8,
+                        "rotation": -16,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -84,7 +84,7 @@ export const artwork: Artwork = {
                         "at": 0.67,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -168,7 +168,7 @@ export const artwork: Artwork = {
                         "at": 0.62,
                         "x": 0,
                         "y": 0,
-                        "rotation": 8,
+                        "rotation": 16,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -176,7 +176,7 @@ export const artwork: Artwork = {
                         "at": 0.68,
                         "x": 0,
                         "y": 0,
-                        "rotation": -4,
+                        "rotation": -8,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -394,12 +394,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2.1,
+                    "y": 0,
                     "rotation": 0,
-                    "scaleX": 1.01,
-                    "scaleY": 1.018
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.69,
+                    "x": 0,
+                    "y": 4,
+                    "rotation": 0,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.77,
+                    "x": 0,
+                    "y": -16,
+                    "rotation": -3,
+                    "scaleX": 0.97,
+                    "scaleY": 1.06
+                  },
+                  {
+                    "at": 0.85,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 2,
+                    "scaleX": 1.06,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.93,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -410,7 +442,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3150,
+                "duration": 7600,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -418,7 +450,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.95
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -9,
+                      "rotation": 0,
+                      "scaleX": 0.9,
+                      "scaleY": 1.15
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -7,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -9,
+                      "y": -3,
+                      "rotation": -9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 9,
+                      "y": -3,
+                      "rotation": 9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -3,
+                      "y": 0,
+                      "rotation": -3,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -4,
+                      "rotation": -2,
+                      "scaleX": 0.97,
+                      "scaleY": 1.05
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.94
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -18,
+                      "rotation": 0,
+                      "scaleX": 0.96,
+                      "scaleY": 1.06
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 2,
+                      "rotation": 0,
+                      "scaleX": 1.06,
+                      "scaleY": 0.93
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -11,
+                      "rotation": 0,
+                      "scaleX": 0.97,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 1,
+                      "rotation": 0,
+                      "scaleX": 1.03,
+                      "scaleY": 0.97
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -440,34 +762,34 @@ export const artwork: Artwork = {
               {
                 "at": 0.15,
                 "x": 0,
-                "y": 5,
+                "y": 6.25,
                 "rotation": 0,
-                "scaleX": 1.06,
-                "scaleY": 0.92
+                "scaleX": 1.075,
+                "scaleY": 0.9
               },
               {
                 "at": 0.42,
                 "x": 0,
-                "y": -28,
+                "y": -35,
                 "rotation": 0,
-                "scaleX": 0.94,
-                "scaleY": 1.1
+                "scaleX": 0.925,
+                "scaleY": 1.125
               },
               {
                 "at": 0.67,
                 "x": 0,
-                "y": 1,
+                "y": 1.25,
                 "rotation": 0,
-                "scaleX": 1.1,
-                "scaleY": 0.91
+                "scaleX": 1.125,
+                "scaleY": 0.888
               },
               {
                 "at": 0.82,
                 "x": 0,
-                "y": -8,
+                "y": -10,
                 "rotation": 0,
-                "scaleX": 0.98,
-                "scaleY": 1.03
+                "scaleX": 0.975,
+                "scaleY": 1.038
               },
               {
                 "at": 1,
@@ -563,7 +885,7 @@ export const artwork: Artwork = {
                         "at": 0.77,
                         "x": 0,
                         "y": 0,
-                        "rotation": 5,
+                        "rotation": 10,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -647,7 +969,7 @@ export const artwork: Artwork = {
                         "at": 0.77,
                         "x": 0,
                         "y": 0,
-                        "rotation": -5,
+                        "rotation": -10,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -857,12 +1179,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2.1,
+                    "y": 0,
                     "rotation": 0,
-                    "scaleX": 1.01,
-                    "scaleY": 1.018
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.72,
+                    "x": 0,
+                    "y": -6,
+                    "rotation": -6,
+                    "scaleX": 1.02,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.81,
+                    "x": 0,
+                    "y": -4,
+                    "rotation": 5,
+                    "scaleX": 1.02,
+                    "scaleY": 1.03
+                  },
+                  {
+                    "at": 0.89,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.03,
+                    "scaleY": 0.97
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -873,7 +1227,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4000,
+                "duration": 8400,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -881,7 +1235,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.96
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -7.2,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -5.6,
+                      "rotation": 0,
+                      "scaleX": 0.936,
+                      "scaleY": 1.096
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -7.2,
+                      "y": -2.4,
+                      "rotation": -7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 7.2,
+                      "y": -2.4,
+                      "rotation": 7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -2.4,
+                      "y": 0,
+                      "rotation": -2.4,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -3.2,
+                      "rotation": -1.6,
+                      "scaleX": 0.976,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.952
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -14.4,
+                      "rotation": 0,
+                      "scaleX": 0.968,
+                      "scaleY": 1.048
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.6,
+                      "rotation": 0,
+                      "scaleX": 1.048,
+                      "scaleY": 0.944
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -8.8,
+                      "rotation": 0,
+                      "scaleX": 0.976,
+                      "scaleY": 1.032
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.8,
+                      "rotation": 0,
+                      "scaleX": 1.024,
+                      "scaleY": 0.976
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -902,33 +1546,33 @@ export const artwork: Artwork = {
               },
               {
                 "at": 0.18,
-                "x": -12,
-                "y": -10,
-                "rotation": -5,
+                "x": -15,
+                "y": -12.5,
+                "rotation": -6.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.42,
-                "x": 9,
-                "y": -2,
-                "rotation": 4,
+                "x": 11.25,
+                "y": -2.5,
+                "rotation": 5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.68,
-                "x": -4,
+                "x": -5,
                 "y": 0,
-                "rotation": -2,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.84,
-                "x": 2,
+                "x": 2.5,
                 "y": 0,
-                "rotation": 1,
+                "rotation": 1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
@@ -1018,9 +1662,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -4,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1034,7 +1702,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3800,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -1056,16 +1724,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -17,
-                    "rotation": 11,
+                    "y": -21.25,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -1165,7 +1833,7 @@ export const artwork: Artwork = {
                         "at": 0.88,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -1241,7 +1909,7 @@ export const artwork: Artwork = {
                         "at": 0.88,
                         "x": 0,
                         "y": 0,
-                        "rotation": -3,
+                        "rotation": -6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -1357,12 +2025,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
                     "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.022
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.73,
+                    "x": 0,
+                    "y": 3,
+                    "rotation": -5,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.82,
+                    "x": 0,
+                    "y": -5,
+                    "rotation": 4,
+                    "scaleX": 0.98,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.91,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.02,
+                    "scaleY": 0.98
+                  },
+                  {
+                    "at": 0.97,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -1373,7 +2073,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4400,
+                "duration": 9200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -1381,7 +2081,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.972
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -4.95,
+                      "rotation": 0,
+                      "scaleX": 0.945,
+                      "scaleY": 1.083
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -3.85,
+                      "rotation": 0,
+                      "scaleX": 0.956,
+                      "scaleY": 1.066
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -4.95,
+                      "y": -1.65,
+                      "rotation": -4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 4.95,
+                      "y": -1.65,
+                      "rotation": 4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -1.65,
+                      "y": 0,
+                      "rotation": -1.65,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -2.2,
+                      "rotation": -1.1,
+                      "scaleX": 0.984,
+                      "scaleY": 1.028
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.967
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -9.9,
+                      "rotation": 0,
+                      "scaleX": 0.978,
+                      "scaleY": 1.033
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.1,
+                      "rotation": 0,
+                      "scaleX": 1.033,
+                      "scaleY": 0.962
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -6.05,
+                      "rotation": 0,
+                      "scaleX": 0.984,
+                      "scaleY": 1.022
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.55,
+                      "rotation": 0,
+                      "scaleX": 1.016,
+                      "scaleY": 0.984
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -1403,23 +2393,23 @@ export const artwork: Artwork = {
               {
                 "at": 0.25,
                 "x": 0,
-                "y": -6,
-                "rotation": -1.2,
+                "y": -7.5,
+                "rotation": -1.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.5,
                 "x": 0,
-                "y": -4,
-                "rotation": 1.1,
+                "y": -5,
+                "rotation": 1.375,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.78,
                 "x": 0,
-                "y": -1,
+                "y": -1.25,
                 "rotation": 0,
                 "scaleX": 1,
                 "scaleY": 1
@@ -1510,9 +2500,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -4,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1526,7 +2540,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
+                "duration": 9200,
                 "delay": -2300,
                 "easing": [
                   0.42,
@@ -1548,15 +2562,15 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -9,
-                    "rotation": 5,
+                    "y": -11.25,
+                    "rotation": 6.25,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": -2.5,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1649,9 +2663,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -4,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1665,7 +2703,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3800,
+                "duration": 8200,
                 "delay": -1600,
                 "easing": [
                   0.42,
@@ -1687,15 +2725,15 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -9,
-                    "rotation": 5,
+                    "y": -11.25,
+                    "rotation": 6.25,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": -2.5,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1788,9 +2826,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -4,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1804,7 +2866,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3800,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -1826,15 +2888,15 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -9,
-                    "rotation": 5,
+                    "y": -11.25,
+                    "rotation": 6.25,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": -2.5,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -1959,7 +3021,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -1967,7 +3029,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -2178,12 +3240,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.69,
+                    "x": 0,
+                    "y": 4,
+                    "rotation": 0,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.77,
+                    "x": 0,
+                    "y": -16,
+                    "rotation": -3,
+                    "scaleX": 0.97,
+                    "scaleY": 1.06
+                  },
+                  {
+                    "at": 0.85,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 2,
+                    "scaleX": 1.06,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.93,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -2194,7 +3288,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3200,
+                "duration": 7600,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -2202,7 +3296,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.95
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -9,
+                      "rotation": 0,
+                      "scaleX": 0.9,
+                      "scaleY": 1.15
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -7,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -9,
+                      "y": -3,
+                      "rotation": -9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 9,
+                      "y": -3,
+                      "rotation": 9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -3,
+                      "y": 0,
+                      "rotation": -3,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -4,
+                      "rotation": -2,
+                      "scaleX": 0.97,
+                      "scaleY": 1.05
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.94
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -18,
+                      "rotation": 0,
+                      "scaleX": 0.96,
+                      "scaleY": 1.06
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 2,
+                      "rotation": 0,
+                      "scaleX": 1.06,
+                      "scaleY": 0.93
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -11,
+                      "rotation": 0,
+                      "scaleX": 0.97,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 1,
+                      "rotation": 0,
+                      "scaleX": 1.03,
+                      "scaleY": 0.97
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -2224,34 +3608,34 @@ export const artwork: Artwork = {
               {
                 "at": 0.15,
                 "x": 0,
-                "y": 5,
+                "y": 6.25,
                 "rotation": 0,
-                "scaleX": 1.06,
-                "scaleY": 0.92
+                "scaleX": 1.075,
+                "scaleY": 0.9
               },
               {
                 "at": 0.42,
                 "x": 0,
-                "y": -27,
+                "y": -33.75,
                 "rotation": 0,
-                "scaleX": 0.94,
-                "scaleY": 1.09
+                "scaleX": 0.925,
+                "scaleY": 1.113
               },
               {
                 "at": 0.67,
                 "x": 0,
-                "y": 1,
+                "y": 1.25,
                 "rotation": 0,
-                "scaleX": 1.09,
-                "scaleY": 0.91
+                "scaleX": 1.113,
+                "scaleY": 0.888
               },
               {
                 "at": 0.82,
                 "x": 0,
-                "y": -8,
+                "y": -10,
                 "rotation": 0,
-                "scaleX": 0.98,
-                "scaleY": 1.03
+                "scaleX": 0.975,
+                "scaleY": 1.038
               },
               {
                 "at": 1,
@@ -2369,7 +3753,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -2377,7 +3761,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -2597,12 +3981,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.72,
+                    "x": 0,
+                    "y": -6,
+                    "rotation": -6,
+                    "scaleX": 1.02,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.81,
+                    "x": 0,
+                    "y": -4,
+                    "rotation": 5,
+                    "scaleX": 1.02,
+                    "scaleY": 1.03
+                  },
+                  {
+                    "at": 0.89,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.03,
+                    "scaleY": 0.97
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -2613,7 +4029,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4200,
+                "duration": 8400,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -2621,7 +4037,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.96
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -7.2,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -5.6,
+                      "rotation": 0,
+                      "scaleX": 0.936,
+                      "scaleY": 1.096
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -7.2,
+                      "y": -2.4,
+                      "rotation": -7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 7.2,
+                      "y": -2.4,
+                      "rotation": 7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -2.4,
+                      "y": 0,
+                      "rotation": -2.4,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -3.2,
+                      "rotation": -1.6,
+                      "scaleX": 0.976,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.952
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -14.4,
+                      "rotation": 0,
+                      "scaleX": 0.968,
+                      "scaleY": 1.048
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.6,
+                      "rotation": 0,
+                      "scaleX": 1.048,
+                      "scaleY": 0.944
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -8.8,
+                      "rotation": 0,
+                      "scaleX": 0.976,
+                      "scaleY": 1.032
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.8,
+                      "rotation": 0,
+                      "scaleX": 1.024,
+                      "scaleY": 0.976
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -2642,33 +4348,33 @@ export const artwork: Artwork = {
               },
               {
                 "at": 0.18,
-                "x": -12,
-                "y": -10,
-                "rotation": -5,
+                "x": -15,
+                "y": -12.5,
+                "rotation": -6.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.42,
-                "x": 9,
-                "y": -2,
-                "rotation": 4,
+                "x": 11.25,
+                "y": -2.5,
+                "rotation": 5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.68,
-                "x": -4,
+                "x": -5,
                 "y": 0,
-                "rotation": -2,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.84,
-                "x": 2,
+                "x": 2.5,
                 "y": 0,
-                "rotation": 1,
+                "rotation": 1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
@@ -2758,9 +4464,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -2774,7 +4504,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -2796,16 +4526,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -2927,7 +4657,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -2935,7 +4665,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -3061,12 +4791,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.73,
+                    "x": 0,
+                    "y": 3,
+                    "rotation": -5,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.82,
+                    "x": 0,
+                    "y": -5,
+                    "rotation": 4,
+                    "scaleX": 0.98,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.91,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.02,
+                    "scaleY": 0.98
+                  },
+                  {
+                    "at": 0.97,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -3077,7 +4839,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
+                "duration": 9200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -3085,7 +4847,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.972
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -4.95,
+                      "rotation": 0,
+                      "scaleX": 0.945,
+                      "scaleY": 1.083
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -3.85,
+                      "rotation": 0,
+                      "scaleX": 0.956,
+                      "scaleY": 1.066
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -4.95,
+                      "y": -1.65,
+                      "rotation": -4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 4.95,
+                      "y": -1.65,
+                      "rotation": 4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -1.65,
+                      "y": 0,
+                      "rotation": -1.65,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -2.2,
+                      "rotation": -1.1,
+                      "scaleX": 0.984,
+                      "scaleY": 1.028
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.967
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -9.9,
+                      "rotation": 0,
+                      "scaleX": 0.978,
+                      "scaleY": 1.033
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.1,
+                      "rotation": 0,
+                      "scaleX": 1.033,
+                      "scaleY": 0.962
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -6.05,
+                      "rotation": 0,
+                      "scaleX": 0.984,
+                      "scaleY": 1.022
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.55,
+                      "rotation": 0,
+                      "scaleX": 1.016,
+                      "scaleY": 0.984
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -3107,31 +5159,31 @@ export const artwork: Artwork = {
               {
                 "at": 0.2,
                 "x": 0,
-                "y": -9,
-                "rotation": -2,
+                "y": -11.25,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.46,
                 "x": 0,
-                "y": -8,
-                "rotation": 2,
+                "y": -10,
+                "rotation": 2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.72,
                 "x": 0,
-                "y": -3,
-                "rotation": -1,
+                "y": -3.75,
+                "rotation": -1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.86,
                 "x": 0,
-                "y": -1,
+                "y": -1.25,
                 "rotation": 0,
                 "scaleX": 1,
                 "scaleY": 1
@@ -3222,9 +5274,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -3238,7 +5314,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
+                "duration": 9400,
                 "delay": -2100,
                 "easing": [
                   0.42,
@@ -3260,16 +5336,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -3361,9 +5437,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -3377,7 +5477,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": -1500,
                 "easing": [
                   0.42,
@@ -3399,16 +5499,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -3500,9 +5600,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -3516,7 +5640,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -3538,16 +5662,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -3637,7 +5761,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -3645,7 +5769,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -3845,12 +5969,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.69,
+                    "x": 0,
+                    "y": 4,
+                    "rotation": 0,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.77,
+                    "x": 0,
+                    "y": -16,
+                    "rotation": -3,
+                    "scaleX": 0.97,
+                    "scaleY": 1.06
+                  },
+                  {
+                    "at": 0.85,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 2,
+                    "scaleX": 1.06,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.93,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -3861,7 +6017,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3200,
+                "duration": 7600,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -3869,7 +6025,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.95
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -9,
+                      "rotation": 0,
+                      "scaleX": 0.9,
+                      "scaleY": 1.15
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -7,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -9,
+                      "y": -3,
+                      "rotation": -9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 9,
+                      "y": -3,
+                      "rotation": 9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -3,
+                      "y": 0,
+                      "rotation": -3,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -4,
+                      "rotation": -2,
+                      "scaleX": 0.97,
+                      "scaleY": 1.05
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.94
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -18,
+                      "rotation": 0,
+                      "scaleX": 0.96,
+                      "scaleY": 1.06
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 2,
+                      "rotation": 0,
+                      "scaleX": 1.06,
+                      "scaleY": 0.93
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -11,
+                      "rotation": 0,
+                      "scaleX": 0.97,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 1,
+                      "rotation": 0,
+                      "scaleX": 1.03,
+                      "scaleY": 0.97
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -3891,34 +6337,34 @@ export const artwork: Artwork = {
               {
                 "at": 0.15,
                 "x": 0,
-                "y": 5,
+                "y": 6.25,
                 "rotation": 0,
-                "scaleX": 1.06,
-                "scaleY": 0.92
+                "scaleX": 1.075,
+                "scaleY": 0.9
               },
               {
                 "at": 0.42,
                 "x": 0,
-                "y": -27,
+                "y": -33.75,
                 "rotation": 0,
-                "scaleX": 0.94,
-                "scaleY": 1.09
+                "scaleX": 0.925,
+                "scaleY": 1.113
               },
               {
                 "at": 0.67,
                 "x": 0,
-                "y": 1,
+                "y": 1.25,
                 "rotation": 0,
-                "scaleX": 1.09,
-                "scaleY": 0.91
+                "scaleX": 1.113,
+                "scaleY": 0.888
               },
               {
                 "at": 0.82,
                 "x": 0,
-                "y": -8,
+                "y": -10,
                 "rotation": 0,
-                "scaleX": 0.98,
-                "scaleY": 1.03
+                "scaleX": 0.975,
+                "scaleY": 1.038
               },
               {
                 "at": 1,
@@ -4002,7 +6448,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -4010,7 +6456,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -4219,12 +6665,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.72,
+                    "x": 0,
+                    "y": -6,
+                    "rotation": -6,
+                    "scaleX": 1.02,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.81,
+                    "x": 0,
+                    "y": -4,
+                    "rotation": 5,
+                    "scaleX": 1.02,
+                    "scaleY": 1.03
+                  },
+                  {
+                    "at": 0.89,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.03,
+                    "scaleY": 0.97
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -4235,7 +6713,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4200,
+                "duration": 8400,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -4243,7 +6721,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.96
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -7.2,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -5.6,
+                      "rotation": 0,
+                      "scaleX": 0.936,
+                      "scaleY": 1.096
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -7.2,
+                      "y": -2.4,
+                      "rotation": -7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 7.2,
+                      "y": -2.4,
+                      "rotation": 7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -2.4,
+                      "y": 0,
+                      "rotation": -2.4,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -3.2,
+                      "rotation": -1.6,
+                      "scaleX": 0.976,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.952
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -14.4,
+                      "rotation": 0,
+                      "scaleX": 0.968,
+                      "scaleY": 1.048
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.6,
+                      "rotation": 0,
+                      "scaleX": 1.048,
+                      "scaleY": 0.944
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -8.8,
+                      "rotation": 0,
+                      "scaleX": 0.976,
+                      "scaleY": 1.032
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.8,
+                      "rotation": 0,
+                      "scaleX": 1.024,
+                      "scaleY": 0.976
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -4264,33 +7032,33 @@ export const artwork: Artwork = {
               },
               {
                 "at": 0.18,
-                "x": -12,
-                "y": -10,
-                "rotation": -5,
+                "x": -15,
+                "y": -12.5,
+                "rotation": -6.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.42,
-                "x": 9,
-                "y": -2,
-                "rotation": 4,
+                "x": 11.25,
+                "y": -2.5,
+                "rotation": 5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.68,
-                "x": -4,
+                "x": -5,
                 "y": 0,
-                "rotation": -2,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.84,
-                "x": 2,
+                "x": 2.5,
                 "y": 0,
-                "rotation": 1,
+                "rotation": 1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
@@ -4380,9 +7148,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -4396,7 +7188,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -4418,16 +7210,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -4515,7 +7307,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -4523,7 +7315,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -4646,12 +7438,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.73,
+                    "x": 0,
+                    "y": 3,
+                    "rotation": -5,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.82,
+                    "x": 0,
+                    "y": -5,
+                    "rotation": 4,
+                    "scaleX": 0.98,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.91,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.02,
+                    "scaleY": 0.98
+                  },
+                  {
+                    "at": 0.97,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -4662,7 +7486,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
+                "duration": 9200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -4670,7 +7494,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.972
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -4.95,
+                      "rotation": 0,
+                      "scaleX": 0.945,
+                      "scaleY": 1.083
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -3.85,
+                      "rotation": 0,
+                      "scaleX": 0.956,
+                      "scaleY": 1.066
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -4.95,
+                      "y": -1.65,
+                      "rotation": -4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 4.95,
+                      "y": -1.65,
+                      "rotation": 4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -1.65,
+                      "y": 0,
+                      "rotation": -1.65,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -2.2,
+                      "rotation": -1.1,
+                      "scaleX": 0.984,
+                      "scaleY": 1.028
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.967
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -9.9,
+                      "rotation": 0,
+                      "scaleX": 0.978,
+                      "scaleY": 1.033
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.1,
+                      "rotation": 0,
+                      "scaleX": 1.033,
+                      "scaleY": 0.962
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -6.05,
+                      "rotation": 0,
+                      "scaleX": 0.984,
+                      "scaleY": 1.022
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.55,
+                      "rotation": 0,
+                      "scaleX": 1.016,
+                      "scaleY": 0.984
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -4692,31 +7806,31 @@ export const artwork: Artwork = {
               {
                 "at": 0.2,
                 "x": 0,
-                "y": -9,
-                "rotation": -2,
+                "y": -11.25,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.46,
                 "x": 0,
-                "y": -8,
-                "rotation": 2,
+                "y": -10,
+                "rotation": 2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.72,
                 "x": 0,
-                "y": -3,
-                "rotation": -1,
+                "y": -3.75,
+                "rotation": -1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.86,
                 "x": 0,
-                "y": -1,
+                "y": -1.25,
                 "rotation": 0,
                 "scaleX": 1,
                 "scaleY": 1
@@ -4807,9 +7921,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -4823,7 +7961,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
+                "duration": 9400,
                 "delay": -2100,
                 "easing": [
                   0.42,
@@ -4845,16 +7983,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -4946,9 +8084,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -4962,7 +8124,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": -1500,
                 "easing": [
                   0.42,
@@ -4984,16 +8146,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -5085,9 +8247,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -5101,7 +8287,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -5123,16 +8309,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -5260,7 +8446,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -5268,7 +8454,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -5438,12 +8624,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.69,
+                    "x": 0,
+                    "y": 4,
+                    "rotation": 0,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.77,
+                    "x": 0,
+                    "y": -16,
+                    "rotation": -3,
+                    "scaleX": 0.97,
+                    "scaleY": 1.06
+                  },
+                  {
+                    "at": 0.85,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 2,
+                    "scaleX": 1.06,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.93,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -5454,7 +8672,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3200,
+                "duration": 7600,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -5462,7 +8680,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.95
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -9,
+                      "rotation": 0,
+                      "scaleX": 0.9,
+                      "scaleY": 1.15
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -7,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -9,
+                      "y": -3,
+                      "rotation": -9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 9,
+                      "y": -3,
+                      "rotation": 9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -3,
+                      "y": 0,
+                      "rotation": -3,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -4,
+                      "rotation": -2,
+                      "scaleX": 0.97,
+                      "scaleY": 1.05
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.94
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -18,
+                      "rotation": 0,
+                      "scaleX": 0.96,
+                      "scaleY": 1.06
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 2,
+                      "rotation": 0,
+                      "scaleX": 1.06,
+                      "scaleY": 0.93
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -11,
+                      "rotation": 0,
+                      "scaleX": 0.97,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 1,
+                      "rotation": 0,
+                      "scaleX": 1.03,
+                      "scaleY": 0.97
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -5484,34 +8992,34 @@ export const artwork: Artwork = {
               {
                 "at": 0.15,
                 "x": 0,
-                "y": 5,
+                "y": 6.25,
                 "rotation": 0,
-                "scaleX": 1.06,
-                "scaleY": 0.92
+                "scaleX": 1.075,
+                "scaleY": 0.9
               },
               {
                 "at": 0.42,
                 "x": 0,
-                "y": -27,
+                "y": -33.75,
                 "rotation": 0,
-                "scaleX": 0.94,
-                "scaleY": 1.09
+                "scaleX": 0.925,
+                "scaleY": 1.113
               },
               {
                 "at": 0.67,
                 "x": 0,
-                "y": 1,
+                "y": 1.25,
                 "rotation": 0,
-                "scaleX": 1.09,
-                "scaleY": 0.91
+                "scaleX": 1.113,
+                "scaleY": 0.888
               },
               {
                 "at": 0.82,
                 "x": 0,
-                "y": -8,
+                "y": -10,
                 "rotation": 0,
-                "scaleX": 0.98,
-                "scaleY": 1.03
+                "scaleX": 0.975,
+                "scaleY": 1.038
               },
               {
                 "at": 1,
@@ -5633,7 +9141,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -5641,7 +9149,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -5820,12 +9328,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.72,
+                    "x": 0,
+                    "y": -6,
+                    "rotation": -6,
+                    "scaleX": 1.02,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.81,
+                    "x": 0,
+                    "y": -4,
+                    "rotation": 5,
+                    "scaleX": 1.02,
+                    "scaleY": 1.03
+                  },
+                  {
+                    "at": 0.89,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.03,
+                    "scaleY": 0.97
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -5836,7 +9376,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4200,
+                "duration": 8400,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -5844,7 +9384,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.96
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -7.2,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -5.6,
+                      "rotation": 0,
+                      "scaleX": 0.936,
+                      "scaleY": 1.096
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -7.2,
+                      "y": -2.4,
+                      "rotation": -7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 7.2,
+                      "y": -2.4,
+                      "rotation": 7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -2.4,
+                      "y": 0,
+                      "rotation": -2.4,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -3.2,
+                      "rotation": -1.6,
+                      "scaleX": 0.976,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.952
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -14.4,
+                      "rotation": 0,
+                      "scaleX": 0.968,
+                      "scaleY": 1.048
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.6,
+                      "rotation": 0,
+                      "scaleX": 1.048,
+                      "scaleY": 0.944
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -8.8,
+                      "rotation": 0,
+                      "scaleX": 0.976,
+                      "scaleY": 1.032
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.8,
+                      "rotation": 0,
+                      "scaleX": 1.024,
+                      "scaleY": 0.976
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -5865,33 +9695,33 @@ export const artwork: Artwork = {
               },
               {
                 "at": 0.18,
-                "x": -12,
-                "y": -10,
-                "rotation": -5,
+                "x": -15,
+                "y": -12.5,
+                "rotation": -6.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.42,
-                "x": 9,
-                "y": -2,
-                "rotation": 4,
+                "x": 11.25,
+                "y": -2.5,
+                "rotation": 5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.68,
-                "x": -4,
+                "x": -5,
                 "y": 0,
-                "rotation": -2,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.84,
-                "x": 2,
+                "x": 2.5,
                 "y": 0,
-                "rotation": 1,
+                "rotation": 1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
@@ -5981,9 +9811,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -5997,7 +9851,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -6019,16 +9873,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -6132,7 +9986,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -6140,7 +9994,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -6233,12 +10087,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.73,
+                    "x": 0,
+                    "y": 3,
+                    "rotation": -5,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.82,
+                    "x": 0,
+                    "y": -5,
+                    "rotation": 4,
+                    "scaleX": 0.98,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.91,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.02,
+                    "scaleY": 0.98
+                  },
+                  {
+                    "at": 0.97,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -6249,7 +10135,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
+                "duration": 9200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -6257,7 +10143,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.972
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -4.95,
+                      "rotation": 0,
+                      "scaleX": 0.945,
+                      "scaleY": 1.083
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -3.85,
+                      "rotation": 0,
+                      "scaleX": 0.956,
+                      "scaleY": 1.066
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -4.95,
+                      "y": -1.65,
+                      "rotation": -4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 4.95,
+                      "y": -1.65,
+                      "rotation": 4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -1.65,
+                      "y": 0,
+                      "rotation": -1.65,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -2.2,
+                      "rotation": -1.1,
+                      "scaleX": 0.984,
+                      "scaleY": 1.028
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.967
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -9.9,
+                      "rotation": 0,
+                      "scaleX": 0.978,
+                      "scaleY": 1.033
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.1,
+                      "rotation": 0,
+                      "scaleX": 1.033,
+                      "scaleY": 0.962
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -6.05,
+                      "rotation": 0,
+                      "scaleX": 0.984,
+                      "scaleY": 1.022
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.55,
+                      "rotation": 0,
+                      "scaleX": 1.016,
+                      "scaleY": 0.984
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -6279,31 +10455,31 @@ export const artwork: Artwork = {
               {
                 "at": 0.2,
                 "x": 0,
-                "y": -9,
-                "rotation": -2,
+                "y": -11.25,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.46,
                 "x": 0,
-                "y": -8,
-                "rotation": 2,
+                "y": -10,
+                "rotation": 2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.72,
                 "x": 0,
-                "y": -3,
-                "rotation": -1,
+                "y": -3.75,
+                "rotation": -1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.86,
                 "x": 0,
-                "y": -1,
+                "y": -1.25,
                 "rotation": 0,
                 "scaleX": 1,
                 "scaleY": 1
@@ -6394,9 +10570,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -6410,7 +10610,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
+                "duration": 9400,
                 "delay": -2100,
                 "easing": [
                   0.42,
@@ -6432,16 +10632,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -6533,9 +10733,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -6549,7 +10773,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": -1500,
                 "easing": [
                   0.42,
@@ -6571,16 +10795,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -6672,9 +10896,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -6688,7 +10936,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -6710,16 +10958,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -6841,7 +11089,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -6849,7 +11097,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -7076,12 +11324,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.69,
+                    "x": 0,
+                    "y": 4,
+                    "rotation": 0,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.77,
+                    "x": 0,
+                    "y": -16,
+                    "rotation": -3,
+                    "scaleX": 0.97,
+                    "scaleY": 1.06
+                  },
+                  {
+                    "at": 0.85,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 2,
+                    "scaleX": 1.06,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.93,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -7092,7 +11372,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3200,
+                "duration": 7600,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -7100,7 +11380,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.95
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -9,
+                      "rotation": 0,
+                      "scaleX": 0.9,
+                      "scaleY": 1.15
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -7,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -9,
+                      "y": -3,
+                      "rotation": -9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 9,
+                      "y": -3,
+                      "rotation": 9,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -3,
+                      "y": 0,
+                      "rotation": -3,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 8,
+                      "rotation": 3,
+                      "scaleX": 1.1,
+                      "scaleY": 0.85
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -4,
+                      "rotation": -2,
+                      "scaleX": 0.97,
+                      "scaleY": 1.05
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 3,
+                      "rotation": 0,
+                      "scaleX": 1.04,
+                      "scaleY": 0.94
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -18,
+                      "rotation": 0,
+                      "scaleX": 0.96,
+                      "scaleY": 1.06
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 2,
+                      "rotation": 0,
+                      "scaleX": 1.06,
+                      "scaleY": 0.93
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -11,
+                      "rotation": 0,
+                      "scaleX": 0.97,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 1,
+                      "rotation": 0,
+                      "scaleX": 1.03,
+                      "scaleY": 0.97
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 7600,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -7122,34 +11692,34 @@ export const artwork: Artwork = {
               {
                 "at": 0.15,
                 "x": 0,
-                "y": 5,
+                "y": 6.25,
                 "rotation": 0,
-                "scaleX": 1.06,
-                "scaleY": 0.92
+                "scaleX": 1.075,
+                "scaleY": 0.9
               },
               {
                 "at": 0.42,
                 "x": 0,
-                "y": -27,
+                "y": -33.75,
                 "rotation": 0,
-                "scaleX": 0.94,
-                "scaleY": 1.09
+                "scaleX": 0.925,
+                "scaleY": 1.113
               },
               {
                 "at": 0.67,
                 "x": 0,
-                "y": 1,
+                "y": 1.25,
                 "rotation": 0,
-                "scaleX": 1.09,
-                "scaleY": 0.91
+                "scaleX": 1.113,
+                "scaleY": 0.888
               },
               {
                 "at": 0.82,
                 "x": 0,
-                "y": -8,
+                "y": -10,
                 "rotation": 0,
-                "scaleX": 0.98,
-                "scaleY": 1.03
+                "scaleX": 0.975,
+                "scaleY": 1.038
               },
               {
                 "at": 1,
@@ -7265,7 +11835,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -7273,7 +11843,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -7501,12 +12071,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.72,
+                    "x": 0,
+                    "y": -6,
+                    "rotation": -6,
+                    "scaleX": 1.02,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.81,
+                    "x": 0,
+                    "y": -4,
+                    "rotation": 5,
+                    "scaleX": 1.02,
+                    "scaleY": 1.03
+                  },
+                  {
+                    "at": 0.89,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.03,
+                    "scaleY": 0.97
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -7517,7 +12119,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4200,
+                "duration": 8400,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -7525,7 +12127,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.96
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -7.2,
+                      "rotation": 0,
+                      "scaleX": 0.92,
+                      "scaleY": 1.12
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -5.6,
+                      "rotation": 0,
+                      "scaleX": 0.936,
+                      "scaleY": 1.096
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -7.2,
+                      "y": -2.4,
+                      "rotation": -7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 7.2,
+                      "y": -2.4,
+                      "rotation": 7.2,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -2.4,
+                      "y": 0,
+                      "rotation": -2.4,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 6.4,
+                      "rotation": 2.4,
+                      "scaleX": 1.08,
+                      "scaleY": 0.88
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -3.2,
+                      "rotation": -1.6,
+                      "scaleX": 0.976,
+                      "scaleY": 1.04
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 2.4,
+                      "rotation": 0,
+                      "scaleX": 1.032,
+                      "scaleY": 0.952
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -14.4,
+                      "rotation": 0,
+                      "scaleX": 0.968,
+                      "scaleY": 1.048
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.6,
+                      "rotation": 0,
+                      "scaleX": 1.048,
+                      "scaleY": 0.944
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -8.8,
+                      "rotation": 0,
+                      "scaleX": 0.976,
+                      "scaleY": 1.032
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.8,
+                      "rotation": 0,
+                      "scaleX": 1.024,
+                      "scaleY": 0.976
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 8400,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -7546,33 +12438,33 @@ export const artwork: Artwork = {
               },
               {
                 "at": 0.18,
-                "x": -12,
-                "y": -10,
-                "rotation": -5,
+                "x": -15,
+                "y": -12.5,
+                "rotation": -6.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.42,
-                "x": 9,
-                "y": -2,
-                "rotation": 4,
+                "x": 11.25,
+                "y": -2.5,
+                "rotation": 5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.68,
-                "x": -4,
+                "x": -5,
                 "y": 0,
-                "rotation": -2,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.84,
-                "x": 2,
+                "x": 2.5,
                 "y": 0,
-                "rotation": 1,
+                "rotation": 1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
@@ -7662,9 +12554,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -7678,7 +12594,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -7700,16 +12616,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -7829,7 +12745,7 @@ export const artwork: Artwork = {
                         "at": 0.66,
                         "x": 0,
                         "y": 0,
-                        "rotation": 3,
+                        "rotation": 6,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -7837,7 +12753,7 @@ export const artwork: Artwork = {
                         "at": 0.74,
                         "x": 0,
                         "y": 0,
-                        "rotation": -2,
+                        "rotation": -4,
                         "scaleX": 1,
                         "scaleY": 1
                       },
@@ -7976,12 +12892,44 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.64,
                     "x": 0,
-                    "y": -2,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
-                    "scaleY": 1.02
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.73,
+                    "x": 0,
+                    "y": 3,
+                    "rotation": -5,
+                    "scaleX": 1.05,
+                    "scaleY": 0.94
+                  },
+                  {
+                    "at": 0.82,
+                    "x": 0,
+                    "y": -5,
+                    "rotation": 4,
+                    "scaleX": 0.98,
+                    "scaleY": 1.04
+                  },
+                  {
+                    "at": 0.91,
+                    "x": 0,
+                    "y": 1,
+                    "rotation": -2,
+                    "scaleX": 1.02,
+                    "scaleY": 0.98
+                  },
+                  {
+                    "at": 0.97,
+                    "x": 0,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
                   },
                   {
                     "at": 1,
@@ -7992,7 +12940,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
+                "duration": 9200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -8000,7 +12948,297 @@ export const artwork: Artwork = {
                   0.58,
                   1
                 ]
-              }
+              },
+              "idleVariants": [
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.71,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.972
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": -4.95,
+                      "rotation": 0,
+                      "scaleX": 0.945,
+                      "scaleY": 1.083
+                    },
+                    {
+                      "at": 0.87,
+                      "x": 0,
+                      "y": -3.85,
+                      "rotation": 0,
+                      "scaleX": 0.956,
+                      "scaleY": 1.066
+                    },
+                    {
+                      "at": 0.95,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.72,
+                      "x": -4.95,
+                      "y": -1.65,
+                      "rotation": -4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 4.95,
+                      "y": -1.65,
+                      "rotation": 4.95,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.9,
+                      "x": -1.65,
+                      "y": 0,
+                      "rotation": -1.65,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.82,
+                      "x": 0,
+                      "y": 4.4,
+                      "rotation": 1.65,
+                      "scaleX": 1.055,
+                      "scaleY": 0.917
+                    },
+                    {
+                      "at": 0.9,
+                      "x": 0,
+                      "y": -2.2,
+                      "rotation": -1.1,
+                      "scaleX": 0.984,
+                      "scaleY": 1.028
+                    },
+                    {
+                      "at": 0.97,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                },
+                {
+                  "frames": [
+                    {
+                      "at": 0,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.64,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 0.68,
+                      "x": 0,
+                      "y": 1.65,
+                      "rotation": 0,
+                      "scaleX": 1.022,
+                      "scaleY": 0.967
+                    },
+                    {
+                      "at": 0.74,
+                      "x": 0,
+                      "y": -9.9,
+                      "rotation": 0,
+                      "scaleX": 0.978,
+                      "scaleY": 1.033
+                    },
+                    {
+                      "at": 0.8,
+                      "x": 0,
+                      "y": 1.1,
+                      "rotation": 0,
+                      "scaleX": 1.033,
+                      "scaleY": 0.962
+                    },
+                    {
+                      "at": 0.86,
+                      "x": 0,
+                      "y": -6.05,
+                      "rotation": 0,
+                      "scaleX": 0.984,
+                      "scaleY": 1.022
+                    },
+                    {
+                      "at": 0.92,
+                      "x": 0,
+                      "y": 0.55,
+                      "rotation": 0,
+                      "scaleX": 1.016,
+                      "scaleY": 0.984
+                    },
+                    {
+                      "at": 0.98,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    },
+                    {
+                      "at": 1,
+                      "x": 0,
+                      "y": 0,
+                      "rotation": 0,
+                      "scaleX": 1,
+                      "scaleY": 1
+                    }
+                  ],
+                  "duration": 9200,
+                  "delay": 0,
+                  "easing": [
+                    0.42,
+                    0,
+                    0.58,
+                    1
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -8022,31 +13260,31 @@ export const artwork: Artwork = {
               {
                 "at": 0.2,
                 "x": 0,
-                "y": -9,
-                "rotation": -2,
+                "y": -11.25,
+                "rotation": -2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.46,
                 "x": 0,
-                "y": -8,
-                "rotation": 2,
+                "y": -10,
+                "rotation": 2.5,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.72,
                 "x": 0,
-                "y": -3,
-                "rotation": -1,
+                "y": -3.75,
+                "rotation": -1.25,
                 "scaleX": 1,
                 "scaleY": 1
               },
               {
                 "at": 0.86,
                 "x": 0,
-                "y": -1,
+                "y": -1.25,
                 "rotation": 0,
                 "scaleX": 1,
                 "scaleY": 1
@@ -8137,9 +13375,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -8153,7 +13415,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
+                "duration": 9400,
                 "delay": -2100,
                 "easing": [
                   0.42,
@@ -8175,16 +13437,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -8276,9 +13538,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -8292,7 +13578,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": -1500,
                 "easing": [
                   0.42,
@@ -8314,16 +13600,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
@@ -8415,9 +13701,33 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   },
                   {
-                    "at": 0.5,
+                    "at": 0.68,
                     "x": 0,
-                    "y": -5,
+                    "y": 0,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.8,
+                    "x": 0,
+                    "y": -11,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.9,
+                    "x": 0,
+                    "y": 2,
+                    "rotation": 0,
+                    "scaleX": 1,
+                    "scaleY": 1
+                  },
+                  {
+                    "at": 0.96,
+                    "x": 0,
+                    "y": 0,
                     "rotation": 0,
                     "scaleX": 1,
                     "scaleY": 1
@@ -8431,7 +13741,7 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 3500,
+                "duration": 8200,
                 "delay": 0,
                 "easing": [
                   0.42,
@@ -8453,16 +13763,16 @@ export const artwork: Artwork = {
                   {
                     "at": 0.35,
                     "x": 0,
-                    "y": -16,
-                    "rotation": 11,
+                    "y": -20,
+                    "rotation": 13.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },
                   {
                     "at": 0.68,
                     "x": 0,
-                    "y": -4,
-                    "rotation": -3,
+                    "y": -5,
+                    "rotation": -3.75,
                     "scaleX": 1,
                     "scaleY": 1
                   },

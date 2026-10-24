@@ -8,9 +8,9 @@ export const restMotion: Motion = {
   frames: [0, 1].map((at) => ({ at, x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1 })),
 };
 
-export function selectMotion(motion: NonNullable<ArtworkNode['motion']>, reacting: boolean, active: boolean): Motion {
+export function selectMotion(motion: NonNullable<ArtworkNode['motion']>, reacting: boolean, active: boolean, idle = motion.idle): Motion {
   if (!active) return restMotion;
-  return (reacting ? motion.reaction ?? motion.idle : motion.idle) ?? restMotion;
+  return (reacting ? motion.reaction ?? idle : idle) ?? restMotion;
 }
 
 /** CSS timing functions apply separately to each keyframe interval. */
@@ -38,8 +38,8 @@ export function sampleMotion(motion: Motion, elapsed: number, loop: boolean): Mo
   return { at: phase, x: mix('x'), y: mix('y'), rotation: mix('rotation'), scaleX: mix('scaleX'), scaleY: mix('scaleY') };
 }
 
-export function groupFrame(motion: NonNullable<ArtworkNode['motion']>, elapsed: number, reactionAt: number | null, active: boolean): MotionFrame {
+export function groupFrame(motion: NonNullable<ArtworkNode['motion']>, elapsed: number, reactionAt: number | null, active: boolean, idle = motion.idle): MotionFrame {
   const reacting = reactionAt !== null && !!motion.reaction && elapsed - reactionAt < motion.reaction.duration + motion.reaction.delay;
-  const selected = selectMotion(motion, reacting, active);
+  const selected = selectMotion(motion, reacting, active, idle);
   return sampleMotion(selected, reacting ? elapsed - reactionAt! : elapsed, !reacting);
 }

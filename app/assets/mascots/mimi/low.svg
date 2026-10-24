@@ -3,17 +3,21 @@
 <style><![CDATA[
   .mimi-svg{overflow:visible;touch-action:manipulation;user-select:none}
   .mimi-svg .tap-body{transform-origin:160px 205px}
-  .mimi-svg .breath{transform-origin:160px 210px;animation:mimi-breathe 3.15s ease-in-out infinite}
+  .mimi-svg .breath{transform-origin:160px 210px;animation:mimi-breathe 7.6s ease-in-out infinite}
   .mimi-svg .ear-left,.mimi-svg .ear-right{transform-box:fill-box}
   .mimi-svg .ear-left{transform-origin:80% 90%}
   .mimi-svg .ear-right{transform-origin:20% 90%}
   .mimi-svg .blink{transform-box:fill-box;transform-origin:center;animation:mimi-blink 6.3s infinite}
-  .mimi-svg .mold-float{animation:mimi-mold-float 3.8s ease-in-out infinite}
+  .mimi-svg .mold-float{animation:mimi-mold-float 8.2s ease-in-out infinite}
   .mimi-svg .mold-float.delay{animation-delay:-1.6s}
-  .mimi-svg .mold-float.slow{animation-duration:5.1s;animation-delay:-2.3s}
-  @keyframes mimi-breathe{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-2.1px) scale(1.01,1.018)}}
+  .mimi-svg .mold-float.slow{animation-duration:9.2s;animation-delay:-2.3s}
+  @keyframes mimi-breathe{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}69%{transform:translateY(4px) rotate(0) scale(1.05,.94)}77%{transform:translateY(-16px) rotate(-3deg) scale(.97,1.06)}85%{transform:translateY(2px) rotate(2deg) scale(1.06,.94)}93%{transform:translateY(0) rotate(0) scale(1)}}
   @keyframes mimi-blink{0%,38%,40%,81%,83%,100%{transform:scaleY(1)}39%,82%{transform:scaleY(.12)}}
-  @keyframes mimi-mold-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes mimi-mold-float{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
+  @keyframes mimi-idle-stretch{0%,64%,100%{transform:translateY(0) scale(1)}71%{transform:translateY(3px) scale(1.04,0.95)}80%{transform:translateY(-9px) scale(0.9,1.15)}87%{transform:translateY(-7px) scale(0.92,1.12)}95%{transform:translateY(0) scale(1)}}
+  @keyframes mimi-idle-sway{0%,64%,100%{transform:translate(0,0) rotate(0)}72%{transform:translate(-9px,-3px) rotate(-9deg)}82%{transform:translate(9px,-3px) rotate(9deg)}90%{transform:translate(-3px,0) rotate(-3deg)}97%{transform:translate(0,0) rotate(0)}}
+  @keyframes mimi-idle-bow{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}74%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}82%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}90%{transform:translateY(-4px) rotate(-2deg) scale(0.97,1.05)}97%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes mimi-idle-double-hop{0%,64%,100%{transform:translateY(0) scale(1)}68%{transform:translateY(3px) scale(1.04,0.94)}74%{transform:translateY(-18px) scale(0.96,1.06)}80%{transform:translateY(2px) scale(1.06,0.93)}86%{transform:translateY(-11px) scale(0.97,1.04)}92%{transform:translateY(1px) scale(1.03,0.97)}98%{transform:translateY(0) scale(1)}}
   @media(prefers-reduced-motion:reduce){.mimi-svg *, .mimi-svg{animation:none!important;transition:none!important}}
 
 
@@ -21,9 +25,9 @@
   .mimi-low .ear-right{animation:mimi-low-ear-r 5.2s ease-in-out infinite}
   .mimi-low .tap-body{transform-origin:160px 230px}
   .mimi-low.is-tapped .tap-body{animation:mimi-tap-happy 720ms cubic-bezier(.2,.8,.2,1) 1 both}
-  @keyframes mimi-low-ear-l{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(-8deg)}67%{transform:rotate(3deg)}73%{transform:rotate(0)}}
-  @keyframes mimi-low-ear-r{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(8deg)}68%{transform:rotate(-4deg)}73%{transform:rotate(0)}}
-  @keyframes mimi-tap-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-28px) scale(.94,1.1)}67%{transform:translateY(1px) scale(1.1,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+  @keyframes mimi-low-ear-l{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(-16deg)}67%{transform:rotate(6deg)}73%{transform:rotate(0)}}
+  @keyframes mimi-low-ear-r{0%,57%,100%{transform:rotate(0)}62%{transform:rotate(16deg)}68%{transform:rotate(-8deg)}73%{transform:rotate(0)}}
+  @keyframes mimi-tap-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(6.25px) scale(1.075,0.9)}42%{transform:translateY(-35px) scale(0.925,1.125)}67%{transform:translateY(1.25px) scale(1.125,0.888)}82%{transform:translateY(-10px) scale(0.975,1.038)}}
 ]]></style>
 
   <ellipse cx="160" cy="244" rx="74" ry="7" fill="#35544F" opacity=".09"/>

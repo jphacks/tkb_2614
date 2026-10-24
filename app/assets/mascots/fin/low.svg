@@ -2,29 +2,33 @@
 <style><![CDATA[
  .mo-fin{overflow:visible;user-select:none;touch-action:manipulation}
  .mo-fin .tap-body{transform-origin:160px 235px}
- .mo-fin .breath{transform-origin:160px 221px;animation:fin-breath 3.2s ease-in-out infinite}
+ .mo-fin .breath{transform-origin:160px 221px;animation:fin-breath 7.6s ease-in-out infinite}
  .mo-fin .blink{transform-box:fill-box;transform-origin:center;animation:fin-blink 5.8s infinite}
  .mo-fin .feature{transform-origin:167px 187px;animation:fin-feature 4.5s ease-in-out infinite}
- .mo-fin .mold-float{animation:fin-mold 3.5s ease-in-out infinite}
+ .mo-fin .mold-float{animation:fin-mold 8.2s ease-in-out infinite}
  .mo-fin .mold-float.late{animation-delay:-1.5s}
- .mo-fin .mold-float.slow{animation-duration:4.7s;animation-delay:-2.1s}
- .mo-fin.mo-medium .breath{animation-duration:4.2s}
- .mo-fin.mo-high .breath{animation-duration:5.1s}
+ .mo-fin .mold-float.slow{animation-duration:9.4s;animation-delay:-2.1s}
+ .mo-fin.mo-medium .breath{animation-duration:8.4s}
+ .mo-fin.mo-high .breath{animation-duration:9.2s}
  .mo-fin.mo-medium .feature{animation-duration:5.3s}
  .mo-fin.mo-high .feature{animation-duration:6.8s}
  .mo-fin.mo-low.is-tapped .tap-body{animation:fin-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
  .mo-fin.mo-medium.is-tapped .tap-body{animation:fin-startle .69s ease-out 1 both}
  .mo-fin.mo-high.is-tapped .tap-body{animation:fin-weak .78s ease-out 1 both}
  .mo-fin.is-tapped .mold-float{animation:fin-mold-startle .78s ease-out 1 both}
- @keyframes fin-breath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.02)}}
+ @keyframes fin-breath{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}69%{transform:translateY(4px) rotate(0) scale(1.05,.94)}77%{transform:translateY(-16px) rotate(-3deg) scale(.97,1.06)}85%{transform:translateY(2px) rotate(2deg) scale(1.06,.94)}93%{transform:translateY(0) rotate(0) scale(1)}}
  @keyframes fin-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
- @keyframes fin-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(3deg)}74%{transform:rotate(-2deg)}84%{transform:rotate(0)}}
- @keyframes fin-mold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
- @keyframes fin-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-27px) scale(.94,1.09)}67%{transform:translateY(1px) scale(1.09,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
- @keyframes fin-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
- @keyframes fin-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-9px) rotate(-2deg)}46%{transform:translateY(-8px) rotate(2deg)}72%{transform:translateY(-3px) rotate(-1deg)}86%{transform:translateY(-1px)}}
- @keyframes fin-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-16px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
- @media(prefers-reduced-motion:reduce){.mo-fin *{animation:none!important;transition:none!important}}
+ @keyframes fin-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(6deg)}74%{transform:rotate(-4deg)}84%{transform:rotate(0)}}
+ @keyframes fin-mold{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
+ @keyframes fin-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(6.25px) scale(1.075,0.9)}42%{transform:translateY(-33.75px) scale(0.925,1.113)}67%{transform:translateY(1.25px) scale(1.113,0.888)}82%{transform:translateY(-10px) scale(0.975,1.038)}}
+ @keyframes fin-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-15px,-12.5px) rotate(-6.25deg)}42%{transform:translate(11.25px,-2.5px) rotate(5deg)}68%{transform:translate(-5px,0) rotate(-2.5deg)}84%{transform:translate(2.5px,0) rotate(1.25deg)}}
+ @keyframes fin-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-11.25px) rotate(-2.5deg)}46%{transform:translateY(-10px) rotate(2.5deg)}72%{transform:translateY(-3.75px) rotate(-1.25deg)}86%{transform:translateY(-1.25px)}}
+ @keyframes fin-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-20px) rotate(13.75deg)}68%{transform:translateY(-5px) rotate(-3.75deg)}}
+  @keyframes fin-idle-stretch{0%,64%,100%{transform:translateY(0) scale(1)}71%{transform:translateY(3px) scale(1.04,0.95)}80%{transform:translateY(-9px) scale(0.9,1.15)}87%{transform:translateY(-7px) scale(0.92,1.12)}95%{transform:translateY(0) scale(1)}}
+  @keyframes fin-idle-sway{0%,64%,100%{transform:translate(0,0) rotate(0)}72%{transform:translate(-9px,-3px) rotate(-9deg)}82%{transform:translate(9px,-3px) rotate(9deg)}90%{transform:translate(-3px,0) rotate(-3deg)}97%{transform:translate(0,0) rotate(0)}}
+  @keyframes fin-idle-bow{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}74%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}82%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}90%{transform:translateY(-4px) rotate(-2deg) scale(0.97,1.05)}97%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes fin-idle-double-hop{0%,64%,100%{transform:translateY(0) scale(1)}68%{transform:translateY(3px) scale(1.04,0.94)}74%{transform:translateY(-18px) scale(0.96,1.06)}80%{transform:translateY(2px) scale(1.06,0.93)}86%{transform:translateY(-11px) scale(0.97,1.04)}92%{transform:translateY(1px) scale(1.03,0.97)}98%{transform:translateY(0) scale(1)}}
+  @media(prefers-reduced-motion:reduce){.mo-fin *{animation:none!important;transition:none!important}}
  ]]></style>
 <ellipse cx="161" cy="247" rx="85" ry="7" fill="#395450" opacity=".08"/>
         <g class="tap-body"><g class="breath"><g class="feature">

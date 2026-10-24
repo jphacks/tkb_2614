@@ -6,6 +6,7 @@ import type { Mood } from './homeState';
 import { artwork } from './mascot/artwork';
 import { MotionGroup } from './mascot/MotionGroup';
 import { MascotClock } from './mascot/MascotClock';
+import { mascotViewBox } from './mascot/viewport';
 import { characterNames, type ArtworkNode, type CharacterKind } from './mascot/types';
 
 const elements = { g: G, path: Path, ellipse: Ellipse, circle: Circle };
@@ -53,7 +54,7 @@ export function Character({ mood, size, character = 'mimi', active = true }: {
       accessibilityHint="タップするとキャラクターが反応します"
       style={{ width: size, height: size, opacity: mood === 'sleep' ? 0.45 : 1 }}
     >
-      <Svg width={size} height={size} viewBox="0 0 320 280" accessible={false}>
+      <Svg width={size} height={size} viewBox={mascotViewBox} preserveAspectRatio="xMidYMid meet" accessible={false}>
         <Drawing key={`${character}-${mood}`} nodes={artwork[character][levels[mood]]} clock={clock} />
       </Svg>
     </Pressable>
