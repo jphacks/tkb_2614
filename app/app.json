@@ -9,15 +9,6 @@
     "plugins": [
       "expo-font",
       [
-        "expo-camera",
-        {
-          "cameraPermission": "部屋の映像にキャラクターを表示するため、カメラを使用します。",
-          "microphonePermission": false,
-          "recordAudioAndroid": false,
-          "barcodeScannerEnabled": false
-        }
-      ],
-      [
         "react-native-ble-plx",
         {
           "isBackgroundEnabled": false,
