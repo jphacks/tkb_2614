@@ -161,7 +161,7 @@ ESP32 は、計測時刻が開始時刻以上の記録を、古い順にデー�
 | 未同期のとき | 時刻 0 で記録 | 記録しない |
 | 終了の印 | 12 バイトの 0 | 8 バイトの 0 |
 
-アプリの `decodeLogRecord`（`app/src/domain/measurement.ts`）や `MeasurementSource` の `fetchSince` / `ack` はバージョン 1 の前提なので、バージョン 2 に合わせて直す必要がある。
+アプリ側の実装は `app/src/data/ble/protocol.ts`（バイト形式）と `app/src/data/ble/BleMeasurementSource.ts`（スキャン〜受信）にある。
 
 ## TypeScript でのデコード例
 
