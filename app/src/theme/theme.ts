@@ -29,6 +29,7 @@ export const type = {
   readingUnit: { fontFamily: fonts.medium, fontSize: 45, lineHeight: 52 },
   /** グラフのカードに出す最新値。 */
   headline: { fontFamily: fonts.semiBold, fontSize: 32, lineHeight: 40 },
+  body: { fontFamily: fonts.medium, fontSize: 16, lineHeight: 24, letterSpacing: 0.5 },
   label: { fontFamily: fonts.medium, fontSize: 14, lineHeight: 20, letterSpacing: 0.1 },
 } as const satisfies Record<string, TextStyle>;
 
