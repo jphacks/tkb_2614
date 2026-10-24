@@ -7,8 +7,8 @@ import { schemes, type ColorScheme } from './schemes';
 export type { ColorScheme };
 
 /** リスクごとに配色全体を切り替える。リスク不明（未接続など）は low の配色を使う。 */
-export function schemeFor(risk: MoldRiskLevel | null, dark: boolean): ColorScheme {
-  return schemes[`${risk ?? 'low'}-${dark ? 'dark' : 'light'}`];
+export function schemeFor(risk: MoldRiskLevel | null): ColorScheme {
+  return schemes[`${risk ?? 'low'}-light`];
 }
 
 export const SchemeContext = createContext<ColorScheme>(schemes['low-light']);
