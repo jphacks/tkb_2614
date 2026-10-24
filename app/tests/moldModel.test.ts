@@ -11,10 +11,10 @@ const humid = { temperatureC: 25, relativeHumidityPercent: 90 };
 const dry = { temperatureC: 20, relativeHumidityPercent: 40 };
 
 /** 古い順の条件を、predictが受け取る最新順の毎時履歴にする。hourOfで計測の間隔を空けられる。 */
-function history(conditions: readonly Condition[], { start = JANUARY, hourOf = (i: number) => i, synced = true } = {}): Measurement[] {
+function history(conditions: readonly Condition[], { start = JANUARY, hourOf = (i: number) => i } = {}): Measurement[] {
   return conditions.map((c, i) => {
     const at = new Date(start + hourOf(i) * HOUR_MS).toISOString();
-    return { seq: hourOf(i) + 1, deviceId: 'test', ...c, measuredAt: synced ? at : null, receivedAt: at };
+    return { deviceId: 'test', ...c, measuredAt: at, receivedAt: at };
   }).reverse();
 }
 const hours = (condition: Condition, count: number) => Array.from({ length: count }, () => condition);
@@ -82,13 +82,12 @@ test('乾燥に変わると6時間は減り、24時間までは横ばい、そ�
 
 test('短い欠測は直前の条件で埋め、長い欠測ではMを保持して参考値に戻す', () => {
   const continuous = (count: number) => predictor.predict(history(hours(humid, count)))!;
-  const withGap = (missing: number, synced = true) =>
-    predictor.predict(history(hours(humid, 200), { hourOf: (i) => (i < 100 ? i : i + missing), synced }))!;
+  const withGap = (missing: number) =>
+    predictor.predict(history(hours(humid, 200), { hourOf: (i) => (i < 100 ? i : i + missing) }))!;
   assert.equal(withGap(2).moldIndex, continuous(202).moldIndex);
   assert.equal(withGap(2).isProvisional, false);
   assert.equal(withGap(96).moldIndex, continuous(200).moldIndex);
   assert.equal(withGap(96).isProvisional, true);
-  assert.deepEqual(withGap(96, false), withGap(96));
 });
 
 test('連続した観測が7日未満なら参考値', () => {

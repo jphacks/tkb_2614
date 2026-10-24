@@ -3,29 +3,27 @@ import { test } from 'node:test';
 import { createMockMeasurementSource } from '../src/data/mock/MockMeasurementSource';
 
 const samples = [{ temperatureC: 20, relativeHumidityPercent: 40 }, { temperatureC: 25, relativeHumidityPercent: 80 }];
-test('モックは毎時の履歴をバッチで返し、ACKまで再送し、同じ時刻の再取得で増えない', async () => {
-  let now = Date.UTC(2026, 9, 1, 1);
+test('モックはsince以上の毎時の履歴を古い順に返し、再起動しても同じ時刻は同じ値', async () => {
+  let now = Date.UTC(2026, 9, 1, 1, 30);
   const source = createMockMeasurementSource({ samples, delayMs: 0, now: () => now });
   const signal = new AbortController().signal;
-  const records = await source.fetchSince(0, signal);
-  assert.deepEqual(records.map((r) => r.seq), [1, 2]);
+  const records = await source.fetchSince(null, signal);
+  assert.deepEqual(records.map((r) => r.measuredAt), ['2026-10-01T00:00:00.000Z', '2026-10-01T01:00:00.000Z']);
   assert.equal(records[1].temperatureC, 25);
-  assert.equal((await source.fetchSince(0, signal)).length, 2);
-  await source.ack(2, signal);
-  assert.deepEqual(await source.fetchSince(0, signal), []);
   now += 3600000;
-  assert.deepEqual((await source.fetchSince(2, signal)).map((r) => r.seq), [3]);
+  const since = new Date(records[1].measuredAt);
+  assert.deepEqual((await source.fetchSince(since, signal)).map((r) => r.measuredAt), ['2026-10-01T01:00:00.000Z', '2026-10-01T02:00:00.000Z']);
   const restarted = createMockMeasurementSource({ samples, delayMs: 0, now: () => now });
-  assert.deepEqual((await restarted.fetchSince(2, signal)).map((r) => r.seq), [3]);
+  assert.deepEqual((await restarted.fetchSince(since, signal)).map((r) => r.temperatureC), [25, 20]);
 });
 test('モックはキャンセル・不正設定・失敗を扱う', async () => {
   const source = createMockMeasurementSource({ delayMs: 0, failEvery: 2 });
   const controller = new AbortController();
   controller.abort();
-  await assert.rejects(source.fetchSince(0, controller.signal), { name: 'AbortError' });
+  await assert.rejects(source.fetchSince(null, controller.signal), { name: 'AbortError' });
   const signal = new AbortController().signal;
-  await source.fetchSince(0, signal);
-  await assert.rejects(source.fetchSince(0, signal), /取得エラー/);
+  await source.fetchSince(null, signal);
+  await assert.rejects(source.fetchSince(null, signal), /取得エラー/);
   assert.throws(() => createMockMeasurementSource({ samples: [] }));
   assert.throws(() => createMockMeasurementSource({ delayMs: -1 }));
   assert.throws(() => createMockMeasurementSource({ failEvery: 0.5 }));

@@ -45,9 +45,7 @@ function riskLevel(moldIndex: number): MoldRiskLevel {
   return moldIndex < 1 ? 'low' : moldIndex < 3 ? 'medium' : 'high';
 }
 
-/** 間隔をmeasuredAtの差、時刻未同期ならseqの差（毎時1件）から求める。 */
 function hoursBetween(previous: Measurement, next: Measurement) {
-  if (previous.measuredAt === null || next.measuredAt === null) return next.seq - previous.seq;
   return Math.round((Date.parse(next.measuredAt) - Date.parse(previous.measuredAt)) / HOUR_MS);
 }
 
@@ -60,9 +58,9 @@ export function createVttMoldPredictor({
   humidityOffsetPercent = 0,
   cmat = 0.5,
 }: { surfaceDeltaByMonthC?: readonly number[]; humidityOffsetPercent?: number; cmat?: number } = {}): MoldPredictor {
-  function surfaceOf({ temperatureC, relativeHumidityPercent, measuredAt, receivedAt }: Measurement): Surface | null {
+  function surfaceOf({ temperatureC, relativeHumidityPercent, measuredAt }: Measurement): Surface | null {
     if (temperatureC === null || relativeHumidityPercent === null) return null;
-    const deltaC = surfaceDeltaByMonthC[new Date(measuredAt ?? receivedAt).getMonth()];
+    const deltaC = surfaceDeltaByMonthC[new Date(measuredAt).getMonth()];
     return surfaceConditions(temperatureC, relativeHumidityPercent, deltaC, humidityOffsetPercent);
   }
 

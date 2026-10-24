@@ -9,23 +9,24 @@ interface KeyValueStorage {
 }
 
 export function createMeasurementStore(storage: KeyValueStorage): MeasurementStore {
-  const key = (deviceId: string) => `measurements:v1:${deviceId}`;
+  // v1はseqが主キーだった形式。計測時刻が主キーのv2とは互換がないので読まない。
+  const key = (deviceId: string) => `measurements:v2:${deviceId}`;
   return {
     async load(deviceId) {
       const value = await storage.getItem(key(deviceId));
       if (value === null) return [];
       const records: unknown = JSON.parse(value);
       if (!Array.isArray(records)) throw new Error('保存済み履歴が壊れています。');
-      let previousSeq = 0;
+      let previous = -Infinity;
       for (const record of records) {
-        if (!record || record.deviceId !== deviceId || !Number.isInteger(record.seq) || record.seq <= previousSeq || record.seq > 0xffffffff ||
+        const time = typeof record?.measuredAt === 'string' ? Date.parse(record.measuredAt) : NaN;
+        if (!record || record.deviceId !== deviceId || !(time > previous) ||
           ![record.temperatureC, record.relativeHumidityPercent].every((v) => v === null || (typeof v === 'number' && Number.isFinite(v))) ||
           (record.relativeHumidityPercent !== null && (record.relativeHumidityPercent < 0 || record.relativeHumidityPercent > 100)) ||
-          !(record.measuredAt === null || (typeof record.measuredAt === 'string' && Number.isFinite(Date.parse(record.measuredAt)))) ||
           typeof record.receivedAt !== 'string' || !Number.isFinite(Date.parse(record.receivedAt))) {
-          throw new Error('保存済み履歴が壊れています。ACKせず同期を停止します。');
+          throw new Error('保存済み履歴が壊れています。上書きせず同期を停止します。');
         }
-        previousSeq = record.seq;
+        previous = time;
       }
       return records as Measurement[];
     },
