@@ -6,7 +6,8 @@ const sources = [
   require('../../../assets/sounds/puni.wav'),
   require('../../../assets/sounds/pyon.wav'),
   require('../../../assets/sounds/poyon.wav'),
-  require('../../../assets/sounds/munyu.wav'),
+  require('../../../assets/sounds/boyon.wav'),
+  require('../../../assets/sounds/pyopyon.wav'),
 ];
 
 /** Returns a function that plays a random tap sound, never the same one twice in a row. */

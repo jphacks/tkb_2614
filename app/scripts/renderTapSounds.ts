@@ -1,6 +1,6 @@
 // キャラをタップしたときの効果音を assets/sounds/ に書き出す。音を変えたら `pnpm render:tap-sounds` で作り直す。
 // 素材のライセンスを気にしなくて済むよう、正弦波を合成して作る。
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const outDir = path.resolve(__dirname, '../assets/sounds');
@@ -67,11 +67,20 @@ const sounds: Record<string, Tone[]> = {
     { start: 0, duration: 0.1, from: 900, to: 600, volume: 0.55 },
     { start: 0.09, duration: 0.16, from: 1100, to: 700, volume: 0.45 },
   ],
-  // むにゅ：ゆれながらゆっくり下がる。
-  munyu: [{ start: 0, duration: 0.26, from: 760, to: 420, volume: 0.6, wobble: 0.08 }],
+  // ぼよん：低いところから跳ね上がる。
+  boyon: [{ start: 0, duration: 0.18, from: 240, to: 760, volume: 0.65 }],
+  // ぴょぴょん：2回続けて跳ね上がる。
+  pyopyon: [
+    { start: 0, duration: 0.09, from: 500, to: 1100, volume: 0.5 },
+    { start: 0.1, duration: 0.14, from: 700, to: 1700, volume: 0.5 },
+  ],
 };
 
 mkdirSync(outDir, { recursive: true });
+// 音を減らしたときに古いファイルが残らないよう、書き出す前に消す。
+for (const file of readdirSync(outDir)) {
+  if (file.endsWith('.wav')) rmSync(path.join(outDir, file));
+}
 for (const [name, tones] of Object.entries(sounds)) {
   const wav = toWav(render(tones));
   writeFileSync(path.join(outDir, `${name}.wav`), wav);
