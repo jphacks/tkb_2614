@@ -30,6 +30,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
+  const [arVisible, setArVisible] = useState(false);
+  const [arSettled, setArSettled] = useState(false);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -42,7 +44,21 @@ export function HomeScreen({ services }: { services: AppServices }) {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           contentOffset={{ x: width * MAIN_PAGE, y: 0 }}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+              useNativeDriver: false,
+              listener: (event: { nativeEvent: { contentOffset: { x: number } } }) => {
+                // ARが画面に入り始めたら起動し、メインに戻り切るまで維持する。
+                const x = event.nativeEvent.contentOffset.x;
+                const visible = x > width * MAIN_PAGE + 1;
+                // 権限の要求はARページに着地してから行う。
+                const settled = x >= width * (MAIN_PAGE + 1) - 1;
+                setArVisible((previous) => previous === visible ? previous : visible);
+                setArSettled((previous) => previous === settled ? previous : settled);
+              },
+            },
+          )}
           scrollEventThrottle={16}
         >
           <View style={{ width }}>
@@ -52,7 +68,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} status={status} onRefresh={refresh} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} />
+            <ARPage risk={home.risk} mood={home.mood} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
