@@ -61,7 +61,7 @@ export function ARScreen({ onBack }: { onBack: () => void }) {
       )}
       <SafeAreaView style={styles.overlay}>
         <View style={styles.header}>
-          <Button title="センサー画面に戻る" onPress={onBack} color="#a9d9ff" />
+          <Button title="ホームに戻る" onPress={onBack} color="#a9d9ff" />
           <Text style={styles.title}>AR（仮）</Text>
         </View>
         {showCamera && cameraReady ? <MovingCharacters /> : (

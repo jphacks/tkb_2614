@@ -2,7 +2,9 @@
 
 ## 今できること
 
-毎時の温湿度履歴をモックからまとめて同期し、端末のAsyncStorageに保存してからACKする。起動時・バックグラウンドからの復帰時・「今すぐ同期」・15分間隔で同期する。iOSのinactiveでは中断しない。最新の計測値・計測時刻・受信時刻・履歴・仮の予測を表示する。履歴は起動をまたいで保持し、画面は最新30件に絞る。
+毎時の温湿度履歴をモックからまとめて同期し、端末のAsyncStorageに保存してからACKする。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで保持する。
+
+画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [AR]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。AR はカメラを使わないモック。
 
 BLE通信・権限設定・本当の予測モデルは未実装。BLEのUUID・要求・バッチ転送・ACKの送信形式はハード担当と確定し、アプリとファームウェアを同じコミットで実装する。現在のインターフェースはアプリ内の抽象化であり、通信仕様ではない。
 
@@ -19,7 +21,7 @@ pnpm lint
 pnpm test
 ```
 
-モック構成はExpo Goを想定。BLEのネイティブライブラリを追加したらdevelopment buildと実機確認が必要。単一画面のため、既存の `index.ts → App.tsx` がエントリ。
+モック構成はExpo Goを想定。BLEのネイティブライブラリを追加したらdevelopment buildと実機確認が必要。ページャーは ScrollView の pagingEnabled で作っており、ルーティングはないため、既存の `index.ts → App.tsx` がエントリ。
 
 ## 実装の分担
 
@@ -29,7 +31,11 @@ pnpm test
 - `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。同一同期サービス内では手動更新や再開も直列化。
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。仮予測は欠測・時刻未同期ならnull。
-- `src/screens/EnvironmentScreen.tsx`: 最新値・欠測表示・最新30件の表示・手動同期。
+- `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
+- `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
+- `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
+- `src/ui/`: Character（おむすび形のメインキャラ）・Mold・Reading・PageIndicator・ChartCard。
+- `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`MainPage`・`GraphPage`・`ARPage` が各ページ。
 - `tests/`: Node test runnerとtsxによる同期・デコード・保存・モックの回帰テスト。Node型はtests/tsconfig.jsonに限定。
 
 同期処理のabortとタイムアウトはアプリ側の待機を解除する。実BLEアダプターはsignalによるネイティブ操作のキャンセル・接続回復も実装する。abortを無視するネイティブ操作そのものの終了までは保証できない。
@@ -50,7 +56,7 @@ pnpm test
 
 - 起動時に保存済み履歴を復元し、同期後も同じseqを重複表示しない。
 - アプリを終了・再起動しても履歴が残り、保存済みseqから同期する。
-- 「今すぐ同期」で新しい毎時計測がなければ履歴が増えない。
+- pull-to-refresh で新しい毎時計測がなければ履歴が増えない。
 - failEveryで失敗しても保存済み履歴が残り、次回同期で復旧する。
 - バックグラウンドで停止し、復帰直後に同期する。iOSの権限ダイアログやコントロールセンターによるinactiveでは中断しない。
 - 実機の描画・ネイティブストレージ・BLEは自動テストでは検証していないため実機で確認する。
