@@ -3,11 +3,12 @@ import type { Measurement } from './measurement';
 export type MoldRiskLevel = 'low' | 'medium' | 'high';
 
 export interface MoldPrediction {
+  /** VTTのカビ指数M（0〜6）。 */
+  readonly moldIndex: number;
   readonly riskLevel: MoldRiskLevel;
-  readonly horizonHours: number;
-  readonly generatedAt: string;
+  /** 今の条件が続いた場合にM=1へ達するまでの日数。生えない条件ならnull、到達済みなら0。 */
+  readonly daysToMoldIndex1: number | null;
   readonly basedOnReceivedAt: string;
-  readonly isPlaceholder: boolean;
 }
 
 export interface MoldPredictor {
