@@ -30,8 +30,3 @@ export type Artwork = Record<CharacterKind, Record<MoldRiskLevel, ArtworkNode[]>
 export function nextCharacter(current: CharacterKind, direction: number): CharacterKind {
   return characterKinds[(characterKinds.indexOf(current) + direction + characterKinds.length) % characterKinds.length];
 }
-/** Horizontal gestures belong to the page navigator. Small vertical movements are taps. */
-export function swipeDirection(dx: number, dy: number): -1 | 0 | 1 {
-  if (Math.abs(dy) < 44 || Math.abs(dy) <= Math.abs(dx) * 1.4) return 0;
-  return dy < 0 ? 1 : -1;
-}

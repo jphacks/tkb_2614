@@ -23,12 +23,11 @@ function Drawing({ nodes, tap, active }: { nodes: ArtworkNode[]; tap: number; ac
   });
 }
 
-export function Character({ mood, size, character = 'mimi', active = true, tapSignal = 0 }: {
+export function Character({ mood, size, character = 'mimi', active = true }: {
   mood: Mood;
   size: number;
   character?: CharacterKind;
   active?: boolean;
-  tapSignal?: number;
 }) {
   const [tap, setTap] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(true);
@@ -48,7 +47,7 @@ export function Character({ mood, size, character = 'mimi', active = true, tapSi
       style={{ width: size, height: size, opacity: mood === 'sleep' ? 0.45 : 1 }}
     >
       <Svg width={size} height={size} viewBox="0 0 320 280" accessible={false}>
-        <Drawing key={`${character}-${mood}`} nodes={artwork[character][levels[mood]]} tap={tap + tapSignal} active={animate} />
+        <Drawing key={`${character}-${mood}`} nodes={artwork[character][levels[mood]]} tap={tap} active={animate} />
       </Svg>
     </Pressable>
   );

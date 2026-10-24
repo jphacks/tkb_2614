@@ -2,14 +2,11 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { artwork } from '../src/ui/mascot/artwork';
-import { characterKinds, nextCharacter, swipeDirection, type ArtworkNode } from '../src/ui/mascot/types';
+import { characterKinds, nextCharacter, type ArtworkNode } from '../src/ui/mascot/types';
 import { restMotion, selectMotion } from '../src/ui/mascot/motionState';
 
-test('縦スワイプで5種類を循環し、横スワイプと小さな動きは切り替えない', () => {
-  assert.equal(swipeDirection(4, -80), 1);
-  assert.equal(swipeDirection(-4, 80), -1);
-  assert.equal(swipeDirection(80, 30), 0);
-  assert.equal(swipeDirection(0, 20), 0);
+test('切り替えボタンは5種類を順に循環する', () => {
+  assert.deepEqual(characterKinds.map((kind) => nextCharacter(kind, 1)), ['antenna', 'fin', 'mushroom', 'cloudtail', 'mimi']);
   assert.equal(nextCharacter('cloudtail', 1), 'mimi');
   assert.equal(nextCharacter('mimi', -1), 'cloudtail');
   for (const kind of characterKinds) assert.equal(nextCharacter(nextCharacter(kind, 1), -1), kind);
