@@ -1,4 +1,4 @@
-import type { Measurement } from '../domain/measurement';
+import { type Measurement, STALE_AFTER_MS } from '../domain/measurement';
 import type { MoldPrediction, MoldRiskLevel } from '../domain/prediction';
 import type { SyncStatus } from '../hooks/useMeasurements';
 
@@ -15,8 +15,8 @@ export interface HomeState {
   readonly reading: ReadingState;
 }
 
-/** これより古い計測値は薄く表示する。計測は1時間ごとなので、1回取りこぼしたら古いとみなす。 */
-export const STALE_AFTER_MS = 2 * 60 * 60 * 1000;
+/** これより古い計測値は薄く表示する。窓の開閉判定と同じ値を使う。 */
+export { STALE_AFTER_MS };
 
 const moods: Record<MoldRiskLevel, Mood> = { low: 'fine', medium: 'worried', high: 'dizzy' };
 
