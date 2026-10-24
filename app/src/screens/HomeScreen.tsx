@@ -6,10 +6,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
+import { useOutdoorWeather } from '../hooks/useOutdoorWeather';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
+import { WeatherDebug } from '../ui/WeatherDebug';
 import { ARPage } from './ARPage';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
@@ -22,6 +24,7 @@ const INDICATOR_AREA = 32 + space.s24;
 export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, refresh } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
+  const outdoor = useOutdoorWeather(services.weatherSource);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
   const scheme = schemeFor(home.risk);
@@ -65,7 +68,13 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} status={status} onRefresh={refresh} bottomInset={bottomInset} />
+            <MainPage
+              home={home}
+              status={status}
+              onRefresh={refresh}
+              bottomInset={bottomInset}
+              debugWeather={<WeatherDebug {...outdoor} label={services.weatherSource.label} />}
+            />
           </View>
           <View style={{ width }}>
             <ARPage risk={home.risk} mood={home.mood} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />

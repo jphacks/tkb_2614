@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import type { SyncStatus } from '../hooks/useMeasurements';
@@ -8,11 +8,13 @@ import type { HomeState } from '../ui/homeState';
 import { Reading } from '../ui/Reading';
 
 /** キャラと湿度だけを置く。更新は pull-to-refresh で行う。 */
-export function MainPage({ home, status, onRefresh, bottomInset }: {
+export function MainPage({ home, status, onRefresh, bottomInset, debugWeather }: {
   home: HomeState;
   status: SyncStatus;
   onRefresh: () => void;
   bottomInset: number;
+  /** TODO: 天気の取得確認用の仮表示。 */
+  debugWeather?: ReactNode;
 }) {
   const scheme = useScheme();
   const [pulled, setPulled] = useState(false);
@@ -33,6 +35,7 @@ export function MainPage({ home, status, onRefresh, bottomInset }: {
     >
       <Character mood={home.mood} size={276} />
       <Reading state={home.reading} />
+      {debugWeather}
     </ScrollView>
   );
 }
