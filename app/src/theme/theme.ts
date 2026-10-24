@@ -30,6 +30,6 @@ export const type = {
   label: { fontFamily: fonts.medium, fontSize: 14, lineHeight: 20, letterSpacing: 0.1 },
 } as const satisfies Record<string, TextStyle>;
 
-export const space = { s4: 4, s8: 8, s12: 12, s16: 16, s24: 24, s32: 32, s48: 48 } as const;
+export const space = { s8: 8, s12: 12, s16: 16, s24: 24 } as const;
 
 export const corner = { extraLargeIncreased: 32, full: 9999 } as const;

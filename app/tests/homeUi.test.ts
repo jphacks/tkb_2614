@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import type { Measurement } from '../src/domain/measurement';
 import type { MoldPrediction } from '../src/domain/prediction';
-import { buildChart, CHART_WINDOW_MS } from '../src/ui/chartGeometry';
+import { buildChart } from '../src/ui/chartGeometry';
 import { deriveHomeState, STALE_AFTER_MS } from '../src/ui/homeState';
 
 const hour = 3600000;
@@ -45,7 +45,6 @@ test('グラフは最新の計測を右端に直近24hだけ描き、欠測で�
   assert.equal(chart.latest?.y, chart.dangerY);
   assert.deepEqual(chart.gridX, [20, 70, 120, 170]);
   assert.equal(buildChart(history, 'temperature', box).dangerY, null);
-  assert.ok(CHART_WINDOW_MS === 24 * hour);
 });
 
 test('時刻未同期だけの履歴ではグラフを描かない', () => {

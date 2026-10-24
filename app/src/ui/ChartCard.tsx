@@ -47,8 +47,8 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
           {chart.paths.map((d) => (
             <Path key={d} d={d} stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" fill="none" />
           ))}
-          {chart.points.map((p) => (
-            <Circle key={`${p.x}`} cx={p.x} cy={p.y} r={3} fill={color} />
+          {chart.points.map((p, i) => (
+            <Circle key={`${i}-${p.x}`} cx={p.x} cy={p.y} r={3} fill={color} />
           ))}
           {latest && (
             <>

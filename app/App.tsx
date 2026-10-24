@@ -7,9 +7,10 @@ import { createAppServices } from './src/services/createAppServices';
 
 export default function App() {
   const [services] = useState(createAppServices);
-  const [fontsLoaded] = useFonts({ Roboto_500Medium, Roboto_600SemiBold });
+  const [fontsLoaded, fontError] = useFonts({ Roboto_500Medium, Roboto_600SemiBold });
 
-  if (!fontsLoaded) return null;
+  // 読み込みに失敗したらシステムフォントで表示する。
+  if (!fontsLoaded && !fontError) return null;
   return (
     <SafeAreaProvider>
       <HomeScreen services={services} />

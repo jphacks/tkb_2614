@@ -5,18 +5,22 @@ import type { Measurement } from '../domain/measurement';
 import type { AppServices } from '../services/createAppServices';
 import { DEFAULT_SYNC_INTERVAL_MS, scheduleMeasurementSync } from '../services/syncMeasurements';
 
-type Status = 'loading' | 'ready' | 'error' | 'paused';
+export type SyncStatus = 'loading' | 'ready' | 'error' | 'paused';
 
 interface MeasurementState {
   readonly measurements: readonly Measurement[];
-  readonly status: Status;
+  readonly status: SyncStatus;
   readonly error: string | null;
 }
 
 export function useMeasurements(services: AppServices, intervalMs = DEFAULT_SYNC_INTERVAL_MS) {
   const [state, setState] = useState<MeasurementState>({ measurements: [], status: 'loading', error: null });
   const [refreshKey, setRefreshKey] = useState(0);
-  const refresh = useCallback(() => setRefreshKey((key) => key + 1), []);
+  // effect の再実行を待たずに loading にし、pull-to-refresh の refreshing と同じ描画で揃える。
+  const refresh = useCallback(() => {
+    setState((previous) => ({ ...previous, status: 'loading', error: null }));
+    setRefreshKey((key) => key + 1);
+  }, []);
 
   useEffect(() => {
     let stopSync: (() => void) | undefined;

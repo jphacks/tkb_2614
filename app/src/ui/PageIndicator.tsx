@@ -12,7 +12,11 @@ const ACTIVE = 24;
 export function PageIndicator({ count, page }: { count: number; page: Animated.AnimatedInterpolation<number> }) {
   const scheme = useScheme();
   return (
-    <View style={[styles.container, { backgroundColor: scheme.surfaceContainerHigh }]} importantForAccessibility="no-hide-descendants">
+    <View
+      style={[styles.container, { backgroundColor: scheme.surfaceContainerHigh }]}
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden
+    >
       {Array.from({ length: count }, (_, i) => {
         const inputRange = [i - 1, i, i + 1];
         return (

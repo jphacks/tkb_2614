@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
+import type { SyncStatus } from '../hooks/useMeasurements';
 import { space, useScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
-import type { HomeState, SyncStatus } from '../ui/homeState';
+import type { HomeState } from '../ui/homeState';
 import { Reading } from '../ui/Reading';
 
 /** キャラと湿度だけを置く。更新は pull-to-refresh で行う。 */

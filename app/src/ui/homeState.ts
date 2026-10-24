@@ -1,8 +1,8 @@
 import type { Measurement } from '../domain/measurement';
 import type { MoldPrediction, MoldRiskLevel } from '../domain/prediction';
+import type { SyncStatus } from '../hooks/useMeasurements';
 
 export type Mood = 'fine' | 'worried' | 'dizzy' | 'sleep';
-export type SyncStatus = 'loading' | 'ready' | 'error' | 'paused';
 
 export type ReadingState =
   | { readonly kind: 'live' | 'stale'; readonly humidity: number }
