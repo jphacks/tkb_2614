@@ -2,7 +2,7 @@ import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, View } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { MoldRiskLevel } from '../domain/prediction';
-import { MEASUREMENT_HISTORY_LIMIT, useMeasurements } from '../hooks/useMeasurements';
+import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import type { AppServices } from '../services/createAppServices';
 
@@ -10,7 +10,7 @@ const statusLabels = {
   loading: 'データを取得中…',
   ready: '取得済み・自動更新中',
   error: '取得に失敗・自動再試行待ち',
-  paused: 'アプリが非アクティブのため取得を停止中',
+  paused: 'バックグラウンドのため同期を停止中',
 };
 const riskLabels: Record<MoldRiskLevel, string> = { low: '低', medium: '中', high: '高' };
 
@@ -19,7 +19,7 @@ function formatTime(timestamp: string | null) {
 }
 
 export function EnvironmentScreen({ services }: { services: AppServices }) {
-  const { measurements, status, error, refresh } = useMeasurements(services.measurementSource);
+  const { measurements, status, error, refresh } = useMeasurements(services);
   const predictionState = useMoldPrediction(services.moldPredictor, measurements);
   const latest = measurements[0];
   const prediction = predictionState.prediction;
@@ -32,15 +32,15 @@ export function EnvironmentScreen({ services }: { services: AppServices }) {
         <Text>状態: {statusLabels[status]}</Text>
         {status === 'loading' && <ActivityIndicator accessibilityLabel="データを取得中" />}
         {error && <Text style={styles.error} accessibilityRole="alert">{error}</Text>}
-        <Button title="今すぐ取得" onPress={refresh} disabled={status === 'loading' || status === 'paused'} />
+        <Button title="今すぐ同期" onPress={refresh} disabled={status === 'loading' || status === 'paused'} />
 
         <View style={styles.section}>
           <Text style={styles.heading}>最新の取得値{latest && status !== 'ready' ? '（前回取得値）' : ''}</Text>
           {latest ? (
             <>
               <Text>デバイス: {latest.deviceId}</Text>
-              <Text>温度: {latest.temperatureC.toFixed(1)} °C</Text>
-              <Text>相対湿度: {latest.relativeHumidityPercent.toFixed(1)} %</Text>
+              <Text>温度: {(latest.temperatureC === null ? '欠測' : latest.temperatureC.toFixed(1))} °C</Text>
+              <Text>相対湿度: {(latest.relativeHumidityPercent === null ? '欠測' : latest.relativeHumidityPercent.toFixed(1))} %</Text>
               <Text>計測時刻: {formatTime(latest.measuredAt)}</Text>
               <Text>受信時刻: {formatTime(latest.receivedAt)}</Text>
             </>
@@ -49,7 +49,6 @@ export function EnvironmentScreen({ services }: { services: AppServices }) {
 
         <View style={styles.section}>
           <Text style={styles.heading}>カビリスク予測</Text>
-          {predictionState.status === 'loading' && <Text>予測を取得中…</Text>}
           {predictionState.error && <Text style={styles.error}>{predictionState.error}</Text>}
           {prediction ? (
             <>
@@ -57,16 +56,16 @@ export function EnvironmentScreen({ services }: { services: AppServices }) {
               {prediction.isPlaceholder && <Text>仮の固定値です。実際の判定・予測は未実装です。</Text>}
               <Text>元データ受信時刻: {formatTime(prediction.basedOnReceivedAt)}</Text>
             </>
-          ) : predictionState.status !== 'loading' && !predictionState.error && <Text>予測データがありません。</Text>}
+          ) : !predictionState.error && <Text>予測データがありません。</Text>}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.heading}>取得履歴（{measurements.length} / {MEASUREMENT_HISTORY_LIMIT}件）</Text>
-          <Text>今回の起動中のみ保持・最新順</Text>
-          {measurements.map((measurement, index) => (
-            <Text key={`${measurement.receivedAt}-${index}`} style={styles.historyItem}>
-              {formatTime(measurement.receivedAt)}{'\n'}
-              {measurement.temperatureC.toFixed(1)} °C / {measurement.relativeHumidityPercent.toFixed(1)} %
+          <Text style={styles.heading}>計測履歴（{measurements.length}件）</Text>
+          <Text>端末に保存済み・最新順（画面は最新30件）</Text>
+          {measurements.slice(0, 30).map((measurement) => (
+            <Text key={`${measurement.deviceId}-${measurement.seq}`} style={styles.historyItem}>
+              {formatTime(measurement.measuredAt)}{'\n'}
+              {(measurement.temperatureC === null ? '欠測' : measurement.temperatureC.toFixed(1))} °C / {(measurement.relativeHumidityPercent === null ? '欠測' : measurement.relativeHumidityPercent.toFixed(1))} %
             </Text>
           ))}
         </View>

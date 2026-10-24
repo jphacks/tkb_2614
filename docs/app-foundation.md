@@ -2,98 +2,61 @@
 
 ## 今できること
 
-モックの温湿度を起動直後に取得し、取得完了の5秒後に次の値を取得する。最新値・受信時刻・最大30件の取得履歴・仮の予測を簡単な画面で表示する。「今すぐ取得」で手動更新できる。デザインと本当の予測処理は今後実装する。
+毎時の温湿度履歴をモックからまとめて同期し、端末のAsyncStorageに保存してからACKする。起動時・バックグラウンドからの復帰時・「今すぐ同期」・15分間隔で同期する。iOSのinactiveでは中断しない。最新の計測値・計測時刻・受信時刻・履歴・仮の予測を表示する。履歴は起動をまたいで保持し、画面は最新30件に絞る。
 
-通信方式はまだ決めていないため、BLEの依存追加・権限設定・ファームウェア変更はしていない。アプリ内データと取得元・予測の契約は [contracts.md](./contracts.md) を参照。
+BLE通信・権限設定・本当の予測モデルは未実装。BLEのUUID・要求・バッチ転送・ACKの送信形式はハード担当と確定し、アプリとファームウェアを同じコミットで実装する。現在のインターフェースはアプリ内の抽象化であり、通信仕様ではない。
 
 ## 起動と確認
 
-`app/.prototools` に合わせてNode.js 24系・pnpm 11系を使用する（corepackは使わない）。protoを導入している場合は `app/` で `proto install` を実行して指定バージョンを用意する。
-
-pnpm 11で開発ツールをインストールできるよう、`app/pnpm-workspace.yaml` の `allowBuilds` で `esbuild`（tsx用）と `unrs-resolver`（lint用）のビルドを許可している。
+`app/.prototools` に合わせてNode.js 24系・pnpm 11系を使用する（corepackは使わない）。proto利用時は `app/` で `proto install` する。
 
 ```sh
 cd app
 pnpm install
 pnpm start
-
-# 別ターミナルから実行
 pnpm typecheck
 pnpm lint
 pnpm test
 ```
 
-現在のモック構成はExpo Goで動作させる想定。MetroのQRからスマホで開く。ネイティブBLEライブラリを追加する際はdevelopment buildと実機確認が必要になる。Web向けの追加依存は今回導入していない。
+モック構成はExpo Goを想定。BLEのネイティブライブラリを追加したらdevelopment buildと実機確認が必要。単一画面のため、既存の `index.ts → App.tsx` がエントリ。
 
-## 構成と責務
+## 実装の分担
 
-```text
-app/
-  App.tsx                              # 依存を1度生成し、画面へ渡す
-  src/
-    domain/
-      measurement.ts                   # 計測値・取得元の型と入力検証
-      prediction.ts                    # 予測の型とインターフェース
-    data/mock/
-      samples.ts                       # 差し込む温湿度データ
-      MockMeasurementSource.ts         # モック取得元（遅延・失敗も再現可能）
-      PlaceholderMoldPredictor.ts       # 仮の固定値を返す予測
-    services/
-      createAppServices.ts             # 具体的な取得元・予測実装の選択
-      pollMeasurements.ts              # 逐次取得・再試行・停止
-    hooks/
-      useMeasurements.ts               # 取得状態・メモリ履歴・アプリ状態との連携
-      useMoldPrediction.ts             # 予測状態・古い結果の破棄
-    screens/
-      EnvironmentScreen.tsx            # 表示と手動再取得
-  tests/                               # データ境界・取得ライフサイクル等のテスト
-```
+- `src/domain/measurement.ts`: seq付き履歴・取得元の型と、firmware/logstore.hの12バイトLE保存レコードのデコード。timestamp=0はnull、温度INT16_MIN・湿度0xFFFFは個別にnullへ変換する。この保存形式とBLEのフレーミングは別。
+- `src/services/syncMeasurements.ts`: 保存済み最大seqを読み、fetchSince → seqで重複除去 → 永続化 → ACK。取得・ACKは各15秒でタイムアウトし、次回再試行。空バッチでも保存済み最大seqをACKし直す。中断後の結果は使用しない。
+- `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存。最大seqは保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さず、ACKしない。
+- `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。同一同期サービス内では手動更新や再開も直列化。
+- `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
+- `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。仮予測は欠測・時刻未同期ならnull。
+- `src/screens/EnvironmentScreen.tsx`: 最新値・欠測表示・最新30件の表示・手動同期。
+- `tests/`: Node test runnerとtsxによる同期・デコード・保存・モックの回帰テスト。Node型はtests/tsconfig.jsonに限定。
 
-現時点では単一画面。Expo Routerや状態管理ライブラリは追加せず、既存の `index.ts → App.tsx` を維持している。画面はhooksと注入されたインターフェースを使い、モック実装を直接参照しない。
+同期処理のabortとタイムアウトはアプリ側の待機を解除する。実BLEアダプターはsignalによるネイティブ操作のキャンセル・接続回復も実装する。abortを無視するネイティブ操作そのものの終了までは保証できない。
 
-## モック値を変更する
+## モックの変更
 
-`app/src/data/mock/samples.ts` の `mockSamples` に温度（°C）と相対湿度（%）を追加・変更する。配列は上から順に取得され、末尾の次は先頭へ戻る。受信・計測時刻は取得時に生成される。
+`src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件のseqを付け、配列の値を繰り返す。再取得しても同じseqの計測値・計測時刻は同じ。ACK前は再送できる。モックのACK状態はメモリ上だが、アプリ再起動時も保存済みseqから再開する。
 
-別の配列を渡すこともできる。`createAppServices.ts` の生成箇所を変更する。
+`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得・ACKの制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
 
-```ts
-measurementSource: createMockMeasurementSource({
-  samples: [
-    { temperatureC: 22.5, relativeHumidityPercent: 45 },
-    { temperatureC: 27.0, relativeHumidityPercent: 85 },
-  ],
-  delayMs: 300,
-  failEvery: 4, // 4回に1回エラー。0なら失敗しない
-}),
-```
+## 今後の実装
 
-取得周期は `pollMeasurements.ts` の `DEFAULT_POLL_INTERVAL_MS`、履歴上限は `useMeasurements.ts` の `MEASUREMENT_HISTORY_LIMIT`。モックのカーソルはアプリ起動時に初期化される。Fast Refreshで状態が保持される場合はアプリをリロードする。
+実データはMeasurementSourceのfetchSince/ackを実装し、単位変換と入力検証をアダプター境界に置く。seqはデバイス単位で単調増加する前提のため、初期化によるseqリセットや複数台の切り替えは別途設計する。保存済み履歴の削除・保持期間も長期運用前に決める。
 
-## 実データ・予測・画面を実装する場所
+予測はMoldPredictorの同期関数を差し替える。VTTに必要な長期間の毎時系列を使用し、欠測と未同期時刻の扱いもモデル側で決める。モックの固定リスクを判定基準に流用しない。
 
-1. **実データ:** `MeasurementSource` を実装するアダプターを追加し、`createAppServices.ts` の `measurementSource` を差し替える。payloadの解析、単位変換、時計未同期の扱い、通信のタイムアウトや中断処理はアダプターに置く。画面からBLE等を直接呼ばない。
-2. **予測:** `MoldPredictor` を実装し、同じ生成箇所の `moldPredictor` を差し替える。モックの固定区分を判定基準として流用しない。本物の結果では `isPlaceholder: false` を返す。
-3. **デザイン:** `EnvironmentScreen.tsx` を作り替える。計測値・取得状態・履歴は `useMeasurements`、予測とその状態は `useMoldPrediction` から取得できる。
+## 手動確認
 
-永続化・複数台対応・バックグラウンド取得・実通信・本当のリスク判定と予測は未実装。保存方法や長期間の履歴を前提とした予測を導入する際は、データ契約と履歴管理を見直す。
+- 起動時に保存済み履歴を復元し、同期後も同じseqを重複表示しない。
+- アプリを終了・再起動しても履歴が残り、保存済みseqから同期する。
+- 「今すぐ同期」で新しい毎時計測がなければ履歴が増えない。
+- failEveryで失敗しても保存済み履歴が残り、次回同期で復旧する。
+- バックグラウンドで停止し、復帰直後に同期する。iOSの権限ダイアログやコントロールセンターによるinactiveでは中断しない。
+- 実機の描画・ネイティブストレージ・BLEは自動テストでは検証していないため実機で確認する。
 
-## テストと手動確認
-
-自動テストはNode標準のtest runnerとtsxを使用する。センサー入力の境界値・不正値、モックの循環とエラー、取得の重複防止、停止後の通知抑止、エラー後の再取得、仮予測の契約を確認する。React Nativeの描画や実機動作を検証するテストではない。
-
-実機では以下を確認する。
-
-- 起動直後に取得中表示が出て、温湿度と「仮の固定値」の予測が表示される。
-- 自動更新と「今すぐ取得」で値が進み、最新順の履歴が最大30件に収まる。
-- `failEvery: 4` で取得失敗時にも前回値が残り、次の成功でエラーが解除される。
-- 初回エラーは `failEvery: 1` で再現でき、履歴0件のまま再試行できる。
-- アプリをバックグラウンドにすると取得が止まり、復帰直後に再取得する。
-- 通信方式や予測実装を差し替えるときは、それぞれのアダプター・実装に固有のテストも追加する。
-
-## 参照した公式ドキュメント
+## 公式資料
 
 - [Expo SDK 58](https://docs.expo.dev/versions/v58.0.0/)
-- [Safe area context（SDK 58）](https://docs.expo.dev/versions/v58.0.0/sdk/safe-area-context/)
-- [Expo ESLint設定](https://docs.expo.dev/guides/using-eslint/)
+- [AsyncStorage（SDK 58）](https://docs.expo.dev/versions/v58.0.0/sdk/async-storage/)
 - [React Native AppState](https://reactnative.dev/docs/appstate)

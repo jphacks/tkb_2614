@@ -11,9 +11,6 @@ export interface MoldPrediction {
 }
 
 export interface MoldPredictor {
-  /** 最新順の履歴を受け取る。データ不足ならnull、失敗時はrejectする。 */
-  predict(
-    measurements: readonly Measurement[],
-    signal: AbortSignal,
-  ): Promise<MoldPrediction | null>;
+  /** 最新順の履歴を受け取る同期的な純粋関数。データ不足ならnull。 */
+  predict(measurements: readonly Measurement[]): MoldPrediction | null;
 }

@@ -1,56 +1,35 @@
-/** アプリ内の正規化済み計測値。通信上のpayloadとは別の契約。 */
+/** 正規化済みの履歴。欠測・時刻未同期はnullで保持する。 */
 export interface Measurement {
+  readonly seq: number;
   readonly deviceId: string;
-  readonly temperatureC: number;
-  readonly relativeHumidityPercent: number;
+  readonly temperatureC: number | null;
+  readonly relativeHumidityPercent: number | null;
   readonly measuredAt: string | null;
   readonly receivedAt: string;
 }
 
 export interface MeasurementSource {
   readonly label: string;
-  readLatest(signal: AbortSignal): Promise<Measurement>;
+  readonly deviceId: string;
+  /** afterSeqより新しい履歴を古い順に返す。BLEの転送形式は未確定。 */
+  fetchSince(afterSeq: number, signal: AbortSignal): Promise<readonly Measurement[]>;
+  ack(seq: number, signal: AbortSignal): Promise<void>;
 }
 
-function isUtcTimestamp(value: unknown): value is string {
-  if (typeof value !== 'string') return false;
-  const time = Date.parse(value);
-  return Number.isFinite(time) && new Date(time).toISOString() === value;
-}
-
-/** TypeScriptの型では防げない、取得元からの不正な値を表示前に弾く。 */
-export function parseMeasurement(value: unknown): Measurement {
-  if (typeof value !== 'object' || value === null) {
-    throw new Error('計測データがオブジェクトではありません。');
-  }
-
-  const data = value as Record<string, unknown>;
-  if (typeof data.deviceId !== 'string' || !data.deviceId.trim()) {
-    throw new Error('計測データのdeviceIdが不正です。');
-  }
-  if (typeof data.temperatureC !== 'number' || !Number.isFinite(data.temperatureC)) {
-    throw new Error('温度には有限の数値が必要です。');
-  }
-  if (
-    typeof data.relativeHumidityPercent !== 'number' ||
-    !Number.isFinite(data.relativeHumidityPercent) ||
-    data.relativeHumidityPercent < 0 ||
-    data.relativeHumidityPercent > 100
-  ) {
-    throw new Error('相対湿度は0〜100の数値である必要があります。');
-  }
-  if (data.measuredAt !== null && !isUtcTimestamp(data.measuredAt)) {
-    throw new Error('計測時刻はUTCのISO 8601形式、またはnullである必要があります。');
-  }
-  if (!isUtcTimestamp(data.receivedAt)) {
-    throw new Error('受信時刻はUTCのISO 8601形式である必要があります。');
-  }
-
+/** firmware/logstore.hの保存形式。BLEのフレーミングとは別。 */
+export function decodeLogRecord(bytes: Uint8Array, deviceId: string, receivedAt: string): Measurement {
+  if (bytes.byteLength !== 12) throw new Error('履歴レコードは12バイト必要です。');
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const seq = view.getUint32(0, true);
+  const timestamp = view.getUint32(4, true);
+  const temperature = view.getInt16(8, true);
+  const humidity = view.getUint16(10, true);
+  if (seq === 0) throw new Error('履歴のseqは1以上である必要があります。');
+  if (humidity !== 0xffff && humidity > 10000) throw new Error('相対湿度が範囲外です。');
   return {
-    deviceId: data.deviceId,
-    temperatureC: data.temperatureC,
-    relativeHumidityPercent: data.relativeHumidityPercent,
-    measuredAt: data.measuredAt,
-    receivedAt: data.receivedAt,
+    seq, deviceId, receivedAt,
+    measuredAt: timestamp === 0 ? null : new Date(timestamp * 1000).toISOString(),
+    temperatureC: temperature === -32768 ? null : temperature / 100,
+    relativeHumidityPercent: humidity === 0xffff ? null : humidity / 100,
   };
 }
