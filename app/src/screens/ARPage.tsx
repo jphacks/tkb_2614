@@ -18,10 +18,11 @@ const MOLDS: Record<MoldRiskLevel, readonly (readonly [number, number, number])[
   high: [[94, 604, 79], [150, 604, 61], [196, 604, 43], [240, 604, 32], [70, 518, 58], [78, 448, 43], [84, 388, 32], [30, 668, 50]],
 };
 
-export function ARPage({ risk, mood, isVisible, bottomInset }: {
+export function ARPage({ risk, mood, isVisible, isSettled, bottomInset }: {
   risk: MoldRiskLevel | null;
   mood: Mood;
   isVisible: boolean;
+  isSettled: boolean;
   bottomInset: number;
 }) {
   const scheme = useScheme();
@@ -60,7 +61,7 @@ export function ARPage({ risk, mood, isVisible, bottomInset }: {
         <Path d="M0 690 L90 600 L402 600 L402 874 L0 874 Z" fill={scheme.surfaceContainerHighest} />
         <Path d="M90 596 L402 596 L402 604 L90 604 Z" fill={scheme.outlineVariant} />
       </Svg>
-      <ARCamera isVisible={isVisible} isActive={isActive} bottomInset={bottomInset}>{scene}</ARCamera>
+      <ARCamera isVisible={isVisible} isSettled={isSettled} isActive={isActive} bottomInset={bottomInset}>{scene}</ARCamera>
     </View>
   );
 }

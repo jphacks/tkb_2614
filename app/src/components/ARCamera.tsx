@@ -19,9 +19,10 @@ function CameraFeed({ onError }: { onError: () => void }) {
   );
 }
 
-/** シーンの親を維持し、ARが見える間だけカメラと権限処理を動かす。 */
-export function ARCamera({ isVisible, isActive, children, bottomInset }: {
+/** シーンの親を維持し、映像はARが見える間、権限処理は着地後に動かす。 */
+export function ARCamera({ isVisible, isSettled, isActive, children, bottomInset }: {
   isVisible: boolean;
+  isSettled: boolean;
   isActive: boolean;
   children: ReactNode;
   bottomInset: number;
@@ -32,7 +33,7 @@ export function ARCamera({ isVisible, isActive, children, bottomInset }: {
   const busy = useRef(false);
 
   useEffect(() => {
-    if (!isVisible || !isActive) return;
+    if (!isSettled || !isActive) return;
     let cancelled = false;
     async function prepare() {
       try {
@@ -52,7 +53,7 @@ export function ARCamera({ isVisible, isActive, children, bottomInset }: {
     }
     void prepare();
     return () => { cancelled = true; };
-  }, [isVisible, isActive, getPermission, requestPermission]);
+  }, [isSettled, isActive, getPermission, requestPermission]);
 
   async function retry() {
     if (busy.current) return;
@@ -79,7 +80,7 @@ export function ARCamera({ isVisible, isActive, children, bottomInset }: {
   }
 
   const denied = permission?.status === 'denied';
-  const needsAction = isVisible && isActive && (denied || failed);
+  const needsAction = isSettled && isActive && (denied || failed);
   const actionLabel = permission?.granted ? 'カメラを再試行' : permission?.canAskAgain ? 'カメラを許可' : 'カメラの設定を開く';
 
   return (

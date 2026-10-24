@@ -24,27 +24,28 @@ static NimBLECharacteristic* dataChar = nullptr;
 static uint8_t mfgData[MFG_DATA_SIZE];
 static uint32_t advertisedCount = 0;
 static bool advertisedSynced = false;
-static uint32_t advertisedLastSeq = 0;
+static uint32_t advertisedLastTime = 0;
 
 // 以下の接続状態は NimBLE のタスクで書き換わり、loop で読む
 static volatile uint16_t connHandle = BLE_HS_CONN_HANDLE_NONE;
 static volatile uint16_t connMtu = 23;
 static volatile bool subscribed = false;
 
-// 状態キャラクタリスティックの中身（現在時刻以外）。loop で作り、NimBLE のタスクで読む
+// 状態キャラクタリスティックの中身のうち、記録に関する部分。loop で作り、NimBLE のタスクで読む
 static portMUX_TYPE statusMux = portMUX_INITIALIZER_UNLOCKED;
 static uint8_t statusValue[BLE_STATUS_SIZE];
 
-// 制御に書き込まれた命令。記録の読み書きは loop だけで行うため、キューで渡す
+// 制御に書き込まれた命令。記録の読み書きと時計合わせは loop だけで行うため、キューで渡す
 struct Command {
   uint8_t op;
-  uint32_t seq;
+  uint32_t since;
+  uint32_t phoneNow;
 };
 static QueueHandle_t commandQueue = nullptr;
 
 // 記録の送信状態（loop だけで使う）
 static bool sending = false;
-static uint32_t sendNextSeq = 0;
+static uint32_t sendNextTime = 0;
 static uint32_t sentCount = 0;
 static unsigned long retryAtMs = 0;
 
@@ -84,7 +85,11 @@ class StatusCallbacks : public NimBLECharacteristicCallbacks {
     portENTER_CRITICAL(&statusMux);
     memcpy(buf, statusValue, BLE_STATUS_SIZE);
     portEXIT_CRITICAL(&statusMux);
+    // 時計に関する部分は読まれた時点の値を入れる
+    buf[1] = clockIsValid() ? BLE_FLAG_TIME_SYNCED : 0;
     put32(buf + 14, clockNow());
+    put32(buf + 18, clockLastSync());
+    buf[22] = clockLastSyncSource();
     chr->setValue(buf, BLE_STATUS_SIZE);
   }
 };
@@ -96,7 +101,7 @@ class ControlCallbacks : public NimBLECharacteristicCallbacks {
       Serial.printf("BLE: 制御の長さが不正（%u バイト）\n", (unsigned)value.size());
       return;
     }
-    Command cmd = {value.data()[0], get32(value.data() + 1)};
+    Command cmd = {value.data()[0], get32(value.data() + 1), get32(value.data() + 5)};
     xQueueSend(commandQueue, &cmd, 0);
   }
 };
@@ -107,18 +112,18 @@ class DataCallbacks : public NimBLECharacteristicCallbacks {
   }
 };
 
-static void buildMfgData(uint32_t count, bool synced) {
+static void buildMfgData(bool synced, uint32_t lastTime) {
   mfgData[0] = BLE_COMPANY_ID & 0xFF;
   mfgData[1] = BLE_COMPANY_ID >> 8;
-  mfgData[2] = BLE_ADV_VERSION;
-  put32(mfgData + 3, count);
-  mfgData[7] = synced ? BLE_FLAG_TIME_SYNCED : 0;
+  mfgData[2] = BLE_PROTOCOL_VERSION;
+  mfgData[3] = synced ? BLE_FLAG_TIME_SYNCED : 0;
+  put32(mfgData + 4, lastTime);
 }
 
 // アドバタイズの中身を作り直して反映する。
 // setManufacturerData() は既存のデータに追記していくので、毎回まっさらな状態から作る
-static bool updateAdvertisement(uint32_t count, bool synced) {
-  buildMfgData(count, synced);
+static bool updateAdvertisement(bool synced, uint32_t lastTime) {
+  buildMfgData(synced, lastTime);
 
   NimBLEAdvertisementData data;
   data.setFlags(BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP);
@@ -127,61 +132,60 @@ static bool updateAdvertisement(uint32_t count, bool synced) {
   return advertising->setAdvertisementData(data);
 }
 
-static void updateStatus(uint32_t count, bool synced, uint32_t lastSeq) {
-  uint8_t buf[BLE_STATUS_SIZE];
-  buf[0] = BLE_STATUS_VERSION;
-  buf[1] = synced ? BLE_FLAG_TIME_SYNCED : 0;
+// 状態のうち記録に関する部分を作る。時計に関する部分は読まれたときに入れる（StatusCallbacks）
+static void updateStatus(uint32_t count, uint32_t lastTime) {
+  uint8_t buf[BLE_STATUS_SIZE] = {};
+  buf[0] = BLE_PROTOCOL_VERSION;
   put32(buf + 2, count);
-  put32(buf + 6, logstoreFirstSeq());
-  put32(buf + 10, lastSeq);
-  put32(buf + 14, 0);  // 現在時刻は読まれたときに入れる
+  put32(buf + 6, logstoreFirstTime());
+  put32(buf + 10, lastTime);
   portENTER_CRITICAL(&statusMux);
   memcpy(statusValue, buf, BLE_STATUS_SIZE);
   portEXIT_CRITICAL(&statusMux);
 }
 
-// 件数・同期状態・最新の通し番号のどれかが変わったら、アドバタイズと状態を更新する
+// 件数・同期状態・最新の記録の時刻のどれかが変わったら、アドバタイズと状態を更新する
 static void refreshIfChanged() {
   uint32_t count = logstoreCount();
   bool synced = clockIsValid();
-  uint32_t lastSeq = logstoreLastSeq();
-  if (count == advertisedCount && synced == advertisedSynced && lastSeq == advertisedLastSeq) {
+  uint32_t lastTime = logstoreLastTime();
+  if (count == advertisedCount && synced == advertisedSynced && lastTime == advertisedLastTime) {
     return;
   }
-  updateStatus(count, synced, lastSeq);
-  if (updateAdvertisement(count, synced)) {
+  updateStatus(count, lastTime);
+  if (updateAdvertisement(synced, lastTime)) {
     advertisedCount = count;
     advertisedSynced = synced;
-    advertisedLastSeq = lastSeq;
+    advertisedLastTime = lastTime;
   }
 }
 
 static void handleCommand(const Command& cmd) {
-  switch (cmd.op) {
-    case BLE_CMD_SEND:
-      if (!subscribed) {
-        Serial.println("BLE: データの Notify が購読されていないので送信しません");
-        return;
-      }
-      sending = true;
-      sendNextSeq = cmd.seq;
-      sentCount = 0;
-      retryAtMs = millis();
-      Serial.printf("BLE: 送信要求（%lu 番以降）\n", (unsigned long)cmd.seq);
-      break;
-    case BLE_CMD_ACK: {
-      uint32_t removed = logstoreAck(cmd.seq);
-      Serial.printf("BLE: ACK %lu 番まで、%lu 件削除（残り %lu 件）\n", (unsigned long)cmd.seq,
-                    (unsigned long)removed, (unsigned long)logstoreCount());
-      break;
-    }
-    default:
-      Serial.printf("BLE: 不明な命令 0x%02X\n", cmd.op);
-      break;
+  if (cmd.op != BLE_CMD_SEND) {
+    Serial.printf("BLE: 不明な命令 0x%02X\n", cmd.op);
+    return;
   }
+
+  if (clockSetFromPhone(cmd.phoneNow)) {
+    char timeBuf[32];
+    clockFormat(cmd.phoneNow, timeBuf, sizeof(timeBuf));
+    Serial.printf("BLE: 端末の時刻で時計を合わせました（%s）\n", timeBuf);
+  }
+
+  if (!subscribed) {
+    Serial.println("BLE: データの Notify が購読されていないので送信しません");
+    return;
+  }
+  sending = true;
+  sendNextTime = cmd.since;
+  sentCount = 0;
+  retryAtMs = millis();
+  char timeBuf[32];
+  clockFormat(cmd.since, timeBuf, sizeof(timeBuf));
+  Serial.printf("BLE: 送信要求（%s 以降）\n", cmd.since ? timeBuf : "最初から");
 }
 
-// 記録を1通知分送る。送信は位置ではなく通し番号で追うので、途中で ACK や記録の追加があってもずれない
+// 記録を1通知分送る。送信は位置ではなく時刻で追うので、途中で古い記録が消えたり記録が増えたりしてもずれない
 static void continueSending() {
   if (connHandle == BLE_HS_CONN_HANDLE_NONE || !subscribed) {
     sending = false;
@@ -195,7 +199,7 @@ static void continueSending() {
   uint32_t perNotify = min((uint32_t)(connMtu - 3) / LOG_RECORD_SIZE, MAX_RECORDS_PER_NOTIFY);
   uint8_t buf[MAX_RECORDS_PER_NOTIFY * LOG_RECORD_SIZE];
 
-  uint32_t index = logstoreFindIndex(sendNextSeq);
+  uint32_t index = logstoreFindIndex(sendNextTime);
   uint32_t n = logstoreReadRaw(index, buf, perNotify);
   bool lastChunk = index + n >= logstoreCount();
   size_t len = n * LOG_RECORD_SIZE;
@@ -214,7 +218,7 @@ static void continueSending() {
   }
 
   if (n > 0) {
-    sendNextSeq = get32(buf + (n - 1) * LOG_RECORD_SIZE) + 1;
+    sendNextTime = get32(buf + (n - 1) * LOG_RECORD_SIZE) + 1;
     sentCount += n;
   }
   if (withEndMarker) {
@@ -248,7 +252,7 @@ bool bleBegin() {
   advertising->setMinInterval(ADV_INTERVAL_MIN);
   advertising->setMaxInterval(ADV_INTERVAL_MAX);
 
-  // アドバタイズ本体は名前と件数で一杯なので、サービス UUID はスキャン応答に入れる
+  // アドバタイズ本体は名前と Manufacturer Data で一杯なので、サービス UUID はスキャン応答に入れる
   advertising->enableScanResponse(true);
   NimBLEAdvertisementData scanData;
   scanData.addServiceUUID(NimBLEUUID(BLE_SERVICE_UUID));
@@ -258,14 +262,14 @@ bool bleBegin() {
 
   uint32_t count = logstoreCount();
   bool synced = clockIsValid();
-  uint32_t lastSeq = logstoreLastSeq();
-  updateStatus(count, synced, lastSeq);
-  if (!updateAdvertisement(count, synced)) {
+  uint32_t lastTime = logstoreLastTime();
+  updateStatus(count, lastTime);
+  if (!updateAdvertisement(synced, lastTime)) {
     return false;
   }
   advertisedCount = count;
   advertisedSynced = synced;
-  advertisedLastSeq = lastSeq;
+  advertisedLastTime = lastTime;
 
   return advertising->start();
 }
@@ -298,11 +302,8 @@ void blePrintStatus() {
     Serial.printf("BLE: 接続中（MTU %u、Notify %s）\n", connMtu, subscribed ? "購読中" : "未購読");
   }
   if (sending) {
-    Serial.printf("送信中: 次は %lu 番、%lu 件送信済み\n", (unsigned long)sendNextSeq,
-                  (unsigned long)sentCount);
+    Serial.printf("送信中: %lu 件送信済み\n", (unsigned long)sentCount);
   }
-  Serial.printf("未送信件数: %lu / 時刻同期: %s\n", (unsigned long)advertisedCount,
-                advertisedSynced ? "済" : "未");
   Serial.print("Manufacturer Data: 0x");
   for (size_t i = 0; i < MFG_DATA_SIZE; i++) {
     Serial.printf("%02X", mfgData[i]);

@@ -16,7 +16,17 @@ Ts     = T − ΔT
 RHs    = min(RH · es(T) / es(Ts), 100)
 ```
 
-ΔT は調整用の値として残す（仮に 3℃）。例えば 25℃・60% の部屋だと、ΔT=3 で RHs ≈ 72%、ΔT=5 で RHs ≈ 81% になる。BME280 の湿度誤差（±3%）を補正するオフセットも一緒に残す。
+例えば 25℃・60% の部屋だと、ΔT=3 で RHs ≈ 72%、ΔT=5 で RHs ≈ 81% になる。BME280 の湿度誤差（±3%）を補正するオフセットも一緒に残す。
+
+ΔT は室温と外気温の差で決まる。結露判定（ISO 13788）では、表面の温度係数 fRsi を使って `ΔT = (1 − fRsi) × (室温 − 外気温)` と表す。fRsi=0.7 は、熱橋（断熱の切れ目）に求められる最低ラインである。夏は外壁が室温と同じか、室温より暖かくなるので、表面は冷えない。そのため ΔT を一年中同じ値にすると、夏のリスクを高めに出す。
+
+ESP32 は外気温を測っていないので、ΔT は月ごとの固定値とする。暖房期の値は、室温 20℃・日本のその時期の外気・fRsi=0.7 で概算した。地域や住宅ごとの差は見ていない。月は計測時刻（未同期なら受信時刻）の、端末のローカル時刻で決める。
+
+| 月 | 12〜2 | 3・11 | 4・10 | 5〜9 |
+|---|---|---|---|---|
+| ΔT [℃] | 4 | 3 | 1.5 | 0 |
+
+夏でも、地面に接する床や冷房の風が当たる壁は表面が冷える。この表はそうした場所を見ていない。押し入れや浴室のように空気そのものの湿度が高い場所は、ΔT=0 でも VTT が反応する。予測はこの仮定した表面条件に基づく推定であり、ΔT を変えると臨界湿度付近の判定が変わる。ΔT を幅で与えて結果を比べ、推定の不確実性を示すのは今後の課題とする。
 
 以降の T と RH は、表面の値 Ts と RHs を指す。
 
@@ -51,6 +61,12 @@ Mmax  = A + B·x − C·x²,   x = (RHcrit − RH) / (RHcrit − 100)
 
 M は 0 未満にしない。
 
+**時間の刻みと欠測**
+
+計測の間隔は計測時刻の差から求める。時刻が未同期のときは、seq の差（毎時 1 件）で代用する。3 時間以内の欠測は、直前の条件が続いたものとして埋める。それより長い欠測は温湿度がわからないので、M を増やしも減らしもせずに保持する。
+
+M は履歴の最初を 0 として計算するが、センサーを置く前からカビが育っている可能性がある。そのため、連続した観測が 7 日に満たないあいだは参考値とする。長い欠測のあとも、観測時間を数え直す。
+
 **パラメータ**
 
 壁紙・石膏ボードを想定し、「敏感」クラス（紙張り製品、合板）を使う。
@@ -69,15 +85,12 @@ Cmat は材料ごとの値が論文にないので、仮置き（0.1〜1 の範�
 | 1〜3 | 注意 | 顕微鏡で見えるレベル |
 | 3 以上 | 危険 | 目で見えるカビ |
 
-あわせて「今の条件が続いた場合、M=1 になるまでの日数」を出す。M<1 の間は k2 ≈ 1 と見なせるので、次の式で近似できる。
+あわせて「今の条件が続いた場合、M=1 になるまでの日数」を出す。今の M から、最新の条件が続くとして 2 章の式で 1 時間ずつ進め、M=1 に達するまでの時間を数える。k2 は M が Mmax に近づくほど小さくなるため、k2 ≈ 1 とした `7 · exp(−0.68·ln T − 13.9·ln RH + 66.02) / 0.578` は、Mmax が 1 に近い条件で日数を短く見積もってしまう。
 
-```
-日数 = 7 · exp(−0.68·ln T − 13.9·ln RH + 66.02) / 0.578
-```
-
-RH < RHcrit のとき、または Mmax ≤ 1 のときは「このままでは生えない」と表示する。
+RH < RHcrit のとき、Mmax ≤ 1 のとき、365 日以内に M=1 に達しないときは「このままでは生えない」と表示する。
 
 ## 参考文献
 
 - Ojanen ら (2010), [Mold Growth Modeling of Building Structures Using Sensitivity Classes of Materials](https://web.ornl.gov/sci/buildings/conf-archive/2010%20B11%20papers/104_Ojanen.pdf)：式とパラメータの出典。
-- Menneer ら (2022), [Modelling mould growth in domestic environments using relative humidity and temperature](https://www.ecehh.org/wp/wp-content/uploads/2023/06/Modelling_mould_growth.pdf)：部屋の空気の値をそのまま入れると VTT がほとんど反応しないことを、英国 219 世帯のデータで示した。表面の湿度を推定する根拠として使う。臨界湿度の式には誤植があり、[訂正論文 (2024)](https://www.sciencedirect.com/science/article/pii/S0360132324002804) で Ojanen 2010 と同じ式に直されている。
+- Menneer ら (2022), [Modelling mould growth in domestic environments using relative humidity and temperature](https://www.ecehh.org/wp/wp-content/uploads/2023/06/Modelling_mould_growth.pdf)：部屋の空気の値をそのまま入れると VTT がほとんど反応しないことを、英国 219 世帯のデータで示した。部屋の値をそのまま使わない根拠として使う。この論文は表面温度を推定せず、臨界湿度を下げる方法で対応している。臨界湿度の式には誤植があり、[訂正論文 (2024)](https://www.sciencedirect.com/science/article/pii/S0360132324002804) で Ojanen 2010 と同じ式に直されている。
+- [ISO 13788:2012](https://www.iso.org/standard/51615.html)、[What is the temperature factor fRSI?（ISO-Chemie）](https://www.iso-chemie.eu/en/isopedia/building-physics/temperature-factor-frsi)：温度係数 fRsi と、表面温度の求め方の出典。
