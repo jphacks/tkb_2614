@@ -11,13 +11,13 @@
   .mimi-svg .mold-float{animation:mimi-mold-float 8.2s ease-in-out infinite}
   .mimi-svg .mold-float.delay{animation-delay:-1.6s}
   .mimi-svg .mold-float.slow{animation-duration:9.2s;animation-delay:-2.3s}
-  @keyframes mimi-breathe{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}72%{transform:translateY(-6px) rotate(-6deg) scale(1.02,1.04)}81%{transform:translateY(-4px) rotate(5deg) scale(1.02,1.03)}89%{transform:translateY(1px) rotate(-2deg) scale(1.03,.97)}96%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes mimi-breathe{0%,64%,100%{transform:translateX(0) rotate(0)}72%{transform:translateX(-3px) rotate(-5deg)}81%{transform:translateX(3px) rotate(4deg)}89%{transform:translateX(-1px) rotate(-2deg)}97%{transform:translateX(0) rotate(0)}}
   @keyframes mimi-blink{0%,38%,40%,81%,83%,100%{transform:scaleY(1)}39%,82%{transform:scaleY(.12)}}
   @keyframes mimi-mold-float{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
-  @keyframes mimi-idle-stretch{0%,64%,100%{transform:translateY(0) scale(1)}71%{transform:translateY(2.4px) scale(1.032,0.96)}80%{transform:translateY(-7.2px) scale(0.92,1.12)}87%{transform:translateY(-5.6px) scale(0.936,1.096)}95%{transform:translateY(0) scale(1)}}
-  @keyframes mimi-idle-sway{0%,64%,100%{transform:translate(0,0) rotate(0)}72%{transform:translate(-7.2px,-2.4px) rotate(-7.2deg)}82%{transform:translate(7.2px,-2.4px) rotate(7.2deg)}90%{transform:translate(-2.4px,0) rotate(-2.4deg)}97%{transform:translate(0,0) rotate(0)}}
-  @keyframes mimi-idle-bow{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}74%{transform:translateY(6.4px) rotate(2.4deg) scale(1.08,0.88)}82%{transform:translateY(6.4px) rotate(2.4deg) scale(1.08,0.88)}90%{transform:translateY(-3.2px) rotate(-1.6deg) scale(0.976,1.04)}97%{transform:translateY(0) rotate(0) scale(1)}}
-  @keyframes mimi-idle-double-hop{0%,64%,100%{transform:translateY(0) scale(1)}68%{transform:translateY(2.4px) scale(1.032,0.952)}74%{transform:translateY(-14.4px) scale(0.968,1.048)}80%{transform:translateY(1.6px) scale(1.048,0.944)}86%{transform:translateY(-8.8px) scale(0.976,1.032)}92%{transform:translateY(0.8px) scale(1.024,0.976)}98%{transform:translateY(0) scale(1)}}
+  @keyframes mimi-idle-shiver{0%,64%,100%{transform:translateX(0) rotate(0)}70%{transform:translateX(-3px) rotate(-2deg)}74%{transform:translateX(3px) rotate(2deg)}78%{transform:translateX(-3px) rotate(-2deg)}82%{transform:translateX(2px) rotate(1deg)}88%{transform:translateX(0) rotate(0)}}
+  @keyframes mimi-idle-peer{0%,64%,100%{transform:translateX(0) rotate(0)}74%{transform:translateX(5px) rotate(6deg)}85%{transform:translateX(5px) rotate(6deg)}96%{transform:translateX(0) rotate(0)}}
+  @keyframes mimi-idle-recoil{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}72%{transform:translate(-6px,2px) rotate(-4deg) scale(1.02,.96)}84%{transform:translate(-4px,2px) rotate(-3deg) scale(1.02,.97)}96%{transform:translate(0,0) rotate(0) scale(1)}}
+  @keyframes mimi-idle-fidget{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}72%{transform:translate(-4px,1px) rotate(-3deg) scale(1.02,.98)}80%{transform:translate(4px,1px) rotate(3deg) scale(1.02,.98)}88%{transform:translate(-2px,1px) rotate(-1deg) scale(1.01,.99)}97%{transform:translate(0,0) rotate(0) scale(1)}}
   @media(prefers-reduced-motion:reduce){.mimi-svg *, .mimi-svg{animation:none!important;transition:none!important}}
 
 

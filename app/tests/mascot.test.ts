@@ -57,6 +57,32 @@ test('全15状態に5種類の待機動作があり、静止区間と姿勢の�
   }
 });
 
+test('高リスクの本体は待機・タップとも跳ねず、沈む動きになる', () => {
+  for (const character of characterKinds) {
+    let bodies = 0;
+    let reactions = 0;
+    const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
+      if (node.motion?.idleVariants) {
+        bodies++;
+        for (const motion of [node.motion.idle!, ...node.motion.idleVariants]) {
+          assert.ok(motion.frames.some((frame) => frame.y > 0), character);
+          assert.ok(motion.frames.every((frame) => frame.y >= 0 && frame.scaleY <= 1), character);
+        }
+      }
+      // The tap-body wraps the body gesture; mold reactions are independent.
+      if (node.motion?.reaction && node.children.some((child) => child.motion?.idleVariants)) {
+        reactions++;
+        assert.ok(node.motion.reaction.frames.some((frame) => frame.y > 0), character);
+        assert.ok(node.motion.reaction.frames.every((frame) => frame.y >= 0 && frame.scaleY <= 1), character);
+      }
+      inspect(node.children);
+    });
+    inspect(artwork[character].high);
+    assert.equal(bodies, 1, character);
+    assert.equal(reactions, 1, character);
+  }
+});
+
 test('ランダム待機はタップや一時停止で選び直されず、停止中は原位置になる', () => {
   const choices = [
     { ...restMotion, duration: 8000 },
