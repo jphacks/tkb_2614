@@ -4,16 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 概要
 
-JPHACKS のチームリポジトリ。ESP32 と BME280 で室内の温度・湿度を測り、BLE でスマホアプリに送って、部屋のカビやすさを可視化する。
+JPHACKS のチームリポジトリ。ESP32 と Si7021 で室内の温度・湿度を測り、BLE でスマホアプリに送って、部屋のカビやすさを可視化する。
 
-- `firmware/`: ESP32 の Arduino スケッチ（BLE peripheral）。BME280 は I2C で読み、最新の値を BLE の read 可能な Characteristic に置く。ESP32 からは送信せず、アプリが定期的に read しに行く（polling）。
+- `firmware/`: ESP32 の Arduino スケッチ（BLE peripheral）。Si7021 を I2C で読み、1時間ごとの温湿度を計測時刻を主キーにして LittleFS に1年分ためる。アプリが数分おきに接続し、開始時刻を指定して記録をまとめて Notify で受け取る（polling）。
 - `app/`: Expo（React Native, TypeScript）のアプリ（BLE central）。JS パッケージはこれ1つだけなので、pnpm workspace は作っていない。
 
 サーバーはなく、ESP32 とスマホが BLE で直接つながる。
 
 ## firmware と app にまたがる取り決め
 
-- BLE の Service/Characteristic の UUID と payload の形式は、両側にハードコードされる。変えるときは `firmware/` と `app/` を同じコミットで直す。
+- BLE の Service/Characteristic の UUID と payload の形式は、両側にハードコードされる。仕様は `docs/ble-protocol.md` にまとめている。変えるときは `firmware/`・`app/`・`docs/ble-protocol.md` を同じコミットで直す。
 - カビリスクの判定はアプリ側で行い、ESP32 は計測値を送るだけにする。判定基準を変えるたびにファームウェアを書き込み直さなくて済む。
 
 ## firmware

@@ -4,16 +4,16 @@
 #include <Preferences.h>
 #include <math.h>
 
-static const char* LOG_PATH = "/log.bin";
-static const char* TMP_PATH = "/log.tmp";  // ACK で書き直すときの作業ファイル
+static const char* LOG_PATH = "/records.bin";
+static const char* TMP_PATH = "/records.tmp";  // 古い記録を消すときの作業ファイル
 
-// 最後の通し番号は NVS に置く（記録を全部消しても続きから振るため）
-static const char* PREF_NAMESPACE = "logstore";
-static const char* PREF_LAST_SEQ = "lastSeq";
+// 通し番号つき 12 バイト形式だった頃のファイルと NVS。見つけたら消す
+static const char* LEGACY_LOG_PATH = "/log.bin";
+static const char* LEGACY_TMP_PATH = "/log.tmp";
+static const char* LEGACY_PREF_NAMESPACE = "logstore";
 
-static Preferences prefs;
-static uint32_t lastSeq = 0;
 static uint32_t recordCount = 0;
+static uint32_t lastTime = 0;
 
 static void put32(uint8_t* p, uint32_t v) {
   p[0] = v;
@@ -36,17 +36,15 @@ static uint16_t get16(const uint8_t* p) {
 }
 
 static void encode(const LogRecord& rec, uint8_t* buf) {
-  put32(buf, rec.seq);
-  put32(buf + 4, rec.timestamp);
-  put16(buf + 8, (uint16_t)rec.temp100);
-  put16(buf + 10, rec.hum100);
+  put32(buf, rec.timestamp);
+  put16(buf + 4, (uint16_t)rec.temp100);
+  put16(buf + 6, rec.hum100);
 }
 
 static void decode(const uint8_t* buf, LogRecord& rec) {
-  rec.seq = get32(buf);
-  rec.timestamp = get32(buf + 4);
-  rec.temp100 = (int16_t)get16(buf + 8);
-  rec.hum100 = get16(buf + 10);
+  rec.timestamp = get32(buf);
+  rec.temp100 = (int16_t)get16(buf + 4);
+  rec.hum100 = get16(buf + 6);
 }
 
 static int16_t toTemp100(float tempC) {
@@ -90,10 +88,12 @@ static bool rewriteFrom(uint32_t skip) {
 
   uint32_t total = src.size() / LOG_RECORD_SIZE;
   bool ok = src.seek((size_t)skip * LOG_RECORD_SIZE);
-  uint8_t buf[LOG_RECORD_SIZE];
-  for (uint32_t i = skip; ok && i < total; i++) {
-    ok = src.read(buf, LOG_RECORD_SIZE) == LOG_RECORD_SIZE &&
-         dst.write(buf, LOG_RECORD_SIZE) == LOG_RECORD_SIZE;
+  uint8_t buf[64 * LOG_RECORD_SIZE];
+  for (uint32_t i = skip; ok && i < total;) {
+    uint32_t n = min((uint32_t)64, total - i);
+    size_t len = n * LOG_RECORD_SIZE;
+    ok = src.read(buf, len) == len && dst.write(buf, len) == len;
+    i += n;
   }
   src.close();
   dst.close();
@@ -111,13 +111,27 @@ static bool rewriteFrom(uint32_t skip) {
   return true;
 }
 
+static void removeLegacy() {
+  if (!LittleFS.exists(LEGACY_LOG_PATH) && !LittleFS.exists(LEGACY_TMP_PATH)) {
+    return;
+  }
+  LittleFS.remove(LEGACY_LOG_PATH);
+  LittleFS.remove(LEGACY_TMP_PATH);
+  Preferences prefs;
+  if (prefs.begin(LEGACY_PREF_NAMESPACE, false)) {
+    prefs.clear();
+    prefs.end();
+  }
+}
+
 bool logstoreBegin() {
   // 初回はフォーマットが必要なので、マウントに失敗したらフォーマットする
   if (!LittleFS.begin(true)) {
     return false;
   }
+  removeLegacy();
 
-  // ACK の書き直し途中で電源が切れた場合の後始末
+  // 書き直しの途中で電源が切れた場合の後始末
   if (LittleFS.exists(TMP_PATH)) {
     if (LittleFS.exists(LOG_PATH)) {
       // 作業ファイルを書いている途中だった。元のファイルが正しい
@@ -139,21 +153,21 @@ bool logstoreBegin() {
   }
   recordCount = fileRecordCount();
 
-  prefs.begin(PREF_NAMESPACE, false);
-  lastSeq = prefs.getUInt(PREF_LAST_SEQ, 0);
-
-  // 追記の直後、NVS に書く前に電源が切れていたら、ファイルの方が進んでいる
   LogRecord last;
-  if (recordCount > 0 && logstoreRead(recordCount - 1, last) && last.seq > lastSeq) {
-    lastSeq = last.seq;
-    prefs.putUInt(PREF_LAST_SEQ, lastSeq);
-  }
+  lastTime = recordCount > 0 && logstoreRead(recordCount - 1, last) ? last.timestamp : 0;
   return true;
 }
 
-bool logstoreAdd(uint32_t timestamp, float tempC, float humidity, LogRecord* out) {
+LogAddResult logstoreAdd(uint32_t timestamp, float tempC, float humidity, LogRecord* out) {
+  if (timestamp == 0) {
+    return LOG_ADD_NO_TIME;
+  }
+  // 時刻が主キーなので、再同期で時計が戻っても同じ時刻・過去の時刻の記録は作らない
+  if (recordCount > 0 && timestamp <= lastTime) {
+    return LOG_ADD_NOT_NEWER;
+  }
+
   LogRecord rec;
-  rec.seq = lastSeq + 1;
   rec.timestamp = timestamp;
   rec.temp100 = toTemp100(tempC);
   rec.hum100 = toHum100(humidity);
@@ -163,31 +177,43 @@ bool logstoreAdd(uint32_t timestamp, float tempC, float humidity, LogRecord* out
 
   File f = LittleFS.open(LOG_PATH, FILE_APPEND);
   if (!f) {
-    return false;
+    return LOG_ADD_FAILED;
   }
   size_t written = f.write(buf, LOG_RECORD_SIZE);
   f.close();
   if (written != LOG_RECORD_SIZE) {
     // 書きかけのバイトが残ると以降のレコードがずれるので切り落とす
     rewriteFrom(0);
-    return false;
+    return LOG_ADD_FAILED;
+  }
+  recordCount++;
+  lastTime = timestamp;
+
+  // 1年より古い記録を消す
+  if (timestamp > LOG_RETENTION_SEC) {
+    uint32_t expired = logstoreFindIndex(timestamp - LOG_RETENTION_SEC);
+    if (expired > 0) {
+      rewriteFrom(expired);
+    }
   }
 
-  lastSeq = rec.seq;
-  recordCount++;
-  prefs.putUInt(PREF_LAST_SEQ, lastSeq);
   if (out) {
     *out = rec;
   }
-  return true;
+  return LOG_ADD_OK;
 }
 
 uint32_t logstoreCount() {
   return recordCount;
 }
 
-uint32_t logstoreLastSeq() {
-  return lastSeq;
+uint32_t logstoreFirstTime() {
+  LogRecord rec;
+  return logstoreRead(0, rec) ? rec.timestamp : 0;
+}
+
+uint32_t logstoreLastTime() {
+  return recordCount > 0 ? lastTime : 0;
 }
 
 bool logstoreRead(uint32_t index, LogRecord& rec) {
@@ -208,11 +234,6 @@ bool logstoreRead(uint32_t index, LogRecord& rec) {
   return ok;
 }
 
-uint32_t logstoreFirstSeq() {
-  LogRecord rec;
-  return logstoreRead(0, rec) ? rec.seq : 0;
-}
-
 uint32_t logstoreReadRaw(uint32_t index, uint8_t* buf, uint32_t maxRecords) {
   if (index >= recordCount) {
     return 0;
@@ -230,8 +251,8 @@ uint32_t logstoreReadRaw(uint32_t index, uint8_t* buf, uint32_t maxRecords) {
   return got / LOG_RECORD_SIZE;
 }
 
-uint32_t logstoreFindIndex(uint32_t seq) {
-  // 記録は通し番号の昇順に並んでいるので二分探索する
+uint32_t logstoreFindIndex(uint32_t timestamp) {
+  // 記録は時刻の昇順に並んでいるので二分探索する
   uint32_t lo = 0;
   uint32_t hi = recordCount;
   LogRecord rec;
@@ -240,7 +261,7 @@ uint32_t logstoreFindIndex(uint32_t seq) {
     if (!logstoreRead(mid, rec)) {
       return recordCount;
     }
-    if (rec.seq < seq) {
+    if (rec.timestamp < timestamp) {
       lo = mid + 1;
     } else {
       hi = mid;
@@ -249,27 +270,12 @@ uint32_t logstoreFindIndex(uint32_t seq) {
   return lo;
 }
 
-uint32_t logstoreAck(uint32_t seq) {
-  // 記録は通し番号の昇順に並んでいるので、先頭から seq 以下を数える
-  uint32_t skip = 0;
-  LogRecord rec;
-  while (skip < recordCount && logstoreRead(skip, rec) && rec.seq <= seq) {
-    skip++;
-  }
-  if (skip == 0) {
-    return 0;
-  }
-  if (skip == recordCount) {
-    return logstoreClear() ? skip : 0;
-  }
-  return rewriteFrom(skip) ? skip : 0;
-}
-
 bool logstoreClear() {
   if (LittleFS.exists(LOG_PATH) && !LittleFS.remove(LOG_PATH)) {
     return false;
   }
   recordCount = 0;
+  lastTime = 0;
   return true;
 }
 
