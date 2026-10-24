@@ -3,14 +3,23 @@ import { test } from 'node:test';
 import type { Measurement } from '../src/domain/measurement';
 import { createVttMoldPredictor, criticalHumidity, surfaceConditions } from '../src/domain/moldModel';
 
+type Condition = Pick<Measurement, 'temperatureC' | 'relativeHumidityPercent'>;
+const HOUR_MS = 3600000;
+const JANUARY = new Date(2026, 0, 1).getTime();
+const JULY = new Date(2026, 6, 1).getTime();
 const humid = { temperatureC: 25, relativeHumidityPercent: 90 };
 const dry = { temperatureC: 20, relativeHumidityPercent: 40 };
-/** 古い順の条件を、predictが受け取る最新順の履歴にする。 */
-function history(conditions: readonly Pick<Measurement, 'temperatureC' | 'relativeHumidityPercent'>[]): Measurement[] {
-  return conditions.map((c, i) => ({ seq: i + 1, deviceId: 'test', ...c, measuredAt: null, receivedAt: `r${i + 1}` })).reverse();
+
+/** 古い順の条件を、predictが受け取る最新順の毎時履歴にする。hourOfで計測の間隔を空けられる。 */
+function history(conditions: readonly Condition[], { start = JANUARY, hourOf = (i: number) => i, synced = true } = {}): Measurement[] {
+  return conditions.map((c, i) => {
+    const at = new Date(start + hourOf(i) * HOUR_MS).toISOString();
+    return { seq: hourOf(i) + 1, deviceId: 'test', ...c, measuredAt: synced ? at : null, receivedAt: at };
+  }).reverse();
 }
-const hours = (condition: typeof humid, count: number) => Array.from({ length: count }, () => condition);
+const hours = (condition: Condition, count: number) => Array.from({ length: count }, () => condition);
 const predictor = createVttMoldPredictor();
+const noDelta = createVttMoldPredictor({ surfaceDeltaByMonthC: Array(12).fill(0) });
 
 test('表面の湿度と臨界湿度は文書の例と一致する', () => {
   assert.equal(Math.round(surfaceConditions(25, 60, 3, 0).relativeHumidityPercent), 72);
@@ -23,19 +32,45 @@ test('表面の湿度と臨界湿度は文書の例と一致する', () => {
 test('有効な計測がなければ予測せず、乾燥条件では生えない', () => {
   assert.equal(predictor.predict([]), null);
   assert.equal(predictor.predict(history([{ temperatureC: null, relativeHumidityPercent: 50 }])), null);
-  const prediction = predictor.predict(history(hours(dry, 100)));
-  assert.deepEqual(prediction, { moldIndex: 0, riskLevel: 'low', daysToMoldIndex1: null, basedOnReceivedAt: 'r100' });
+  const records = history(hours(dry, 200));
+  assert.deepEqual(predictor.predict(records), {
+    moldIndex: 0, riskLevel: 'low', daysToMoldIndex1: null, isProvisional: false, basedOnReceivedAt: records[0].receivedAt,
+  });
 });
 
-test('高湿が続くと予測した日数付近でM=1を超え、欠測は飛ばす', () => {
-  const days = predictor.predict(history([humid]))?.daysToMoldIndex1;
-  assert.ok(days !== null && days !== undefined && days > 0);
-  const crossing = Math.round(days * 24);
-  assert.ok(predictor.predict(history(hours(humid, crossing - 2)))!.moldIndex < 1);
-  const after = predictor.predict(history([...hours(humid, crossing + 2), { temperatureC: null, relativeHumidityPercent: null }]))!;
+test('予測の元時刻は実際に使った最後の計測のもの', () => {
+  const records = history([...hours(dry, 3), { temperatureC: null, relativeHumidityPercent: 50 }]);
+  assert.equal(predictor.predict(records)?.basedOnReceivedAt, records[1].receivedAt);
+});
+
+test('壁が冷える冬だけ、同じ部屋の条件で成長する', () => {
+  const room = { temperatureC: 28, relativeHumidityPercent: 70 };
+  assert.ok(predictor.predict(history([room], { start: JANUARY }))?.daysToMoldIndex1);
+  assert.equal(predictor.predict(history([room], { start: JULY }))?.daysToMoldIndex1, null);
+});
+
+/** 1時間分の履歴から求めた日数どおりに、その時間だけ履歴を進めるとM=1を超える。 */
+function assertCrossesAtPredictedDay(model: typeof predictor, condition: Condition) {
+  const days = model.predict(history([condition]))?.daysToMoldIndex1;
+  assert.ok(typeof days === 'number' && days > 0);
+  const crossing = 1 + Math.round(days * 24);
+  assert.ok(model.predict(history(hours(condition, crossing - 1)))!.moldIndex < 1);
+  const after = model.predict(history(hours(condition, crossing)))!;
   assert.ok(after.moldIndex >= 1);
-  assert.equal(after.riskLevel, 'medium');
   assert.equal(after.daysToMoldIndex1, 0);
+  return days;
+}
+
+test('高湿が続くと、予測した日数でM=1を超える', () => {
+  assertCrossesAtPredictedDay(predictor, humid);
+  assert.equal(predictor.predict(history(hours(humid, 300)))!.riskLevel, 'medium');
+});
+
+test('Mmaxが1に近いとk2で成長が遅くなり、1以下なら生えない', () => {
+  assert.equal(noDelta.predict(history([{ temperatureC: 25, relativeHumidityPercent: 82 }]))?.daysToMoldIndex1, null);
+  const days = assertCrossesAtPredictedDay(noDelta, { temperatureC: 25, relativeHumidityPercent: 83 });
+  const constantRateDays = (7 * Math.exp(-0.68 * Math.log(25) - 13.9 * Math.log(83) + 66.02)) / 0.578;
+  assert.ok(days > constantRateDays * 1.2);
 });
 
 test('乾燥に変わると6時間は減り、24時間までは横ばい、その後また減る', () => {
@@ -43,4 +78,20 @@ test('乾燥に変わると6時間は減り、24時間までは横ばい、そ�
   assert.ok(m(6) < m(0));
   assert.equal(m(24), m(6));
   assert.ok(m(30) < m(24));
+});
+
+test('短い欠測は直前の条件で埋め、長い欠測ではMを保持して参考値に戻す', () => {
+  const continuous = (count: number) => predictor.predict(history(hours(humid, count)))!;
+  const withGap = (missing: number, synced = true) =>
+    predictor.predict(history(hours(humid, 200), { hourOf: (i) => (i < 100 ? i : i + missing), synced }))!;
+  assert.equal(withGap(2).moldIndex, continuous(202).moldIndex);
+  assert.equal(withGap(2).isProvisional, false);
+  assert.equal(withGap(96).moldIndex, continuous(200).moldIndex);
+  assert.equal(withGap(96).isProvisional, true);
+  assert.deepEqual(withGap(96, false), withGap(96));
+});
+
+test('連続した観測が7日未満なら参考値', () => {
+  assert.equal(predictor.predict(history(hours(dry, 167)))!.isProvisional, true);
+  assert.equal(predictor.predict(history(hours(dry, 168)))!.isProvisional, false);
 });

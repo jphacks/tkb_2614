@@ -8,6 +8,8 @@ export interface MoldPrediction {
   readonly riskLevel: MoldRiskLevel;
   /** 今の条件が続いた場合にM=1へ達するまでの日数。生えない条件ならnull、到達済みなら0。 */
   readonly daysToMoldIndex1: number | null;
+  /** 連続した観測が7日未満、または長い欠測の直後。M=0から始めた仮定の影響が大きいので参考値。 */
+  readonly isProvisional: boolean;
   readonly basedOnReceivedAt: string;
 }
 

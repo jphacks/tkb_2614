@@ -30,7 +30,7 @@ pnpm test
 - `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存。最大seqは保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さず、ACKしない。
 - `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。同一同期サービス内では手動更新や再開も直列化。
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
-- `src/domain/moldModel.ts`: VTTモデル。表面の温湿度を推定し、履歴を古い順に1レコード=1時間としてMを更新する。温湿度の欠測レコードは飛ばし、時刻未同期は計算に影響しない。表面温度差ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
+- `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAt（未同期ならseq）の差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
@@ -51,7 +51,7 @@ pnpm test
 
 実データはMeasurementSourceのfetchSince/ackを実装し、単位変換と入力検証をアダプター境界に置く。seqはデバイス単位で単調増加する前提のため、初期化によるseqリセットや複数台の切り替えは別途設計する。保存済み履歴の削除・保持期間も長期運用前に決める。
 
-VTTは毎時の連続した系列を前提とする。seqが飛ぶ長い欠測を扱う場合は、measuredAtの差分から経過時間を求める。
+月別ΔTは地域・住宅の差を見ていない概算。外気温を取得できるようになったら、ΔT=(1−fRsi)(室温−外気温) で求める（[mold-model.md](mold-model.md)）。参考値（`isProvisional`）の画面での見せ方は未定。
 
 ## 手動確認
 
