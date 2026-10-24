@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useMemo, useState } from 'react';
-import { Animated, StyleSheet, useColorScheme, useWindowDimensions, View } from 'react-native';
+import { useLayoutEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { Animated, ScrollView, StyleSheet, useColorScheme, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMeasurements } from '../hooks/useMeasurements';
@@ -16,6 +16,8 @@ import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 
 const MAIN_PAGE = 1;
+const AR_PAGE = 2;
+const PAGE_COUNT = 3;
 // インジケーター（高さ32）の上に空ける余白。
 const INDICATOR_AREA = 32 + space.s24;
 
@@ -33,6 +35,15 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
   const [character, setCharacter] = useState<CharacterKind>('mimi');
   const [activePage, setActivePage] = useState(MAIN_PAGE);
+  const activePageRef = useRef(MAIN_PAGE);
+  const pager = useRef<ComponentRef<typeof ScrollView>>(null);
+  const [initialOffset] = useState(() => ({ x: width * MAIN_PAGE, y: 0 }));
+  useLayoutEffect(() => {
+    const x = width * activePageRef.current;
+    pager.current?.scrollTo({ x, animated: false });
+    scrollX.setValue(x);
+  }, [width, scrollX]);
+  const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -41,13 +52,19 @@ export function HomeScreen({ services }: { services: AppServices }) {
       <StatusBar style={dark ? 'light' : 'dark'} />
       <View style={[styles.root, { backgroundColor: scheme.surface }]}>
         <Animated.ScrollView
+          ref={pager}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          contentOffset={{ x: width * MAIN_PAGE, y: 0 }}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          contentOffset={initialOffset}
+          onLayout={() => pager.current?.scrollTo({ x: width * activePageRef.current, animated: false })}
+          onScroll={(event) => {
+            updateScroll(event);
+            const next = Math.max(0, Math.min(PAGE_COUNT - 1, Math.round(event.nativeEvent.contentOffset.x / width)));
+            activePageRef.current = next;
+            setActivePage(next);
+          }}
           scrollEventThrottle={16}
-          onMomentumScrollEnd={(event) => setActivePage(Math.round(event.nativeEvent.contentOffset.x / width))}
         >
           <View style={{ width }}>
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
@@ -56,11 +73,11 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} character={character} active={activePage === 2} />
+            <ARPage risk={home.risk} mood={home.mood} character={character} active={activePage === AR_PAGE} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
-          <PageIndicator count={3} page={page} />
+          <PageIndicator count={PAGE_COUNT} page={page} />
         </View>
       </View>
     </SchemeContext.Provider>

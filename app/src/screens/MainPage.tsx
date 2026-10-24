@@ -65,7 +65,7 @@ export function MainPage({ home, bottomInset, topInset, character, onCharacterCh
           <Path d="M10.5 13.3q1.5 1.4 3 0" fill="none" stroke={scheme.onSurfaceVariant} strokeWidth={1.2} strokeLinecap="round" />
         </Svg>
       </Pressable>
-      <Character key={`${character}-${previewMood ?? home.mood}`} mood={previewMood ?? home.mood} size={size} character={character} active={active} />
+      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
       <Reading state={home.reading} />
     </View>
   );

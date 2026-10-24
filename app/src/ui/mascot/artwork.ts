@@ -51,8 +51,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    125,
-                    135
+                    123.83019923457772,
+                    131.44519479530425
                   ],
                   "idle": {
                     "frames": [
@@ -107,7 +107,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -138,8 +143,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    195,
-                    135
+                    196.16980076542228,
+                    131.44519479530425
                   ],
                   "idle": {
                     "frames": [
@@ -194,7 +199,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -347,7 +357,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6300,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -397,7 +412,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3150,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -460,7 +480,12 @@ export const artwork: Artwork = {
             ],
             "duration": 720,
             "delay": 0,
-            "easing": "inOut"
+            "easing": [
+              0.2,
+              0.8,
+              0.2,
+              1
+            ]
           }
         }
       }
@@ -513,8 +538,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    125,
-                    180
+                    117.69645615825121,
+                    216.5568981157349
                   ],
                   "idle": {
                     "frames": [
@@ -561,7 +586,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -592,8 +622,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    195,
-                    180
+                    203.3035438417488,
+                    216.5568981157349
                   ],
                   "idle": {
                     "frames": [
@@ -640,7 +670,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -777,7 +812,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6300,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -835,7 +875,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4000,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -898,7 +943,12 @@ export const artwork: Artwork = {
             ],
             "duration": 690,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -986,7 +1036,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3800,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -1025,7 +1080,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 690,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -1080,8 +1140,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    125,
-                    215
+                    106.71743664768032,
+                    230.84732255231873
                   ],
                   "idle": {
                     "frames": [
@@ -1120,7 +1180,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -1151,8 +1216,8 @@ export const artwork: Artwork = {
                 ],
                 "motion": {
                   "origin": [
-                    195,
-                    215
+                    216.2825633523197,
+                    230.84732255231873
                   ],
                   "idle": {
                     "frames": [
@@ -1191,7 +1256,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6200,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -1305,7 +1375,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4400,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -1360,7 +1435,12 @@ export const artwork: Artwork = {
             ],
             "duration": 780,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -1448,7 +1528,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 5100,
                 "delay": -2300,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -1485,9 +1570,14 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 5100,
-                "delay": -2300,
-                "easing": "out"
+                "duration": 780,
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -1577,7 +1667,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3800,
                 "delay": -1600,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -1615,8 +1710,13 @@ export const artwork: Artwork = {
                   }
                 ],
                 "duration": 780,
-                "delay": -1600,
-                "easing": "out"
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -1706,7 +1806,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3800,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -1745,7 +1850,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -1880,7 +1990,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 4500,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -2026,7 +2141,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -2076,7 +2196,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -2139,7 +2264,12 @@ export const artwork: Artwork = {
             ],
             "duration": 720,
             "delay": 0,
-            "easing": "inOut"
+            "easing": [
+              0.22,
+              0.8,
+              0.3,
+              1
+            ]
           }
         }
       }
@@ -2270,7 +2400,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5300,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -2416,7 +2551,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -2475,7 +2615,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -2538,7 +2683,12 @@ export const artwork: Artwork = {
             ],
             "duration": 690,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -2626,7 +2776,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -2665,7 +2820,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -2798,7 +2958,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6800,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -2914,7 +3079,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 5100,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -2977,7 +3147,12 @@ export const artwork: Artwork = {
             ],
             "duration": 780,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -3065,7 +3240,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4700,
                 "delay": -2100,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -3102,9 +3282,14 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
-                "delay": -2100,
-                "easing": "out"
+                "duration": 780,
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -3194,7 +3379,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": -1500,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -3232,8 +3422,13 @@ export const artwork: Artwork = {
                   }
                 ],
                 "duration": 780,
-                "delay": -1500,
-                "easing": "out"
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -3323,7 +3518,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -3362,7 +3562,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -3463,7 +3668,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 4500,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -3527,7 +3737,7 @@ export const artwork: Artwork = {
                 "motion": {
                   "origin": [
                     126,
-                    197
+                    198
                   ],
                   "idle": {
                     "frames": [
@@ -3598,7 +3808,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -3648,7 +3863,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -3711,7 +3931,12 @@ export const artwork: Artwork = {
             ],
             "duration": 720,
             "delay": 0,
-            "easing": "inOut"
+            "easing": [
+              0.22,
+              0.8,
+              0.3,
+              1
+            ]
           }
         }
       }
@@ -3808,7 +4033,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5300,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -3872,7 +4102,7 @@ export const artwork: Artwork = {
                 "motion": {
                   "origin": [
                     124,
-                    210
+                    210.5
                   ],
                   "idle": {
                     "frames": [
@@ -3943,7 +4173,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -4002,7 +4237,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4065,7 +4305,12 @@ export const artwork: Artwork = {
             ],
             "duration": 690,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -4153,7 +4398,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -4192,7 +4442,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4291,7 +4546,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6800,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -4404,7 +4664,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 5100,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4467,7 +4732,12 @@ export const artwork: Artwork = {
             ],
             "duration": 780,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -4555,7 +4825,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4700,
                 "delay": -2100,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -4592,9 +4867,14 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
-                "delay": -2100,
-                "easing": "out"
+                "duration": 780,
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4684,7 +4964,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": -1500,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -4722,8 +5007,13 @@ export const artwork: Artwork = {
                   }
                 ],
                 "duration": 780,
-                "delay": -1500,
-                "easing": "out"
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4813,7 +5103,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -4852,7 +5147,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -4991,7 +5291,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 4500,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -5096,7 +5401,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -5146,7 +5456,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -5209,7 +5524,12 @@ export const artwork: Artwork = {
             ],
             "duration": 720,
             "delay": 0,
-            "easing": "inOut"
+            "easing": [
+              0.22,
+              0.8,
+              0.3,
+              1
+            ]
           }
         }
       }
@@ -5344,7 +5664,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5300,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -5449,7 +5774,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -5508,7 +5838,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -5571,7 +5906,12 @@ export const artwork: Artwork = {
             ],
             "duration": 690,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -5659,7 +5999,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -5698,7 +6043,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -5813,7 +6163,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6800,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -5896,7 +6251,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 5100,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -5959,7 +6319,12 @@ export const artwork: Artwork = {
             ],
             "duration": 780,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -6047,7 +6412,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4700,
                 "delay": -2100,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -6084,9 +6454,14 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
-                "delay": -2100,
-                "easing": "out"
+                "duration": 780,
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -6176,7 +6551,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": -1500,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -6214,8 +6594,13 @@ export const artwork: Artwork = {
                   }
                 ],
                 "duration": 780,
-                "delay": -1500,
-                "easing": "out"
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -6305,7 +6690,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -6344,7 +6734,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -6477,7 +6872,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 4500,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -6639,7 +7039,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -6689,7 +7094,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -6752,7 +7162,12 @@ export const artwork: Artwork = {
             ],
             "duration": 720,
             "delay": 0,
-            "easing": "inOut"
+            "easing": [
+              0.22,
+              0.8,
+              0.3,
+              1
+            ]
           }
         }
       }
@@ -6881,7 +7296,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5300,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -7035,7 +7455,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 5800,
                     "delay": 0,
-                    "easing": "linear"
+                    "easing": [
+                      0.25,
+                      0.1,
+                      0.25,
+                      1
+                    ]
                   }
                 }
               },
@@ -7094,7 +7519,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4200,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -7157,7 +7587,12 @@ export const artwork: Artwork = {
             ],
             "duration": 690,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -7245,7 +7680,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -7284,7 +7724,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -7415,7 +7860,12 @@ export const artwork: Artwork = {
                     ],
                     "duration": 6800,
                     "delay": 0,
-                    "easing": "inOut"
+                    "easing": [
+                      0.42,
+                      0,
+                      0.58,
+                      1
+                    ]
                   }
                 }
               },
@@ -7544,7 +7994,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 5100,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -7607,7 +8062,12 @@ export const artwork: Artwork = {
             ],
             "duration": 780,
             "delay": 0,
-            "easing": "out"
+            "easing": [
+              0,
+              0,
+              0.58,
+              1
+            ]
           }
         }
       },
@@ -7695,7 +8155,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 4700,
                 "delay": -2100,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -7732,9 +8197,14 @@ export const artwork: Artwork = {
                     "scaleY": 1
                   }
                 ],
-                "duration": 4700,
-                "delay": -2100,
-                "easing": "out"
+                "duration": 780,
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -7824,7 +8294,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": -1500,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -7862,8 +8337,13 @@ export const artwork: Artwork = {
                   }
                 ],
                 "duration": 780,
-                "delay": -1500,
-                "easing": "out"
+                "delay": 0,
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }
@@ -7953,7 +8433,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 3500,
                 "delay": 0,
-                "easing": "inOut"
+                "easing": [
+                  0.42,
+                  0,
+                  0.58,
+                  1
+                ]
               },
               "reaction": {
                 "frames": [
@@ -7992,7 +8477,12 @@ export const artwork: Artwork = {
                 ],
                 "duration": 780,
                 "delay": 0,
-                "easing": "out"
+                "easing": [
+                  0,
+                  0,
+                  0.58,
+                  1
+                ]
               }
             }
           }

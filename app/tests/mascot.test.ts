@@ -3,7 +3,86 @@ import { test } from 'node:test';
 
 import { artwork } from '../src/ui/mascot/artwork';
 import { characterKinds, nextCharacter, type ArtworkNode } from '../src/ui/mascot/types';
-import { restMotion, selectMotion } from '../src/ui/mascot/motionState';
+import { easeAt, groupFrame, restMotion, sampleMotion, selectMotion } from '../src/ui/mascot/motionState';
+import { MascotClock } from '../src/ui/mascot/MascotClock';
+
+function fakeClock() {
+  const callbacks = new Map<number, (time: number) => void>();
+  let id = 0;
+  const clock = new MascotClock((callback) => { callbacks.set(++id, callback); return id; }, (frame) => { callbacks.delete(frame); });
+  return {
+    clock, callbacks,
+    tick(time: number) {
+      const scheduled = [...callbacks.values()];
+      callbacks.clear();
+      scheduled.forEach((callback) => callback(time));
+    },
+  };
+}
+
+test('全グループが1つのフレーム予約を共有し、停止時に予約とタップを破棄する', () => {
+  const { clock, callbacks, tick } = fakeClock();
+  let latest: [number, number | null, boolean] | undefined;
+  const unsubscribe = clock.subscribe((...frame) => { latest = frame; });
+  const other = clock.subscribe(() => {});
+  clock.setActive(true);
+  assert.equal(callbacks.size, 1);
+  tick(100); tick(300);
+  assert.deepEqual(latest, [200, null, true]);
+  clock.react();
+  assert.deepEqual(latest, [200, 200, true]);
+  clock.setActive(false);
+  assert.equal(callbacks.size, 0);
+  clock.react();
+  assert.deepEqual(latest, [200, null, false]);
+  clock.setActive(true);
+  tick(5000); tick(5100);
+  assert.deepEqual(latest, [300, null, true]);
+  assert.equal(callbacks.size, 1);
+  clock.setActive(false);
+  unsubscribe(); other();
+});
+
+test('タップ中も呼吸・耳・まばたきの位相は変わらない', () => {
+  for (const character of characterKinds) {
+    for (const risk of ['low', 'medium', 'high'] as const) {
+      const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
+        if (node.motion?.idle && !node.motion.reaction) {
+          assert.deepEqual(groupFrame(node.motion, 1234, null, true), groupFrame(node.motion, 1234, 1200, true));
+          assert.deepEqual(groupFrame(node.motion, 1400, 1350, true), sampleMotion(node.motion.idle, 1400, true));
+        }
+        inspect(node.children);
+      });
+      inspect(artwork[character][risk]);
+    }
+  }
+});
+
+test('highのslowカビもタップ反応は780ms、遅延なしで終了する', () => {
+  for (const character of characterKinds) {
+    const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
+      if (node.motion?.reaction) {
+        assert.equal(node.motion.reaction.duration, 780);
+        assert.equal(node.motion.reaction.delay, 0);
+        assert.deepEqual(groupFrame(node.motion, 1000, 0, true), sampleMotion(node.motion.idle ?? restMotion, 1000, true));
+      }
+      inspect(node.children);
+    });
+    inspect(artwork[character].high);
+  }
+});
+
+test('イージングは全体ではなく各キーフレームの間に適用する', () => {
+  const motion = { ...restMotion, duration: 1000, easing: [.25, .1, .25, 1] as [number, number, number, number], frames: [
+    { ...restMotion.frames[0], at: 0, x: 0 },
+    { ...restMotion.frames[0], at: .5, x: 10 },
+    { ...restMotion.frames[0], at: 1, x: 0 },
+  ] };
+  assert.equal(sampleMotion(motion, 500, false).x, 10);
+  assert.ok(Math.abs(sampleMotion(motion, 250, false).x - 10*easeAt(.5, motion.easing)) < 1e-8);
+  assert.ok(sampleMotion(motion, 250, false).x > 8);
+  assert.equal(sampleMotion(motion, 1000, false).x, 0);
+});
 
 test('切り替えボタンは5種類を順に循環する', () => {
   assert.deepEqual(characterKinds.map((kind) => nextCharacter(kind, 1)), ['antenna', 'fin', 'mushroom', 'cloudtail', 'mimi']);

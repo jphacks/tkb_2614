@@ -17,7 +17,7 @@ export interface Motion {
   frames: MotionFrame[];
   duration: number;
   delay: number;
-  easing: 'linear' | 'inOut' | 'out';
+  easing: [number, number, number, number];
 }
 export interface ArtworkNode {
   tag: 'g' | 'path' | 'ellipse' | 'circle';

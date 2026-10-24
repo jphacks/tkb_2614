@@ -28,7 +28,7 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "lint": "expo lint",
-    "test": "tsx --test tests/*.test.ts"
+    "test": "tsx --test tests/*.test.ts tests/*.test.mjs"
   },
   "private": true
 }
