@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
+import { useWidgetSync } from '../hooks/useWidgetSync';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
@@ -23,7 +24,7 @@ const INDICATOR_AREA = 32 + space.s24;
 
 /** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
-  const { measurements, status } = useMeasurements(services);
+  const { measurements, status, lastSyncedAt } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
@@ -33,6 +34,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
   const [character, setCharacter] = useState<CharacterKind>('mimi');
+  useWidgetSync({ measurements, status, prediction, lastSyncedAt, character });
   const [activePage, setActivePage] = useState(MAIN_PAGE);
   const activePageRef = useRef(MAIN_PAGE);
   const pager = useRef<ComponentRef<typeof ScrollView>>(null);
