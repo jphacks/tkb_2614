@@ -16,6 +16,8 @@ const GUTTER = 40;
 const INSET = 6;
 const AXIS_GAP = space.s8;
 const BAND_RADIUS = 8;
+/** 時刻（「18時」など）の幅の半分の目安。 */
+const AXIS_LABEL_HALF = 16;
 const AXIS_Y = INSET + PLOT_HEIGHT + AXIS_GAP + type.label.fontSize;
 const SVG_HEIGHT = AXIS_Y + INSET;
 
@@ -80,9 +82,10 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
             {chart.grid.map((g) => (
               <SvgText
                 key={g.x}
-                x={g.x}
+                // 最新の計測が正時ちょうどだと縦線が右端に来るので、時刻が切れないよう右端にそろえる。
+                x={g.x + AXIS_LABEL_HALF > svgWidth ? svgWidth : g.x}
                 y={AXIS_Y}
-                textAnchor="middle"
+                textAnchor={g.x + AXIS_LABEL_HALF > svgWidth ? 'end' : 'middle'}
                 fill={scheme.onSurfaceVariant}
                 fontFamily={type.label.fontFamily}
                 fontSize={type.label.fontSize}
