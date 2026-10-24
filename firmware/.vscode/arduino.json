@@ -1,0 +1,5 @@
+{
+  "sketch": "firmware.ino",
+  "board": "esp32:esp32:esp32",
+  "port": ""
+}
