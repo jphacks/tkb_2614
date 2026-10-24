@@ -16,7 +16,8 @@ interface MeasurementState {
 export function useMeasurements(services: AppServices, intervalMs = DEFAULT_SYNC_INTERVAL_MS) {
   const [state, setState] = useState<MeasurementState>({ measurements: [], status: 'loading', error: null });
   const [refreshKey, setRefreshKey] = useState(0);
-  // effect の再実行を待たずに loading にし、pull-to-refresh の refreshing と同じ描画で揃える。
+  // 手動同期用のAPI。ホームの更新UIは意図的に設けず、通信側の接続用に維持する。
+  // effect の再実行を待たずに、呼び出した描画で loading にする。
   const refresh = useCallback(() => {
     setState((previous) => ({ ...previous, status: 'loading', error: null }));
     setRefreshKey((key) => key + 1);

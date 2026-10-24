@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-mushroom mo-high" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="きのこまもり・ぐったり">
+<style><![CDATA[
+ .mo-mushroom{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-mushroom .tap-body{transform-origin:160px 235px}
+ .mo-mushroom .breath{transform-origin:160px 221px;animation:mushroom-breath 3.2s ease-in-out infinite}
+ .mo-mushroom .blink{transform-box:fill-box;transform-origin:center;animation:mushroom-blink 5.8s infinite}
+ .mo-mushroom .feature{transform-origin:167px 187px;animation:mushroom-feature 4.5s ease-in-out infinite}
+ .mo-mushroom .mold-float{animation:mushroom-mold 3.5s ease-in-out infinite}
+ .mo-mushroom .mold-float.late{animation-delay:-1.5s}
+ .mo-mushroom .mold-float.slow{animation-duration:4.7s;animation-delay:-2.1s}
+ .mo-mushroom.mo-medium .breath{animation-duration:4.2s}
+ .mo-mushroom.mo-high .breath{animation-duration:5.1s}
+ .mo-mushroom.mo-medium .feature{animation-duration:5.3s}
+ .mo-mushroom.mo-high .feature{animation-duration:6.8s}
+ .mo-mushroom.mo-low.is-tapped .tap-body{animation:mushroom-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-mushroom.mo-medium.is-tapped .tap-body{animation:mushroom-startle .69s ease-out 1 both}
+ .mo-mushroom.mo-high.is-tapped .tap-body{animation:mushroom-weak .78s ease-out 1 both}
+ .mo-mushroom.is-tapped .mold-float{animation:mushroom-mold-startle .78s ease-out 1 both}
+ @keyframes mushroom-breath{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2px) scaleY(1.02)}}
+ @keyframes mushroom-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes mushroom-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(3deg)}74%{transform:rotate(-2deg)}84%{transform:rotate(0)}}
+ @keyframes mushroom-mold{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+ @keyframes mushroom-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(5px) scale(1.06,.92)}42%{transform:translateY(-27px) scale(.94,1.09)}67%{transform:translateY(1px) scale(1.09,.91)}82%{transform:translateY(-8px) scale(.98,1.03)}}
+ @keyframes mushroom-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-12px,-10px) rotate(-5deg)}42%{transform:translate(9px,-2px) rotate(4deg)}68%{transform:translate(-4px,0) rotate(-2deg)}84%{transform:translate(2px,0) rotate(1deg)}}
+ @keyframes mushroom-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-9px) rotate(-2deg)}46%{transform:translateY(-8px) rotate(2deg)}72%{transform:translateY(-3px) rotate(-1deg)}86%{transform:translateY(-1px)}}
+ @keyframes mushroom-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-16px) rotate(11deg)}68%{transform:translateY(-4px) rotate(-3deg)}}
+ @media(prefers-reduced-motion:reduce){.mo-mushroom *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="159" cy="248" rx="106" ry="7" fill="#395450" opacity=".1"/>
+    <g class="tap-body"><g class="breath">
+    <path d="M88 220 Q100 201 163 204 Q212 206 230 222 Q243 243 212 244 L114 244 Q83 244 88 220 Z" fill="#FFF9F1"/>
+    <g class="feature"><path d="M74 208 C68 175 110 154 163 157 C209 157 246 173 254 205 Q261 228 239 228 Q213 207 169 206 Q114 203 94 225 Q78 229 74 208 Z" fill="#F4BCC3"/>
+    <path d="M87 223 Q140 193 204 214 Q239 233 251 211 Q239 239 200 227 Q138 210 104 236 Z" fill="#FAE0DC"/></g>
+    <g stroke="#395450" stroke-width="2.8" stroke-linecap="round"><path d="M132 223 l6 6 M138 223 l-6 6"/><path d="M172 223 l6 6 M178 223 l-6 6"/></g><path d="M148 242 Q156 234 164 242" fill="none" stroke="#395450" stroke-width="3" stroke-linecap="round"/><path d="M208 206 Q199 217 203 222 Q212 227 211 218 Z" fill="#F4BCC3" opacity=".88"/>
+    </g></g><g transform="translate(63 236) scale(0.7)"><g class="mold-float slow">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g><g transform="translate(272 231) scale(0.83)"><g class="mold-float late">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g><g transform="translate(191 163) scale(0.75)"><g class="mold-float ">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g>
+</svg>

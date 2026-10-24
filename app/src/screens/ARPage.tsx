@@ -8,6 +8,7 @@ import { useScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
 import type { Mood } from '../ui/homeState';
 import { Mold } from '../ui/Mold';
+import type { CharacterKind } from '../ui/mascot/types';
 
 const VIEW = { width: 402, height: 874 };
 
@@ -18,9 +19,10 @@ const MOLDS: Record<MoldRiskLevel, readonly (readonly [number, number, number])[
   high: [[94, 604, 79], [150, 604, 61], [196, 604, 43], [240, 604, 32], [70, 518, 58], [78, 448, 43], [84, 388, 32], [30, 668, 50]],
 };
 
-export function ARPage({ risk, mood, isVisible, isSettled, bottomInset }: {
+export function ARPage({ risk, mood, character, isVisible, isSettled, bottomInset }: {
   risk: MoldRiskLevel | null;
   mood: Mood;
+  character: CharacterKind;
   isVisible: boolean;
   isSettled: boolean;
   bottomInset: number;
@@ -49,7 +51,7 @@ export function ARPage({ risk, mood, isVisible, isSettled, bottomInset }: {
           moving={isVisible && isActive}
         />
       ))}
-      <View style={styles.character}><Character mood={mood} size={108} /></View>
+      <View style={styles.character}><Character mood={mood} size={108} character={character} active={isVisible && isActive} /></View>
     </View>
   );
 
