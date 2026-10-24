@@ -23,9 +23,10 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "start:mock": "EXPO_PUBLIC_MEASUREMENT_SOURCE=mock expo start --go",
+    "ios": "expo run:ios --device",
+    "android": "expo run:android --device",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "lint": "expo lint",

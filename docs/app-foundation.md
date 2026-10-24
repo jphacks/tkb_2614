@@ -15,13 +15,16 @@
 ```sh
 cd app
 pnpm install
-pnpm start
+pnpm start:mock  # モックで起動（Expo Go）
+pnpm ios         # development build を iPhone に入れて起動（BLE）
+pnpm android     # development build を Android に入れて起動（BLE）
+pnpm start       # 入れた development build 用に Metro だけ起動する
 pnpm typecheck
 pnpm lint
 pnpm test
 ```
 
-既定の取得元はBLE（react-native-ble-plx）で、Expo GoとiOSシミュレータでは動かない。ESP32とつなぐときは、次の節の development build を実機に入れる。ハードなしでUIを触るときは `EXPO_PUBLIC_MEASUREMENT_SOURCE=mock pnpm start` でモックに切り替える（Expo Goでも動く）。ページャーは ScrollView の pagingEnabled で作っており、ルーティングはないため、既存の `index.ts → App.tsx` がエントリ。
+既定の取得元はBLE（react-native-ble-plx）で、Expo GoとiOSシミュレータでは動かない。ESP32とつなぐときは、次の節の development build を実機に入れる。ハードなしでUIを触るときは `pnpm start:mock` でモックに切り替え、Expo Go で開く。`pnpm start` で起動した Metro を Expo Go で開くと、BLE のネイティブコードがないのでエラーになる。ページャーは ScrollView の pagingEnabled で作っており、ルーティングはないため、既存の `index.ts → App.tsx` がエントリ。
 
 ## development build（実機）
 
@@ -29,10 +32,11 @@ pnpm test
 
 **iPhone**（Mac が必要）
 
-1. Xcode と CocoaPods（`brew install cocoapods`）を入れる。Xcode の Settings → Accounts に Apple ID を追加する（無料の Personal Team でよい）。
-2. iPhone を USB でつなぎ、「このコンピュータを信頼」する。iOS 16 以降は 設定 → プライバシーとセキュリティ → デベロッパモード をオンにする。
-3. `cd app && pnpm expo run:ios --device` を実行し、一覧から iPhone を選ぶ。初回は bundle identifier を聞かれるので、自分だけの値（例: `com.<名前>.chiikabi`）を入れる。`app.json` に書き込まれるが、Personal Team では人ごとに値が違うのでコミットしない。
-4. 起動しないときは、iPhone の 設定 → 一般 → VPNとデバイス管理 で自分の Apple ID を信頼する。初回起動時の Bluetooth の許可は「許可」を選ぶ。
+1. Xcode と CocoaPods（`brew install cocoapods`）を入れる。Xcode のメニュー Xcode → Settings… の「Apple Accounts」（@ のアイコン）で Apple アカウントにサインインする（Xcode 27 で確認。Developer Program に入っていなくても、無料の Personal Team が作られる）。サインインしただけでは署名用の証明書はできないので、同じ画面でアカウントを選び、Manage Certificates… →「+」→ Apple Development で作る。これがないと `No code signing certificates are available to use.` で止まる。`security find-identity -p codesigning -v` で1件以上出れば足りている。証明書があるのに0件のときは、発行元の中間証明書（Apple WWDR G3）がキーチェーンにない。[Apple の配布ページ](https://www.apple.com/certificateauthority/)の「Worldwide Developer Relations - G3」を入れる（ダウンロードした `.cer` をダブルクリックする）。
+2. iPhone を USB でつなぎ、「このコンピュータを信頼」する。iOS 16 以降は 設定 → プライバシーとセキュリティ → デベロッパモード（いちばん下）をオンにし、再起動後のダイアログで「オンにする」を選ぶ。オフのままだと `Developer Mode disabled` で止まる。
+3. `app/.env.local` に自分だけの bundle identifier を書く（例: `IOS_BUNDLE_IDENTIFIER=com.<名前>.chiikabi`）。Personal Team では人ごとに値が違うので、`app.json` ではなく gitignore 済みのこのファイルに置き、`app.config.ts` が読む。`cd app && pnpm ios` を実行し、一覧から iPhone を選ぶ。
+4. 初回は `No profiles for '<bundle identifier>' were found` で止まる（Expo CLI はプロファイルを作る `-allowProvisioningUpdates` を渡さない）。`xed ios` で Xcode を開き、TARGETS の app → Signing & Capabilities で Team が自分の Personal Team になっていることを確かめ、実行先に iPhone を選んで ▶ で一度ビルドする。プロファイルができるので、以後は `pnpm ios` で通る。
+5. 起動しないときは、iPhone の 設定 → 一般 → VPNとデバイス管理 で自分の Apple ID を信頼する。初回起動時の Bluetooth の許可は「許可」を選ぶ。
 
 Personal Team で入れたアプリは7日で起動しなくなるので、そのときは同じコマンドで入れ直す。
 
@@ -40,12 +44,12 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 
 1. Android Studio を入れ、SDK と JDK 17 を用意する（`ANDROID_HOME` を設定する）。
 2. 端末の 開発者向けオプション → USBデバッグ をオンにし、USB でつなぐ。`adb devices` に出ることを確認する。
-3. `cd app && pnpm expo run:android --device` を実行し、端末を選ぶ。初回起動時の「付近のデバイス」の許可は「許可」を選ぶ。
+3. `cd app && pnpm android` を実行し、端末を選ぶ。初回起動時の「付近のデバイス」の許可は「許可」を選ぶ。
 
 **入れた後**
 
 - このビルドは Metro からJSを読み込む。2回目以降は `pnpm start` で Metro を起動し、入れたアプリを開けばよい（Mac と端末は同じ Wi-Fi にする）。JS の変更はビルドし直さなくても反映される。
-- ネイティブのパッケージを足したとき・`app.json` を変えたときは、`run:ios` / `run:android` でビルドし直す。
+- ネイティブのパッケージを足したとき・`app.json` を変えたときは、`pnpm ios` / `pnpm android` でビルドし直す。
 - Metro なしで動くアプリが欲しいとき（デモなど）は `pnpm expo run:ios --device --configuration Release` / `pnpm expo run:android --device --variant release` でビルドする。
 
 ## 実装の分担
