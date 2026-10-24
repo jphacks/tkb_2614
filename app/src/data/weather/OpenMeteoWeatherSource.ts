@@ -31,6 +31,16 @@ function abortError(): Error {
   return error;
 }
 
+/** promiseの完了かabortの早い方で決着する。 */
+function untilAborted<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) return Promise.reject(abortError());
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => reject(abortError());
+    signal.addEventListener('abort', onAbort, { once: true });
+    promise.then(resolve, reject).finally(() => signal.removeEventListener('abort', onAbort));
+  });
+}
+
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
@@ -83,14 +93,22 @@ export function createOpenMeteoWeatherSource({
   }
 
   async function request(url: string, signal: AbortSignal): Promise<unknown> {
+    const response = await fetchFn(url, { signal });
+    if (!response.ok) return null;
+    return await response.json();
+  }
+
+  /** 位置の取得からAPIまでをまとめて期限内に終わらせる。期限切れか呼び出し側のabortで待機を打ち切る。 */
+  async function fetchFresh(signal: AbortSignal): Promise<OutdoorWeather | null> {
     const controller = new AbortController();
     const abort = () => controller.abort();
     signal.addEventListener('abort', abort, { once: true });
     const timer = setTimeout(abort, timeoutMs);
     try {
-      const response = await fetchFn(url, { signal: controller.signal });
-      if (!response.ok) return null;
-      return await response.json();
+      // getLocationはabortを受け取れないので、返らなくても待機だけは解除する。
+      const location = await untilAborted(getLocation(), controller.signal);
+      if (!location) return null;
+      return parseOpenMeteo(await untilAborted(request(weatherUrl(location), controller.signal), controller.signal), new Date(now()));
     } finally {
       clearTimeout(timer);
       signal.removeEventListener('abort', abort);
@@ -105,10 +123,7 @@ export function createOpenMeteoWeatherSource({
       if (signal.aborted) throw abortError();
       if (cached) return cached;
       try {
-        const location = await getLocation();
-        if (signal.aborted) throw abortError();
-        if (!location) return null;
-        const weather = parseOpenMeteo(await request(weatherUrl(location), signal), new Date(now()));
+        const weather = await fetchFresh(signal);
         if (signal.aborted) throw abortError();
         // 失敗はキャッシュしない。次に開いたときに取り直す。
         if (weather) await storage.setItem(CACHE_KEY, JSON.stringify(weather)).catch(() => {});

@@ -71,6 +71,20 @@ test('壊れたキャッシュは無視して取り直し、abortはAbortError�
   await assert.rejects(source.fetchCurrent(controller.signal), { name: 'AbortError' });
 });
 
+test('位置が返らなくても、期限切れならnull、abortならAbortErrorで待機を解除する', async () => {
+  const create = (timeoutMs: number) => createOpenMeteoWeatherSource({
+    getLocation: () => new Promise(() => {}),
+    storage: { async getItem() { return null; }, async setItem() {} },
+    fetch: (async () => { throw new Error('呼ばれない'); }) as unknown as typeof fetch,
+    timeoutMs,
+  });
+  assert.equal(await create(10).fetchCurrent(signal()), null);
+  const controller = new AbortController();
+  const pending = create(60_000).fetchCurrent(controller.signal);
+  setTimeout(() => controller.abort(), 10);
+  await assert.rejects(pending, { name: 'AbortError' });
+});
+
 test('モックは固定の天気か「外の天気なし」を返す', async () => {
   const now = Date.UTC(2026, 9, 25, 5, 10);
   const weather = await createMockWeatherSource({ delayMs: 0, now: () => now }).fetchCurrent(signal());

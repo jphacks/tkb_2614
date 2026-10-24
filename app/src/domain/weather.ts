@@ -2,7 +2,7 @@
 export interface OutdoorWeather {
   readonly temperatureC: number;
   readonly relativeHumidityPercent: number;
-  /** 直前1時間の降水量。 */
+  /** 直前15分間の降水量（Open-Meteoのcurrentは15分間隔のデータ）。1時間量ではない。 */
   readonly precipitationMm: number;
   readonly windSpeedMps: number;
   readonly isDay: boolean;
