@@ -16,6 +16,12 @@ test('モックはsince以上の毎時の履歴を古い順に返し、再起動
   const restarted = createMockMeasurementSource({ samples, delayMs: 0, now: () => now });
   assert.deepEqual((await restarted.fetchSince(since, signal)).map((r) => r.temperatureC), [25, 20]);
 });
+test('モックの起点はepochで変えられる', async () => {
+  const epoch = Date.UTC(2026, 0, 1);
+  const source = createMockMeasurementSource({ samples, delayMs: 0, epoch, now: () => epoch + 3600000 });
+  const records = await source.fetchSince(null, new AbortController().signal);
+  assert.deepEqual(records.map((r) => r.measuredAt), ['2026-01-01T00:00:00.000Z', '2026-01-01T01:00:00.000Z']);
+});
 test('モックはキャンセル・不正設定・失敗を扱う', async () => {
   const source = createMockMeasurementSource({ delayMs: 0, failEvery: 2 });
   const controller = new AbortController();
