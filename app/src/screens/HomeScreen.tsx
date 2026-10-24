@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useMemo, useState } from 'react';
-import { Animated, StyleSheet, useColorScheme, useWindowDimensions, View } from 'react-native';
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMeasurements } from '../hooks/useMeasurements';
@@ -24,8 +24,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
-  const dark = useColorScheme() === 'dark';
-  const scheme = schemeFor(home.risk, dark);
+  const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -35,7 +34,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
 
   return (
     <SchemeContext.Provider value={scheme}>
-      <StatusBar style={dark ? 'light' : 'dark'} />
+      <StatusBar style="dark" />
       <View style={[styles.root, { backgroundColor: scheme.surface }]}>
         <Animated.ScrollView
           horizontal
