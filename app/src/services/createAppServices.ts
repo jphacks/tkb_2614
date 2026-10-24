@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createMeasurementStore } from '../data/measurementStore';
 import { createMockMeasurementSource } from '../data/mock/MockMeasurementSource';
-import { placeholderMoldPredictor } from '../data/mock/PlaceholderMoldPredictor';
 import type { MeasurementSource } from '../domain/measurement';
+import { createVttMoldPredictor } from '../domain/moldModel';
 import type { MoldPredictor } from '../domain/prediction';
 import { createMeasurementSync } from './syncMeasurements';
 
@@ -17,7 +17,7 @@ export function createAppServices(): AppServices {
   const measurementSource = createMockMeasurementSource({ delayMs: 300, failEvery: 0 });
   return {
     measurementSource,
-    moldPredictor: placeholderMoldPredictor,
+    moldPredictor: createVttMoldPredictor(),
     syncMeasurements: createMeasurementSync(measurementSource, createMeasurementStore(AsyncStorage)),
   };
 }

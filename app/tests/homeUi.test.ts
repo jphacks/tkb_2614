@@ -12,7 +12,7 @@ function record(hoursAgo: number, humidity: number | null, temperature: number |
   return { seq: 100 - hoursAgo, deviceId: 'test', temperatureC: temperature, relativeHumidityPercent: humidity, measuredAt: at, receivedAt: at };
 }
 const prediction = (riskLevel: MoldPrediction['riskLevel']): MoldPrediction =>
-  ({ riskLevel, horizonHours: 24, generatedAt: '', basedOnReceivedAt: '', isPlaceholder: true });
+  ({ moldIndex: 0, riskLevel, daysToMoldIndex1: null, isProvisional: false, basedOnReceivedAt: '' });
 
 test('データがなければ眠り、同期中は探索中、失敗後は空欄にする', () => {
   assert.deepEqual(deriveHomeState([], 'loading', null, end), { risk: null, mood: 'sleep', reading: { kind: 'searching' } });

@@ -6,7 +6,7 @@
 
 画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [AR]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。AR はカメラを使わないモック。
 
-BLE通信・権限設定・本当の予測モデルは未実装。BLEのUUID・要求・バッチ転送・ACKの送信形式はハード担当と確定し、アプリとファームウェアを同じコミットで実装する。現在のインターフェースはアプリ内の抽象化であり、通信仕様ではない。
+カビのリスクはVTTモデル（[mold-model.md](mold-model.md)）で計算する。BLE通信・権限設定は未実装。BLEのUUID・要求・バッチ転送・ACKの送信形式はハード担当と確定し、アプリとファームウェアを同じコミットで実装する。現在のインターフェースはアプリ内の抽象化であり、通信仕様ではない。
 
 ## 起動と確認
 
@@ -30,7 +30,8 @@ pnpm test
 - `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存。最大seqは保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さず、ACKしない。
 - `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。同一同期サービス内では手動更新や再開も直列化。
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
-- `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。仮予測は欠測・時刻未同期ならnull。
+- `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAt（未同期ならseq）の差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
+- `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
@@ -50,7 +51,7 @@ pnpm test
 
 実データはMeasurementSourceのfetchSince/ackを実装し、単位変換と入力検証をアダプター境界に置く。seqはデバイス単位で単調増加する前提のため、初期化によるseqリセットや複数台の切り替えは別途設計する。保存済み履歴の削除・保持期間も長期運用前に決める。
 
-予測はMoldPredictorの同期関数を差し替える。VTTに必要な長期間の毎時系列を使用し、欠測と未同期時刻の扱いもモデル側で決める。モックの固定リスクを判定基準に流用しない。
+月別ΔTは地域・住宅の差を見ていない概算。外気温を取得できるようになったら、ΔT=(1−fRsi)(室温−外気温) で求める（[mold-model.md](mold-model.md)）。参考値（`isProvisional`）の画面での見せ方は未定。
 
 ## 手動確認
 
