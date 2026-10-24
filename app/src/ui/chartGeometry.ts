@@ -4,8 +4,8 @@ export const CHART_WINDOW_MS = 24 * 60 * 60 * 1000;
 const GRID_STEP_MS = 6 * 60 * 60 * 1000;
 
 /**
- * 湿度グラフで塗る危険帯の下限。部屋の湿度が70%だと、3℃低い壁際の表面は80%前後になり、
- * VTT モデルの臨界湿度（20℃超で80%）に届く（docs/mold-model.md）。
+ * 湿度グラフで塗る危険帯の下限。部屋の湿度が70%だと、冬に3〜4℃低い壁際の表面は80%以上になり、
+ * VTT モデルの臨界湿度（20℃超で80%）に届く（docs/mold-model.md）。夏は表面が冷えないので、実際の判定はもっと緩い。
  */
 export const HUMIDITY_DANGER_PERCENT = 70;
 
@@ -43,11 +43,10 @@ function rangeOf(values: readonly number[], kind: ChartKind): [number, number] {
   return [Math.floor(min) - 2, Math.ceil(max) + 2];
 }
 
-/** 最新順の履歴から、最新の計測時刻を右端とする直近24hのグラフ形状を作る。時刻未同期の記録は使わない。 */
+/** 最新順の履歴から、最新の計測時刻を右端とする直近24hのグラフ形状を作る。 */
 export function buildChart(measurements: readonly Measurement[], kind: ChartKind, box: Box): ChartGeometry {
   const timed = measurements
-    .filter((m) => m.measuredAt !== null)
-    .map((m) => ({ t: Date.parse(m.measuredAt as string), v: valueOf(m, kind) }))
+    .map((m) => ({ t: Date.parse(m.measuredAt), v: valueOf(m, kind) }))
     .sort((a, b) => a.t - b.t);
   const end = timed.at(-1)?.t;
   if (end === undefined) return { paths: [], points: [], latest: null, gridX: [], dangerY: null };

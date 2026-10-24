@@ -44,6 +44,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
     scrollX.setValue(x);
   }, [width, scrollX]);
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
+  const [arVisible, setArVisible] = useState(false);
+  const [arSettled, setArSettled] = useState(false);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -57,12 +59,21 @@ export function HomeScreen({ services }: { services: AppServices }) {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           contentOffset={initialOffset}
-          onLayout={() => pager.current?.scrollTo({ x: width * activePageRef.current, animated: false })}
+          onLayout={() => {
+            pager.current?.scrollTo({ x: width * activePageRef.current, animated: false });
+            setArVisible(activePageRef.current === AR_PAGE);
+            setArSettled(activePageRef.current === AR_PAGE);
+          }}
           onScroll={(event) => {
             updateScroll(event);
             const next = Math.max(0, Math.min(PAGE_COUNT - 1, Math.round(event.nativeEvent.contentOffset.x / width)));
             activePageRef.current = next;
             setActivePage(next);
+            // Preserve AR startup while entering the page, and request camera
+            // permission only once it is fully in view.
+            const x = event.nativeEvent.contentOffset.x;
+            setArVisible(x > width * MAIN_PAGE + 1);
+            setArSettled(x >= width * AR_PAGE - 1);
           }}
           scrollEventThrottle={16}
         >
@@ -73,7 +84,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} character={character} active={activePage === AR_PAGE} />
+            <ARPage risk={home.risk} mood={home.mood} character={character} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">

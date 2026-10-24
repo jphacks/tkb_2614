@@ -3,12 +3,15 @@ import { setImmediate } from 'node:timers/promises';
 import { test } from 'node:test';
 import { createMeasurementStore } from '../src/data/measurementStore';
 import type { Measurement, MeasurementSource } from '../src/domain/measurement';
-import { createMeasurementSync, scheduleMeasurementSync, type MeasurementStore } from '../src/services/syncMeasurements';
+import { createMeasurementSync, RETENTION_MS, scheduleMeasurementSync, type MeasurementStore } from '../src/services/syncMeasurements';
 
-const record = (seq: number): Measurement => ({
-  seq, deviceId: 'room', temperatureC: 25, relativeHumidityPercent: 60,
-  measuredAt: null, receivedAt: '2026-10-24T03:00:00.000Z',
+const base = Date.UTC(2026, 9, 24);
+const hour = 3600000;
+const record = (hours: number, temperatureC: number | null = 25): Measurement => ({
+  deviceId: 'room', temperatureC, relativeHumidityPercent: 60,
+  measuredAt: new Date(base + hours * hour).toISOString(), receivedAt: '2026-10-24T03:00:00.000Z',
 });
+const hours = (records: readonly Measurement[]) => records.map((r) => (Date.parse(r.measuredAt) - base) / hour);
 function setup() {
   let saved: readonly Measurement[] = [];
   const events: string[] = [];
@@ -18,48 +21,45 @@ function setup() {
   };
   const source: MeasurementSource = {
     label: 'test', deviceId: 'room',
-    async fetchSince(after) { events.push('fetch:' + after); return [record(1), record(2)]; },
-    async ack(seq) { events.push('ack:' + seq); },
+    async fetchSince(since) { events.push('fetch:' + (since?.toISOString() ?? 'all')); return [record(1), record(2)]; },
   };
   return { source, store, events, saved: () => saved };
 }
 const signal = () => new AbortController().signal;
 
-test('fetch→保存→ACKの順序を守り、再送の重複を除去して再開する', async () => {
+test('初回は全件、以降は保存済みの最新時刻から取得し、同じ時刻の記録は重複させない', async () => {
   const f = setup();
   const sync = createMeasurementSync(f.source, f.store);
   let displayed: readonly Measurement[] = [];
   await sync(signal(), (records) => { displayed = records; });
-  await sync(signal(), () => {});
-  assert.deepEqual(f.events, ['fetch:0', 'save', 'ack:2', 'fetch:2', 'save', 'ack:2']);
-  assert.deepEqual(f.saved().map((r) => r.seq), [1, 2]);
-  assert.deepEqual(displayed.map((r) => r.seq), [2, 1]);
+  const fetchSince = f.source.fetchSince;
+  f.source.fetchSince = async (since, s) => { await fetchSince(since, s); return [record(2, 30), record(3)]; };
+  await sync(signal(), (records) => { displayed = records; });
+  assert.deepEqual(f.events, ['fetch:all', 'save', 'fetch:' + record(2).measuredAt, 'save']);
+  assert.deepEqual(hours(f.saved()), [1, 2, 3]);
+  assert.equal(f.saved()[1].temperatureC, 30); // 同じ時刻は新しく届いた方で上書き
+  assert.deepEqual(hours(displayed), [3, 2, 1]);
 });
 
-test('保存が失敗したときACKせず、欠測レコードは成功した履歴と一緒に保存する', async () => {
+test('保存が失敗したら同期を失敗させ、欠測レコードは成功した履歴と一緒に保存する', async () => {
   const f = setup();
   f.store.save = async () => { throw new Error('disk full'); };
   await assert.rejects(createMeasurementSync(f.source, f.store)(signal(), () => {}), /disk full/);
-  assert.deepEqual(f.events, ['fetch:0']);
   const g = setup();
-  g.source.fetchSince = async () => [{ ...record(1), temperatureC: null }, record(2)];
+  g.source.fetchSince = async () => [record(1, null), record(2)];
   await createMeasurementSync(g.source, g.store)(signal(), () => {});
   assert.equal(g.saved()[0].temperatureC, null);
-  assert.ok(g.events.includes('ack:2'));
 });
 
-test('ACK失敗後、再起動した同期でも保存済みseqを読み、空バッチで再ACKする', async () => {
+test('1年より古い記録は保存しない', async () => {
   const f = setup();
-  f.source.ack = async () => { throw new Error('ACK failed'); };
-  await assert.rejects(createMeasurementSync(f.source, f.store)(signal(), () => {}), /ACK failed/);
-  f.source.fetchSince = async (after) => { assert.equal(after, 2); return []; };
-  f.source.ack = async (seq) => { f.events.push('retry:' + seq); };
+  const old = { ...record(0), measuredAt: new Date(base + 2 * hour - RETENTION_MS).toISOString() };
+  f.source.fetchSince = async () => [old, record(1), record(2)];
   await createMeasurementSync(f.source, f.store)(signal(), () => {});
-  assert.equal(f.saved().length, 2);
-  assert.equal(f.events.at(-1), 'retry:2');
+  assert.deepEqual(hours(f.saved()), [1, 2]);
 });
 
-test('保存途中で停止しても保存を完了し、ACKと停止後の通知をしない', async () => {
+test('保存途中で停止しても保存を完了し、停止後の通知をしない', async () => {
   const f = setup();
   const controller = new AbortController();
   let finish!: () => void;
@@ -73,7 +73,6 @@ test('保存途中で停止しても保存を完了し、ACKと停止後の通�
   await assert.rejects(pending, /中止/);
   assert.equal(notifications, 1); // 開始時の保存済み履歴のみ
   assert.equal(f.saved().length, 2);
-  assert.ok(!f.events.some((event) => event.startsWith('ack')));
 });
 
 test('応答しないfetchをタイムアウトさせ、次回同期を実行し、遅着結果を捨てる', async (t) => {
@@ -96,19 +95,7 @@ test('応答しないfetchをタイムアウトさせ、次回同期を実行し
   await sync(signal(), () => {});
   finish([record(2)]);
   await setImmediate();
-  assert.deepEqual(f.saved().map((r) => r.seq), [1]);
-});
-
-test('応答しないACKもタイムアウトし、保存済み履歴は保持する', async (t) => {
-  t.mock.timers.enable({ apis: ['setTimeout'] });
-  const f = setup();
-  f.source.ack = () => new Promise(() => {});
-  const pending = createMeasurementSync(f.source, f.store, 10)(signal(), () => {});
-  const rejected = assert.rejects(pending, /タイムアウト/);
-  await setImmediate();
-  t.mock.timers.tick(10);
-  await rejected;
-  assert.equal(f.saved().length, 2);
+  assert.deepEqual(hours(f.saved()), [1]);
 });
 
 test('手動同期・再開を直列化し、開始前に中断された同期は取得しない', async () => {
@@ -149,7 +136,7 @@ test('スケジューラーは失敗後も再試行し、停止すると遅着�
   assert.equal(calls, 2);
 });
 
-test('停止後のfetch結果を保存もACKもしない', async () => {
+test('停止後のfetch結果を保存しない', async () => {
   const f = setup();
   let finish!: (records: readonly Measurement[]) => void;
   f.source.fetchSince = () => new Promise((resolve) => { finish = resolve; });
@@ -165,8 +152,8 @@ test('停止後のfetch結果を保存もACKもしない', async () => {
   assert.equal(notifications, 1);
 });
 
-test('順序違反・異なるデバイスの履歴をACKしない', async () => {
-  for (const records of [[record(2), record(1)], [{ ...record(1), deviceId: 'other' }]]) {
+test('時刻の順序違反・重複・異なるデバイスの履歴を保存しない', async () => {
+  for (const records of [[record(2), record(1)], [record(1), record(1)], [{ ...record(1), deviceId: 'other' }], [{ ...record(1), measuredAt: 'x' }]]) {
     const f = setup();
     f.source.fetchSince = async () => records;
     await assert.rejects(createMeasurementSync(f.source, f.store)(signal(), () => {}), /不正/);
@@ -182,10 +169,12 @@ test('ストアの新規インスタンスでも履歴・欠測を復元し、�
   };
   const store = createMeasurementStore(storage);
   assert.deepEqual(await store.load('room'), []);
-  const records = [{ ...record(1), temperatureC: null }, record(2)];
+  const records = [record(1, null), record(2)];
   await store.save('room', records);
   assert.deepEqual(await createMeasurementStore(storage).load('room'), records);
-  data.set('measurements:v1:room', '[{}]');
-  await assert.rejects(store.load('room'), /壊れています/);
-  assert.equal(data.get('measurements:v1:room'), '[{}]');
+  for (const broken of ['[{}]', JSON.stringify([record(2), record(1)])]) {
+    data.set('measurements:v2:room', broken);
+    await assert.rejects(store.load('room'), /壊れています/);
+    assert.equal(data.get('measurements:v2:room'), broken);
+  }
 });

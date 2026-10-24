@@ -12,13 +12,19 @@ export function MotionGroup({ motion, clock, children }: {
   children: ReactNode;
 }) {
   const group = useRef<G<unknown>>(null);
-  useEffect(() => clock.subscribe((elapsed, reactionAt, active) => {
-    const frame = groupFrame(motion, elapsed, reactionAt, active);
-    group.current?.setNativeProps({
-      x: frame.x, y: frame.y, rotation: frame.rotation,
-      scaleX: frame.scaleX, scaleY: frame.scaleY,
+  useEffect(() => {
+    let previous: number[] | undefined;
+    return clock.subscribe((elapsed, reactionAt, active) => {
+      const frame = groupFrame(motion, elapsed, reactionAt, active);
+      const values = [frame.x, frame.y, frame.rotation, frame.scaleX, frame.scaleY];
+      if (previous?.every((value, index) => value === values[index])) return;
+      previous = values;
+      group.current?.setNativeProps({
+        x: frame.x, y: frame.y, rotation: frame.rotation,
+        scaleX: frame.scaleX, scaleY: frame.scaleY,
+      });
     });
-  }), [clock, motion]);
+  }, [clock, motion]);
 
   const [x, y] = motion.origin;
   // Preserve this hierarchy even at rest and explicitly write the identity

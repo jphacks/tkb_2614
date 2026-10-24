@@ -2,11 +2,11 @@
 
 ## 今できること
 
-毎時の温湿度履歴をモックからまとめて同期し、端末のAsyncStorageに保存してからACKする。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで保持する。
+毎時の温湿度履歴を ESP32（chiikabi）から BLE でまとめて受け取り、計測時刻をキーにして端末のAsyncStorageに保存する（通信仕様は `docs/ble-protocol.md`）。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで1年分保持する。
 
-画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [AR]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。AR はカメラを使わないモック。
+画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [AR]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。AR はスワイプ中も含めて画面に一部でも見えていて、アプリが active の間だけ背面カメラを使う。カビとキャラはページの表示切り替えで作り直さない。準備中・非表示・一時停止中は部屋の絵を表示し、カメラ権限の確認・要求はARページへの着地後にのみ行い、少しのぞいて戻るだけでは要求しない。権限拒否や起動失敗からの復旧画面も着地後に表示する。権限拒否時は眠っているキャラと1文を表示し、キャラのタップで権限要求・設定・再試行を行う。カビ画像はリスクに応じて数と大きさが増え、仮の配置の周囲をゆっくり漂う。
 
-BLE通信・権限設定・本当の予測モデルは未実装。BLEのUUID・要求・バッチ転送・ACKの送信形式はハード担当と確定し、アプリとファームウェアを同じコミットで実装する。現在のインターフェースはアプリ内の抽象化であり、通信仕様ではない。
+カビのリスクはVTTモデル（[mold-model.md](mold-model.md)）で計算する。
 
 ## 起動と確認
 
@@ -15,22 +15,54 @@ BLE通信・権限設定・本当の予測モデルは未実装。BLEのUUID・�
 ```sh
 cd app
 pnpm install
-pnpm start
+pnpm start:mock  # モックで起動（Expo Go）
+pnpm ios         # development build を iPhone に入れて起動（BLE）
+pnpm android     # development build を Android に入れて起動（BLE）
+pnpm start       # 入れた development build 用に Metro だけ起動する
 pnpm typecheck
 pnpm lint
 pnpm test
 ```
 
-モック構成はExpo Goを想定。BLEのネイティブライブラリを追加したらdevelopment buildと実機確認が必要。ページャーは ScrollView の pagingEnabled で作っており、ルーティングはないため、既存の `index.ts → App.tsx` がエントリ。
+既定の取得元はBLE（react-native-ble-plx）で、Expo GoとiOSシミュレータでは動かない。ESP32とつなぐときは、次の節の development build を実機に入れる。ハードなしでUIを触るときは `pnpm start:mock` でモックに切り替え、Expo Go で開く。`pnpm start` で起動した Metro を Expo Go で開くと、BLE のネイティブコードがないのでエラーになる。ページャーは ScrollView の pagingEnabled で作っており、ルーティングはないため、既存の `index.ts → App.tsx` がエントリ。
+
+## development build（実機）
+
+ネイティブコードを含むアプリを手元でビルドし、USBでつないだ実機に入れる。`app/ios/`・`app/android/` はビルド時に `app.json` から生成され、gitには入れない。手で編集しない。
+
+**iPhone**（Mac が必要）
+
+1. Xcode と CocoaPods（`brew install cocoapods`）を入れる。Xcode のメニュー Xcode → Settings… の「Apple Accounts」（@ のアイコン）で Apple アカウントにサインインする（Xcode 27 で確認。Developer Program に入っていなくても、無料の Personal Team が作られる）。サインインしただけでは署名用の証明書はできないので、同じ画面でアカウントを選び、Manage Certificates… →「+」→ Apple Development で作る。これがないと `No code signing certificates are available to use.` で止まる。`security find-identity -p codesigning -v` で1件以上出れば足りている。証明書があるのに0件のときは、発行元の中間証明書（Apple WWDR G3）がキーチェーンにない。[Apple の配布ページ](https://www.apple.com/certificateauthority/)の「Worldwide Developer Relations - G3」を入れる（ダウンロードした `.cer` をダブルクリックする）。
+2. iPhone を USB でつなぎ、「このコンピュータを信頼」する。iOS 16 以降は 設定 → プライバシーとセキュリティ → デベロッパモード（いちばん下）をオンにし、再起動後のダイアログで「オンにする」を選ぶ。オフのままだと `Developer Mode disabled` で止まる。
+3. `app/.env.local` に自分だけの bundle identifier を書く（例: `IOS_BUNDLE_IDENTIFIER=com.<名前>.chiikabi`）。Personal Team では人ごとに値が違うので、`app.json` ではなく gitignore 済みのこのファイルに置き、`app.config.ts` が読む。`cd app && pnpm ios` を実行し、一覧から iPhone を選ぶ。
+4. 初回は `No profiles for '<bundle identifier>' were found` で止まる（Expo CLI はプロファイルを作る `-allowProvisioningUpdates` を渡さない）。`xed ios` で Xcode を開き、TARGETS の app → Signing & Capabilities で Team が自分の Personal Team になっていることを確かめ、実行先に iPhone を選んで ▶ で一度ビルドする。プロファイルができるので、以後は `pnpm ios` で通る。
+5. 起動しないときは、iPhone の 設定 → 一般 → VPNとデバイス管理 で自分の Apple ID を信頼する。初回起動時の Bluetooth の許可は「許可」を選ぶ。
+
+Personal Team で入れたアプリは7日で起動しなくなるので、そのときは同じコマンドで入れ直す。
+
+**Android**
+
+1. Android Studio を入れ、SDK と JDK 17 を用意する（`ANDROID_HOME` を設定する）。
+2. 端末の 開発者向けオプション → USBデバッグ をオンにし、USB でつなぐ。`adb devices` に出ることを確認する。
+3. `cd app && pnpm android` を実行し、端末を選ぶ。初回起動時の「付近のデバイス」の許可は「許可」を選ぶ。
+
+**入れた後**
+
+- このビルドは Metro からJSを読み込む。2回目以降は `pnpm start` で Metro を起動し、入れたアプリを開けばよい（Mac と端末は同じ Wi-Fi にする）。JS の変更はビルドし直さなくても反映される。
+- ネイティブのパッケージを足したとき・`app.json` を変えたときは、`pnpm ios` / `pnpm android` でビルドし直す。
+- Metro なしで動くアプリが欲しいとき（デモなど）は `pnpm expo run:ios --device --configuration Release` / `pnpm expo run:android --device --variant release` でビルドする。
 
 ## 実装の分担
 
-- `src/domain/measurement.ts`: seq付き履歴・取得元の型と、firmware/logstore.hの12バイトLE保存レコードのデコード。timestamp=0はnull、温度INT16_MIN・湿度0xFFFFは個別にnullへ変換する。この保存形式とBLEのフレーミングは別。
-- `src/services/syncMeasurements.ts`: 保存済み最大seqを読み、fetchSince → seqで重複除去 → 永続化 → ACK。取得・ACKは各15秒でタイムアウトし、次回再試行。空バッチでも保存済み最大seqをACKし直す。中断後の結果は使用しない。
-- `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存。最大seqは保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さず、ACKしない。
-- `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。同一同期サービス内では手動更新や再開も直列化。
+- `src/domain/measurement.ts`: 計測時刻が主キーの履歴と、取得元（`fetchSince(since)`）の型。欠測は温度・湿度ごとにnull。
+- `src/data/ble/protocol.ts`: BLE 形式バージョン2のバイト形式（送信要求・データ通知・アドバタイズ判定・base64）。温度INT16_MIN・湿度0xFFFFはnullへ変換する。
+- `src/data/ble/BleMeasurementSource.ts`: 権限要求 → Bluetoothのオン待ち → フィルタなしスキャンで `chiikabi` を探す → 接続（Android は MTU 517）→ データを購読 → 送信要求を書く → 終了の印まで受信 → 切断。abort・タイムアウトでもスキャン停止と切断をする。途中で切れた分は捨て、次回同じ要求をし直す。1台前提。
+- `src/services/syncMeasurements.ts`: 保存済みの最新計測時刻を読み、その時刻以上をfetchSince → 計測時刻で上書きマージ → 1年より古い分を捨てて永続化。初回は全件。取得は既定15秒（BLEは60秒）でタイムアウトし、次回再試行。中断後の結果は使用しない。
+- `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存（キーは `measurements:v2:`）。最新時刻は保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さない。
+- `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。`EXPO_PUBLIC_MEASUREMENT_SOURCE=mock` でモック、それ以外はBLE。同一同期サービス内では手動更新や再開も直列化。
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
-- `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。仮予測は欠測・時刻未同期ならnull。
+- `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAtの差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
+- `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
@@ -38,27 +70,30 @@ pnpm test
 - `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`MainPage`・`GraphPage`・`ARPage` が各ページ。
 - `tests/`: Node test runnerとtsxによる同期・デコード・保存・モックの回帰テスト。Node型はtests/tsconfig.jsonに限定。
 
-同期処理のabortとタイムアウトはアプリ側の待機を解除する。実BLEアダプターはsignalによるネイティブ操作のキャンセル・接続回復も実装する。abortを無視するネイティブ操作そのものの終了までは保証できない。
+同期処理のabortとタイムアウトはアプリ側の待機を解除し、BLEアダプターはsignalでスキャン停止・切断する。abortを無視するネイティブ操作そのものの終了までは保証できない。
 
 ## モックの変更
 
-`src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件のseqを付け、配列の値を繰り返す。再取得しても同じseqの計測値・計測時刻は同じ。ACK前は再送できる。モックのACK状態はメモリ上だが、アプリ再起動時も保存済みseqから再開する。
+`src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件を作り、配列の値を繰り返す。BLEと同じく、since以上の時刻の記録を返し、再取得しても同じ時刻の計測値は同じ。
 
-`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得・ACKの制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
+`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
 
 ## 今後の実装
 
-実データはMeasurementSourceのfetchSince/ackを実装し、単位変換と入力検証をアダプター境界に置く。seqはデバイス単位で単調増加する前提のため、初期化によるseqリセットや複数台の切り替えは別途設計する。保存済み履歴の削除・保持期間も長期運用前に決める。
+複数台の切り替えは未対応（deviceIdは `chiikabi` 固定）。ペアリングが入ったら、初回接続時のOSのダイアログで同期がタイムアウトしないかを確認する。
 
-予測はMoldPredictorの同期関数を差し替える。VTTに必要な長期間の毎時系列を使用し、欠測と未同期時刻の扱いもモデル側で決める。モックの固定リスクを判定基準に流用しない。
+月別ΔTは地域・住宅の差を見ていない概算。外気温を取得できるようになったら、ΔT=(1−fRsi)(室温−外気温) で求める（[mold-model.md](mold-model.md)）。参考値（`isProvisional`）の画面での見せ方は未定。
 
 ## 手動確認
 
-- 起動時に保存済み履歴を復元し、同期後も同じseqを重複表示しない。
-- アプリを終了・再起動しても履歴が残り、保存済みseqから同期する。
+- 起動時に保存済み履歴を復元し、同期後も同じ計測時刻を重複表示しない。
+- アプリを終了・再起動しても履歴が残り、保存済みの最新時刻から同期する（ESP32 のシリアルで開始時刻を確認できる）。
+- ESP32 の電源を切ると数字が薄くなり（stale）、電源を戻すと次回の同期で回復する。
 - pull-to-refresh で新しい毎時計測がなければ履歴が増えない。
 - failEveryで失敗しても保存済み履歴が残り、次回同期で復旧する。
 - バックグラウンドで停止し、復帰直後に同期する。iOSの権限ダイアログやコントロールセンターによるinactiveでは中断しない。
+- 起動時とメイン・グラフページでカメラ権限が要求されず、メインからARを少しのぞいて戻るだけでも要求されないこと、ARページに着地して初めて要求されることを確認する。権限確認の完了前に離れた場合も要求されないことを確認する。
+- ARページ上で少し横にドラッグして戻してもカメラが再起動しないこと、メインからARへのスワイプ中の起動、メインへ戻り切ったとき・バックグラウンド移行時の停止、復帰、権限拒否後のキャラのタップ、設定変更、起動失敗からの再試行を実機で確認する。
 - 実機の描画・ネイティブストレージ・BLEは自動テストでは検証していないため実機で確認する。
 
 ## 公式資料

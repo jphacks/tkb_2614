@@ -1,18 +1,37 @@
-import { Circle, G, Path } from 'react-native-svg';
+import { useEffect, useState } from 'react';
+import { Animated, Easing } from 'react-native';
 
-import { useScheme } from '../theme/theme';
+const small = require('../../assets/character/kabiSmall.png');
+const normal = require('../../assets/character/kabiNormal.png');
+const big = require('../../assets/character/kabiBig.png');
 
-const BODY =
-  'M24 3c4 0 6 4 9 5s8-1 10 3-1 7 0 10 5 6 3 10-6 4-8 7-3 8-7 8-6-4-9-5-8 1-10-3 1-7 0-10-5-6-3-10 6-4 8-7 3-8 7-8z';
+/** 仮の配置の周りだけをゆっくり漂う。非表示・バックグラウンドでは停止する。 */
+export function Mold({ x, y, size, variant, moving }: {
+  x: number; y: number; size: number; variant: 'small' | 'normal' | 'big'; moving: boolean;
+}) {
+  const [drift] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    if (!moving) return;
+    const animation = Animated.loop(Animated.sequence([
+      Animated.timing(drift, { toValue: 1, duration: 4000 + Math.random() * 2000, easing: Easing.inOut(Easing.sin), useNativeDriver: true, isInteraction: false }),
+      Animated.timing(drift, { toValue: 0, duration: 4000 + Math.random() * 2000, easing: Easing.inOut(Easing.sin), useNativeDriver: true, isInteraction: false }),
+    ]));
+    animation.start();
+    return () => animation.stop();
+  }, [drift, moving]);
 
-/** AR に並ぶカビキャラ。親の Svg の中に置く。inverse-surface と inverse-on-surface の組み合わせ。 */
-export function Mold({ x, y, size }: { x: number; y: number; size: number }) {
-  const scheme = useScheme();
   return (
-    <G transform={`translate(${x} ${y}) scale(${size / 48})`}>
-      <Path d={BODY} fill={scheme.inverseSurface} />
-      <Circle cx={18} cy={24} r={3} fill={scheme.inverseOnSurface} />
-      <Circle cx={30} cy={24} r={3} fill={scheme.inverseOnSurface} />
-    </G>
+    <Animated.Image
+      source={variant === 'big' ? big : variant === 'normal' ? normal : small}
+      accessible={false}
+      resizeMode="contain"
+      style={{
+        position: 'absolute', left: x, top: y, width: size, height: size,
+        transform: [
+          { translateX: drift.interpolate({ inputRange: [0, 1], outputRange: [0, 6] }) },
+          { translateY: drift.interpolate({ inputRange: [0, 1], outputRange: [0, -8] }) },
+        ],
+      }}
+    />
   );
 }
