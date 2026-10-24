@@ -2,6 +2,12 @@
 
 [![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2026/07/IMG_5316.png)](https://www.youtube.com/watch?v=piaNsc6ilBI)
 
+## 開発ドキュメント
+
+- [アプリの起動・構成・モックデータの変更方法](docs/app-foundation.md)
+- [アプリ内データと取得元・予測の契約（暫定）](docs/contracts.md)
+- [ハードウェア側の制作予定](docs/plan.md)
+
 ## 製品概要
 ### 背景(製品開発のきっかけ、課題等）
 ### 製品説明（具体的な製品の説明）
