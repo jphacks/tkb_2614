@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mimi-svg mimi-high" viewBox="0 0 320 280" width="320" height="280" role="img" aria-labelledby="mimi-title-high">
+<title id="mimi-title-high">みみばね・ぐったりの状態</title>
+<style><![CDATA[
+  .mimi-svg{overflow:visible;touch-action:manipulation;user-select:none}
+  .mimi-svg .tap-body{transform-origin:160px 205px}
+  .mimi-svg .breath{transform-origin:160px 210px;animation:mimi-breathe 7.6s ease-in-out infinite}
+  .mimi-svg .ear-left,.mimi-svg .ear-right{transform-box:fill-box}
+  .mimi-svg .ear-left{transform-origin:80% 90%}
+  .mimi-svg .ear-right{transform-origin:20% 90%}
+  .mimi-svg .blink{transform-box:fill-box;transform-origin:center;animation:mimi-blink 6.3s infinite}
+  .mimi-svg .mold-float{animation:mimi-mold-float 8.2s ease-in-out infinite}
+  .mimi-svg .mold-float.delay{animation-delay:-1.6s}
+  .mimi-svg .mold-float.slow{animation-duration:9.2s;animation-delay:-2.3s}
+  @keyframes mimi-breathe{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}75%{transform:translateY(6px) rotate(0) scale(1.05,.92)}86%{transform:translateY(7px) rotate(1deg) scale(1.06,.9)}97%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes mimi-blink{0%,38%,40%,81%,83%,100%{transform:scaleY(1)}39%,82%{transform:scaleY(.12)}}
+  @keyframes mimi-mold-float{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
+  @keyframes mimi-idle-droop-left{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}76%{transform:translate(-3px,4px) rotate(-5deg) scale(1.02,.96)}87%{transform:translate(-4px,5px) rotate(-6deg) scale(1.03,.94)}98%{transform:translate(0,0) rotate(0) scale(1)}}
+  @keyframes mimi-idle-droop-right{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}77%{transform:translate(3px,5px) rotate(5deg) scale(1.03,.94)}89%{transform:translate(4px,6px) rotate(6deg) scale(1.04,.92)}98%{transform:translate(0,0) rotate(0) scale(1)}}
+  @keyframes mimi-idle-settle{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}73%{transform:translateY(2px) rotate(-2deg) scale(1.02,.97)}81%{transform:translateY(4px) rotate(2deg) scale(1.03,.95)}89%{transform:translateY(3px) rotate(-1deg) scale(1.02,.96)}98%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes mimi-idle-slump{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}73%{transform:translateY(4px) rotate(2deg) scale(1.04,.94)}83%{transform:translateY(8px) rotate(3deg) scale(1.07,.88)}91%{transform:translateY(8px) rotate(3deg) scale(1.07,.88)}99%{transform:translateY(0) rotate(0) scale(1)}}
+  @media(prefers-reduced-motion:reduce){.mimi-svg *, .mimi-svg{animation:none!important;transition:none!important}}
+
+
+  .mimi-high .breath{animation:mimi-high-breathe 9.2s ease-in-out infinite}
+  .mimi-high .ear-left{animation:mimi-high-ear-l 6.2s ease-in-out infinite}
+  .mimi-high .ear-right{animation:mimi-high-ear-r 6.2s ease-in-out infinite}
+  .mimi-high.is-tapped .tap-body{animation:mimi-tap-weak 780ms ease-out 1 both}
+  .mimi-high.is-tapped .mold-float{animation:mimi-mold-surprise 780ms ease-out 1 both}
+  @keyframes mimi-high-breathe{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}75%{transform:translateY(6px) rotate(0) scale(1.05,.92)}86%{transform:translateY(7px) rotate(1deg) scale(1.06,.9)}97%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes mimi-high-ear-l{0%,80%,100%{transform:rotate(0)}88%{transform:rotate(6deg)}}
+  @keyframes mimi-high-ear-r{0%,80%,100%{transform:rotate(0)}88%{transform:rotate(-6deg)}}
+  @keyframes mimi-tap-weak{0%,100%{transform:translateY(0) rotate(0) scale(1)}22%{transform:translateY(4px) rotate(-1.5deg) scale(1.03,.96)}50%{transform:translateY(7px) rotate(1deg) scale(1.05,.93)}78%{transform:translateY(3px) rotate(-.5deg) scale(1.02,.97)}}
+  @keyframes mimi-mold-surprise{0%,100%{transform:translateY(0)}35%{transform:translateY(-11.25px) rotate(6.25deg)}64%{transform:translateY(-2.5px)}}
+]]></style>
+
+  <ellipse cx="160" cy="246" rx="101" ry="7.5" fill="#35544F" opacity=".11"/>
+  <g class="tap-body">
+    <g class="breath">
+      <g class="ear-left">
+        <path d="M116 199 C92 191 55 188 27 203 C7 214 21 237 49 235 C80 235 107 225 129 216 Z" fill="#9EDFD4"/>
+        <path d="M58 219 Q80 207 105 211" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <g class="ear-right">
+        <path d="M207 199 C231 191 268 188 296 203 C316 214 302 237 274 235 C243 235 216 225 194 216 Z" fill="#9EDFD4"/>
+        <path d="M265 219 Q243 207 218 211" fill="none" stroke="#35544F" stroke-opacity=".15" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <path d="M77 219 C75 198 107 186 138 187 L181 187 C216 188 245 204 244 223 C243 244 222 245 198 244 L107 244 C91 244 78 236 77 219 Z" fill="#FFF9F0"/>
+      <ellipse cx="110" cy="237" rx="10" ry="6" transform="rotate(15 110 237)" fill="#9EDFD4"/>
+      <ellipse cx="212" cy="237" rx="10" ry="6" transform="rotate(-15 212 237)" fill="#9EDFD4"/>
+      <g stroke="#35544F" stroke-width="2.8" stroke-linecap="round">
+        <path d="M129 213 l7 7 M136 213 l-7 7"/>
+        <path d="M184 213 l7 7 M191 213 l-7 7"/>
+      </g>
+      <path d="M150 230 Q160 222 170 230" fill="none" stroke="#35544F" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M212 197 Q206 205 210 210 Q216 210 215 205 Z" fill="#9EDFD4"/>
+    </g>
+  </g>
+  <g transform="translate(66 240) scale(0.68)"><g class="mold-float slow">
+      <path d="M-18 1 C-25 -7 -19 -17 -9 -17 C-6 -27 7 -25 12 -17 C25 -18 28 -4 20 4 C25 15 11 22 2 16 C-7 22 -19 15 -18 1 Z" fill="#8FA79C"/>
+      <circle cx="-5.5" cy="0" r="2.25" fill="#35544F"/>
+      <circle cx="7.5" cy="0" r="2.25" fill="#35544F"/>
+      <path d="M-3 8 Q1 11 5 7" fill="none" stroke="#35544F" stroke-width="2.1" stroke-linecap="round"/>
+    </g></g>
+  <g transform="translate(253 231) scale(0.85)"><g class="mold-float delay">
+      <path d="M-18 1 C-25 -7 -19 -17 -9 -17 C-6 -27 7 -25 12 -17 C25 -18 28 -4 20 4 C25 15 11 22 2 16 C-7 22 -19 15 -18 1 Z" fill="#8FA79C"/>
+      <circle cx="-5.5" cy="0" r="2.25" fill="#35544F"/>
+      <circle cx="7.5" cy="0" r="2.25" fill="#35544F"/>
+      <path d="M-3 8 Q1 11 5 7" fill="none" stroke="#35544F" stroke-width="2.1" stroke-linecap="round"/>
+    </g></g>
+  <g transform="translate(195 164) scale(0.82)"><g class="mold-float ">
+      <path d="M-18 1 C-25 -7 -19 -17 -9 -17 C-6 -27 7 -25 12 -17 C25 -18 28 -4 20 4 C25 15 11 22 2 16 C-7 22 -19 15 -18 1 Z" fill="#8FA79C"/>
+      <circle cx="-5.5" cy="0" r="2.25" fill="#35544F"/>
+      <circle cx="7.5" cy="0" r="2.25" fill="#35544F"/>
+      <path d="M-3 8 Q1 11 5 7" fill="none" stroke="#35544F" stroke-width="2.1" stroke-linecap="round"/>
+    </g></g>
+
+</svg>

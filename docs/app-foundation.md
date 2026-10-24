@@ -51,6 +51,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - このビルドは Metro からJSを読み込む。2回目以降は `pnpm start` で Metro を起動し、入れたアプリを開けばよい（Mac と端末は同じ Wi-Fi にする）。JS の変更はビルドし直さなくても反映される。
 - ネイティブのパッケージを足したとき・`app.json` を変えたときは、`pnpm ios` / `pnpm android` でビルドし直す。
 - Metro なしで動くアプリが欲しいとき（デモなど）は `pnpm expo run:ios --device --configuration Release` / `pnpm expo run:android --device --variant release` でビルドする。
+- ホーム画面ウィジェットは development build でのみ動き、Expo Go（`pnpm start:mock`）ではウィジェットの更新を読み飛ばす。iOS のウィジェットは App Group（`group.<bundle identifier>`）でアプリと値を共有する。ウィジェットの設定（`app.json` の expo-widgets）を変えたら `pnpm expo prebuild --clean` してからビルドし直す。
 
 ## 実装の分担
 
@@ -72,6 +73,8 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
 - `src/ui/`: Character（おむすび形のメインキャラ）・Mold・Reading・PageIndicator・ChartCard。
 - `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`MainPage`・`GraphPage`・`ARPage` が各ページ。
+- `src/widgets/`: ホーム画面ウィジェット（expo-widgets）。Figma の Widgets セクションと同じ5種類（キャラ・湿度・温度・同期時刻の小サイズと、それらをまとめた中サイズ）。レイアウトは `ios/`（`@expo/ui/swift-ui`）と `android/`（`@expo/ui/jetpack-compose`）に分かれ、`'widget'` の関数は別ランタイムで動くため外側の値やモジュールを参照できない。表示する値・配色は `widgetProps.ts` の純粋関数で文字列にして渡し、古さと表情は `deriveHomeState` と同じ判定にする。iOS は15分ごとのタイムラインで「◯分前」と古さを先回りして更新し、Android はスナップショットのみ。ウィジェットは BLE を使わず、アプリが最後に同期した値を表示する。
+- `scripts/renderWidgetImages.ts`: ウィジェットは SVG を描けないので、`assets/mascots` の5種類×危険度3段階のマスコットとアイコンを `assets/widgets/` に PNG で書き出す。マスコットの SVG を変えたら `pnpm render:widget-images` で作り直す。ウィジェットはメイン画面で選んでいるマスコットを表示し、計測値がないときはアプリと同じく low の絵を薄く出す。iOS はアプリが App Group の共有ディレクトリへ画像をコピーし、Android のリリースビルドは drawable 名をそのまま渡す。
 - `tests/`: Node test runnerとtsxによる同期・デコード・保存・モックの回帰テスト。Node型はtests/tsconfig.jsonに限定。
 
 同期処理のabortとタイムアウトはアプリ側の待機を解除し、BLEアダプターはsignalでスキャン停止・切断する。abortを無視するネイティブ操作そのものの終了までは保証できない。

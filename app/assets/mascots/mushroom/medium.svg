@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-mushroom mo-medium" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="きのこまもり・注意">
+<style><![CDATA[
+ .mo-mushroom{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-mushroom .tap-body{transform-origin:160px 235px}
+ .mo-mushroom .breath{transform-origin:160px 221px;animation:mushroom-breath 7.6s ease-in-out infinite}
+ .mo-mushroom .blink{transform-box:fill-box;transform-origin:center;animation:mushroom-blink 5.8s infinite}
+ .mo-mushroom .feature{transform-origin:167px 187px;animation:mushroom-feature 4.5s ease-in-out infinite}
+ .mo-mushroom .mold-float{animation:mushroom-mold 8.2s ease-in-out infinite}
+ .mo-mushroom .mold-float.late{animation-delay:-1.5s}
+ .mo-mushroom .mold-float.slow{animation-duration:9.4s;animation-delay:-2.1s}
+ .mo-mushroom.mo-medium .breath{animation-duration:8.4s}
+ .mo-mushroom.mo-high .breath{animation-duration:9.2s}
+ .mo-mushroom.mo-medium .feature{animation-duration:5.3s}
+ .mo-mushroom.mo-high .feature{animation-duration:6.8s}
+ .mo-mushroom.mo-low.is-tapped .tap-body{animation:mushroom-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-mushroom.mo-medium.is-tapped .tap-body{animation:mushroom-startle .69s ease-out 1 both}
+ .mo-mushroom.mo-high.is-tapped .tap-body{animation:mushroom-weak .78s ease-out 1 both}
+ .mo-mushroom.is-tapped .mold-float{animation:mushroom-mold-startle .78s ease-out 1 both}
+ @keyframes mushroom-breath{0%,64%,100%{transform:translateX(0) rotate(0)}72%{transform:translateX(-3px) rotate(-5deg)}81%{transform:translateX(3px) rotate(4deg)}89%{transform:translateX(-1px) rotate(-2deg)}97%{transform:translateX(0) rotate(0)}}
+ @keyframes mushroom-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes mushroom-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(6deg)}74%{transform:rotate(-4deg)}84%{transform:rotate(0)}}
+ @keyframes mushroom-mold{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
+ @keyframes mushroom-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(6.25px) scale(1.075,0.9)}42%{transform:translateY(-33.75px) scale(0.925,1.113)}67%{transform:translateY(1.25px) scale(1.113,0.888)}82%{transform:translateY(-10px) scale(0.975,1.038)}}
+ @keyframes mushroom-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-15px,-12.5px) rotate(-6.25deg)}42%{transform:translate(11.25px,-2.5px) rotate(5deg)}68%{transform:translate(-5px,0) rotate(-2.5deg)}84%{transform:translate(2.5px,0) rotate(1.25deg)}}
+ @keyframes mushroom-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-11.25px) rotate(-2.5deg)}46%{transform:translateY(-10px) rotate(2.5deg)}72%{transform:translateY(-3.75px) rotate(-1.25deg)}86%{transform:translateY(-1.25px)}}
+ @keyframes mushroom-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-20px) rotate(13.75deg)}68%{transform:translateY(-5px) rotate(-3.75deg)}}
+  @keyframes mushroom-idle-shiver{0%,64%,100%{transform:translateX(0) rotate(0)}70%{transform:translateX(-3px) rotate(-2deg)}74%{transform:translateX(3px) rotate(2deg)}78%{transform:translateX(-3px) rotate(-2deg)}82%{transform:translateX(2px) rotate(1deg)}88%{transform:translateX(0) rotate(0)}}
+  @keyframes mushroom-idle-peer{0%,64%,100%{transform:translateX(0) rotate(0)}74%{transform:translateX(5px) rotate(6deg)}85%{transform:translateX(5px) rotate(6deg)}96%{transform:translateX(0) rotate(0)}}
+  @keyframes mushroom-idle-recoil{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}72%{transform:translate(-6px,2px) rotate(-4deg) scale(1.02,.96)}84%{transform:translate(-4px,2px) rotate(-3deg) scale(1.02,.97)}96%{transform:translate(0,0) rotate(0) scale(1)}}
+  @keyframes mushroom-idle-fidget{0%,64%,100%{transform:translate(0,0) rotate(0) scale(1)}72%{transform:translate(-4px,1px) rotate(-3deg) scale(1.02,.98)}80%{transform:translate(4px,1px) rotate(3deg) scale(1.02,.98)}88%{transform:translate(-2px,1px) rotate(-1deg) scale(1.01,.99)}97%{transform:translate(0,0) rotate(0) scale(1)}}
+  @media(prefers-reduced-motion:reduce){.mo-mushroom *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="163" cy="249" rx="83" ry="7" fill="#395450" opacity=".09"/>
+        <g class="tap-body"><g class="breath">
+        <path d="M113 204 C110 179 129 164 161 164 C193 163 215 182 215 213 C214 236 197 246 162 246 C128 246 110 232 113 204 Z" fill="#FFF9F1"/>
+        <ellipse cx="133" cy="240" rx="10" ry="6" fill="#F4BCC3"/><ellipse cx="194" cy="240" rx="10" ry="6" fill="#F4BCC3"/>
+        <g class="feature"><path d="M86 181 C81 153 105 130 135 120 Q177 102 210 128 C228 144 242 167 238 195 C236 219 221 216 211 204 Q177 180 137 191 Q103 205 92 201 Q85 194 86 181 Z" fill="#F4BCC3"/>
+        <path d="M94 199 Q141 173 193 196 Q224 214 237 197 Q226 224 197 212 Q151 194 112 217 Z" fill="#FAE0DC"/></g>
+        <g class="blink"><ellipse cx="142" cy="215" rx="3.5" ry="4.2" fill="#395450"/><ellipse cx="180" cy="215" rx="3.5" ry="4.2" fill="#395450"/></g><path d="M155 231 Q162 226 169 231" fill="none" stroke="#395450" stroke-width="2.8" stroke-linecap="round"/><path d="M205 198 Q196 209 200 214 Q209 219 208 210 Z" fill="#F4BCC3" opacity=".88"/>
+        </g></g><g transform="translate(253 237) scale(0.78)"><g class="mold-float ">
+    <path d="M-17 2 C-25 -7 -18 -17 -8 -16 C-3 -25 9 -22 12 -15 C25 -15 27 -1 19 6 C22 17 9 21 1 17 C-8 22 -20 15 -17 2 Z" fill="#8CA59A"/>
+    <circle cx="-5.5" cy="0" r="2.1" fill="#395450"/><circle cx="7" cy="0" r="2.1" fill="#395450"/>
+    <path d="M-3 7 Q1 10 5 7" fill="none" stroke="#395450" stroke-width="1.9" stroke-linecap="round"/>
+    </g></g>
+</svg>

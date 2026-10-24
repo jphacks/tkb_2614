@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mo-svg mo-cloudtail mo-low" viewBox="0 0 320 280" width="320" height="280" role="img" aria-label="くもりしっぽ・元気">
+<style><![CDATA[
+ .mo-cloudtail{overflow:visible;user-select:none;touch-action:manipulation}
+ .mo-cloudtail .tap-body{transform-origin:160px 235px}
+ .mo-cloudtail .breath{transform-origin:160px 221px;animation:cloudtail-breath 7.6s ease-in-out infinite}
+ .mo-cloudtail .blink{transform-box:fill-box;transform-origin:center;animation:cloudtail-blink 5.8s infinite}
+ .mo-cloudtail .feature{transform-origin:167px 187px;animation:cloudtail-feature 4.5s ease-in-out infinite}
+ .mo-cloudtail .mold-float{animation:cloudtail-mold 8.2s ease-in-out infinite}
+ .mo-cloudtail .mold-float.late{animation-delay:-1.5s}
+ .mo-cloudtail .mold-float.slow{animation-duration:9.4s;animation-delay:-2.1s}
+ .mo-cloudtail.mo-medium .breath{animation-duration:8.4s}
+ .mo-cloudtail.mo-high .breath{animation-duration:9.2s}
+ .mo-cloudtail.mo-medium .feature{animation-duration:5.3s}
+ .mo-cloudtail.mo-high .feature{animation-duration:6.8s}
+ .mo-cloudtail.mo-low.is-tapped .tap-body{animation:cloudtail-happy .72s cubic-bezier(.22,.8,.3,1) 1 both}
+ .mo-cloudtail.mo-medium.is-tapped .tap-body{animation:cloudtail-startle .69s ease-out 1 both}
+ .mo-cloudtail.mo-high.is-tapped .tap-body{animation:cloudtail-weak .78s ease-out 1 both}
+ .mo-cloudtail.is-tapped .mold-float{animation:cloudtail-mold-startle .78s ease-out 1 both}
+ @keyframes cloudtail-breath{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}69%{transform:translateY(4px) rotate(0) scale(1.05,.94)}77%{transform:translateY(-16px) rotate(-3deg) scale(.97,1.06)}85%{transform:translateY(2px) rotate(2deg) scale(1.06,.94)}93%{transform:translateY(0) rotate(0) scale(1)}}
+ @keyframes cloudtail-blink{0%,44%,46%,81%,83%,100%{transform:scaleY(1)}45%,82%{transform:scaleY(.12)}}
+ @keyframes cloudtail-feature{0%,55%,100%{transform:rotate(0)}66%{transform:rotate(6deg)}74%{transform:rotate(-4deg)}84%{transform:rotate(0)}}
+ @keyframes cloudtail-mold{0%,68%,100%{transform:translateY(0)}80%{transform:translateY(-11px)}90%{transform:translateY(2px)}96%{transform:translateY(0)}}
+ @keyframes cloudtail-happy{0%,100%{transform:translateY(0) scale(1)}15%{transform:translateY(6.25px) scale(1.075,0.9)}42%{transform:translateY(-33.75px) scale(0.925,1.113)}67%{transform:translateY(1.25px) scale(1.113,0.888)}82%{transform:translateY(-10px) scale(0.975,1.038)}}
+ @keyframes cloudtail-startle{0%,100%{transform:translateX(0) translateY(0) rotate(0)}18%{transform:translate(-15px,-12.5px) rotate(-6.25deg)}42%{transform:translate(11.25px,-2.5px) rotate(5deg)}68%{transform:translate(-5px,0) rotate(-2.5deg)}84%{transform:translate(2.5px,0) rotate(1.25deg)}}
+ @keyframes cloudtail-weak{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-11.25px) rotate(-2.5deg)}46%{transform:translateY(-10px) rotate(2.5deg)}72%{transform:translateY(-3.75px) rotate(-1.25deg)}86%{transform:translateY(-1.25px)}}
+ @keyframes cloudtail-mold-startle{0%,100%{transform:translateY(0)}35%{transform:translateY(-20px) rotate(13.75deg)}68%{transform:translateY(-5px) rotate(-3.75deg)}}
+  @keyframes cloudtail-idle-stretch{0%,64%,100%{transform:translateY(0) scale(1)}71%{transform:translateY(3px) scale(1.04,0.95)}80%{transform:translateY(-9px) scale(0.9,1.15)}87%{transform:translateY(-7px) scale(0.92,1.12)}95%{transform:translateY(0) scale(1)}}
+  @keyframes cloudtail-idle-sway{0%,64%,100%{transform:translate(0,0) rotate(0)}72%{transform:translate(-9px,-3px) rotate(-9deg)}82%{transform:translate(9px,-3px) rotate(9deg)}90%{transform:translate(-3px,0) rotate(-3deg)}97%{transform:translate(0,0) rotate(0)}}
+  @keyframes cloudtail-idle-bow{0%,64%,100%{transform:translateY(0) rotate(0) scale(1)}74%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}82%{transform:translateY(8px) rotate(3deg) scale(1.1,0.85)}90%{transform:translateY(-4px) rotate(-2deg) scale(0.97,1.05)}97%{transform:translateY(0) rotate(0) scale(1)}}
+  @keyframes cloudtail-idle-double-hop{0%,64%,100%{transform:translateY(0) scale(1)}68%{transform:translateY(3px) scale(1.04,0.94)}74%{transform:translateY(-18px) scale(0.96,1.06)}80%{transform:translateY(2px) scale(1.06,0.93)}86%{transform:translateY(-11px) scale(0.97,1.04)}92%{transform:translateY(1px) scale(1.03,0.97)}98%{transform:translateY(0) scale(1)}}
+  @media(prefers-reduced-motion:reduce){.mo-cloudtail *{animation:none!important;transition:none!important}}
+ ]]></style>
+<ellipse cx="157" cy="247" rx="88" ry="7" fill="#395450" opacity=".09"/>
+        <g class="tap-body"><g class="breath"><g class="feature">
+        <circle cx="207" cy="172" r="36" fill="#BDD8EF"/><circle cx="243" cy="140" r="38" fill="#BDD8EF"/>
+        <circle cx="246" cy="189" r="29" fill="#BDD8EF"/><circle cx="205" cy="213" r="27" fill="#BDD8EF"/>
+        </g>
+        <path d="M99 157 Q83 146 90 132 Q101 120 111 143 Z" fill="#BDD8EF"/>
+        <path d="M128 150 Q130 127 142 130 Q154 137 144 153 Z" fill="#BDD8EF"/>
+        <path d="M122 136 Q129 114 138 132 Q143 145 135 157 Z" fill="#FFF9F1"/>
+        <ellipse cx="139" cy="191" rx="58" ry="49" fill="#FFF9F1"/>
+        <ellipse cx="103" cy="235" rx="10" ry="7" fill="#BDD8EF"/><ellipse cx="170" cy="235" rx="10" ry="7" fill="#BDD8EF"/>
+        <g class="blink"><ellipse cx="119" cy="194" rx="3.5" ry="4.2" fill="#395450"/><ellipse cx="154" cy="194" rx="3.5" ry="4.2" fill="#395450"/></g><path d="M130 209 Q137 216 144 209" fill="none" stroke="#395450" stroke-width="2.8" stroke-linecap="round"/>
+        </g></g>
+</svg>

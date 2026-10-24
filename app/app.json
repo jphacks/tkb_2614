@@ -34,7 +34,113 @@
           "isIosBackgroundLocationEnabled": false,
           "isAndroidBackgroundLocationEnabled": false
         }
-      ]
+      ],
+      [
+        "expo-widgets",
+        {
+          "enableAndroid": true,
+          "widgets": [
+            {
+              "name": "MoldCharacter",
+              "displayName": "キャラ",
+              "description": "キャラの表情でカビのリスクを表示します",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall"
+                ],
+                "initialLayout": "src/widgets/ios/CharacterWidget.tsx",
+                "contentMarginsDisabled": true
+              },
+              "android": {
+                "minWidth": 110,
+                "minHeight": 110,
+                "targetCellWidth": 2,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialLayout": "src/widgets/android/CharacterWidget.tsx"
+              }
+            },
+            {
+              "name": "MoldHumidity",
+              "displayName": "湿度",
+              "description": "最新の湿度を表示します",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall"
+                ],
+                "initialLayout": "src/widgets/ios/HumidityWidget.tsx"
+              },
+              "android": {
+                "minWidth": 110,
+                "minHeight": 110,
+                "targetCellWidth": 2,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialLayout": "src/widgets/android/HumidityWidget.tsx"
+              }
+            },
+            {
+              "name": "MoldTemperature",
+              "displayName": "温度",
+              "description": "最新の温度を表示します",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall"
+                ],
+                "initialLayout": "src/widgets/ios/TemperatureWidget.tsx"
+              },
+              "android": {
+                "minWidth": 110,
+                "minHeight": 110,
+                "targetCellWidth": 2,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialLayout": "src/widgets/android/TemperatureWidget.tsx"
+              }
+            },
+            {
+              "name": "MoldSync",
+              "displayName": "同期",
+              "description": "デバイスと最後に同期した時刻を表示します",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall"
+                ],
+                "initialLayout": "src/widgets/ios/SyncWidget.tsx"
+              },
+              "android": {
+                "minWidth": 110,
+                "minHeight": 110,
+                "targetCellWidth": 2,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialLayout": "src/widgets/android/SyncWidget.tsx"
+              }
+            },
+            {
+              "name": "MoldOverview",
+              "displayName": "まとめ",
+              "description": "キャラ・湿度・温度・同期時刻をまとめて表示します",
+              "ios": {
+                "supportedFamilies": [
+                  "systemMedium"
+                ],
+                "contentMarginsDisabled": true,
+                "initialLayout": "src/widgets/ios/OverviewWidget.tsx"
+              },
+              "android": {
+                "minWidth": 250,
+                "minHeight": 110,
+                "targetCellWidth": 4,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialLayout": "src/widgets/android/OverviewWidget.tsx"
+              }
+            }
+          ]
+        }
+      ],
+      "expo-asset"
     ],
     "ios": {
       "supportsTablet": true
@@ -46,7 +152,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.jphacks.tkb2614"
     },
     "web": {
       "favicon": "./assets/favicon.png"
