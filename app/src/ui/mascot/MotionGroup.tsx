@@ -3,6 +3,7 @@ import { G } from 'react-native-svg';
 
 import type { MascotClock } from './MascotClock';
 import { groupFrame } from './motionState';
+import { RandomIdle } from './RandomIdle';
 import type { ArtworkNode } from './types';
 
 /** All groups share one clock; idle groups never restart in response to taps. */
@@ -14,8 +15,10 @@ export function MotionGroup({ motion, clock, children }: {
   const group = useRef<G<unknown>>(null);
   useEffect(() => {
     let previous: number[] | undefined;
+    const idle = motion.idle && motion.idleVariants?.length
+      ? new RandomIdle([motion.idle, ...motion.idleVariants]) : undefined;
     return clock.subscribe((elapsed, reactionAt, active) => {
-      const frame = groupFrame(motion, elapsed, reactionAt, active);
+      const frame = groupFrame(motion, elapsed, reactionAt, active, active ? idle?.at(elapsed) ?? motion.idle : motion.idle);
       const values = [frame.x, frame.y, frame.rotation, frame.scaleX, frame.scaleY];
       if (previous?.every((value, index) => value === values[index])) return;
       previous = values;

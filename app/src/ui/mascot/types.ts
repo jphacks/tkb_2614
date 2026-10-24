@@ -23,7 +23,7 @@ export interface ArtworkNode {
   tag: 'g' | 'path' | 'ellipse' | 'circle';
   props: Record<string, string>;
   children: ArtworkNode[];
-  motion?: { origin: number[]; idle?: Motion; reaction?: Motion };
+  motion?: { origin: number[]; idle?: Motion; idleVariants?: Motion[]; reaction?: Motion };
 }
 export type Artwork = Record<CharacterKind, Record<MoldRiskLevel, ArtworkNode[]>>;
 

@@ -5,6 +5,99 @@ import { artwork } from '../src/ui/mascot/artwork';
 import { characterKinds, nextCharacter, type ArtworkNode } from '../src/ui/mascot/types';
 import { easeAt, groupFrame, restMotion, sampleMotion, selectMotion } from '../src/ui/mascot/motionState';
 import { MascotClock } from '../src/ui/mascot/MascotClock';
+import { RandomIdle } from '../src/ui/mascot/RandomIdle';
+
+test('ランダム待機は直前を除く全候補から選び、同じ周期では選び直さない', () => {
+  const choices = Array.from({ length: 5 }, () => ({ ...restMotion, duration: 8000 }));
+  for (let first = 0; first < choices.length; first++) {
+    const reached = new Set();
+    for (let next = 0; next < choices.length - 1; next++) {
+      const values = [(first + .5) / choices.length, (next + .5) / (choices.length - 1)];
+      let calls = 0;
+      const idle = new RandomIdle(choices, () => values[calls++]);
+      assert.equal(idle.at(0), choices[first]);
+      assert.equal(idle.at(7999), choices[first]);
+      assert.equal(calls, 1);
+      const selected = idle.at(8000);
+      assert.notEqual(selected, choices[first]);
+      assert.equal(calls, 2);
+      reached.add(selected);
+    }
+    assert.equal(reached.size, choices.length - 1);
+  }
+});
+
+test('全15状態に5種類の待機動作があり、静止区間と姿勢の連続性を保つ', () => {
+  for (const character of characterKinds) {
+    for (const risk of ['low', 'medium', 'high'] as const) {
+      const bodies: NonNullable<ArtworkNode['motion']>[] = [];
+      const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
+        if (node.motion?.idleVariants) bodies.push(node.motion);
+        inspect(node.children);
+      });
+      inspect(artwork[character][risk]);
+      assert.equal(bodies.length, 1, `${character}/${risk}`);
+      const body = bodies[0];
+      const choices = [body.idle!, ...body.idleVariants!];
+      assert.equal(choices.length, 5);
+      assert.equal(new Set(choices.map((motion) => JSON.stringify(motion.frames))).size, 5);
+      for (const motion of choices) {
+        assert.ok(motion.duration >= 7600);
+        assert.equal(motion.duration, body.idle!.duration);
+        assert.equal(motion.delay, 0);
+        for (const elapsed of [0, motion.duration * .32, motion.duration * .64, motion.duration]) {
+          const { at, ...pose } = sampleMotion(motion, elapsed, false);
+          assert.ok(Number.isFinite(at));
+          const { at: restAt, ...rest } = restMotion.frames[0];
+          assert.equal(restAt, 0);
+          assert.deepEqual(pose, rest);
+        }
+      }
+    }
+  }
+});
+
+test('高リスクの本体は待機・タップとも跳ねず、沈む動きになる', () => {
+  for (const character of characterKinds) {
+    let bodies = 0;
+    let reactions = 0;
+    const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
+      if (node.motion?.idleVariants) {
+        bodies++;
+        for (const motion of [node.motion.idle!, ...node.motion.idleVariants]) {
+          assert.ok(motion.frames.some((frame) => frame.y > 0), character);
+          assert.ok(motion.frames.every((frame) => frame.y >= 0 && frame.scaleY <= 1), character);
+        }
+      }
+      // The tap-body wraps the body gesture; mold reactions are independent.
+      if (node.motion?.reaction && node.children.some((child) => child.motion?.idleVariants)) {
+        reactions++;
+        assert.ok(node.motion.reaction.frames.some((frame) => frame.y > 0), character);
+        assert.ok(node.motion.reaction.frames.every((frame) => frame.y >= 0 && frame.scaleY <= 1), character);
+      }
+      inspect(node.children);
+    });
+    inspect(artwork[character].high);
+    assert.equal(bodies, 1, character);
+    assert.equal(reactions, 1, character);
+  }
+});
+
+test('ランダム待機はタップや一時停止で選び直されず、停止中は原位置になる', () => {
+  const choices = [
+    { ...restMotion, duration: 8000 },
+    { ...restMotion, duration: 8000, frames: restMotion.frames.map((frame) => ({ ...frame, x: 10 })) },
+  ];
+  const idle = new RandomIdle(choices, () => .99);
+  const motion = { origin: [0, 0], idle: choices[0], reaction: { ...restMotion, duration: 780 } };
+  assert.equal(idle.at(6000), choices[1]);
+  assert.equal(groupFrame(motion, 6000, null, true, idle.at(6000)).x, 10);
+  assert.equal(groupFrame(motion, 6100, 6000, true, idle.at(6100)).x, 0);
+  assert.equal(groupFrame(motion, 6900, 6000, true, idle.at(6900)).x, 10);
+  assert.equal(groupFrame(motion, 6900, null, false, idle.at(6900)).x, 0);
+  assert.equal(idle.at(6900), choices[1]);
+  assert.equal(idle.at(8000), choices[0]);
+});
 
 function fakeClock() {
   const callbacks = new Map<number, (time: number) => void>();
@@ -125,7 +218,7 @@ test('全15状態に描画と有効な待機・タップアニメーションが
       const inspect = (nodes: ArtworkNode[]) => nodes.forEach((node) => {
         if (node.motion?.idle) idleCount++;
         if (node.motion?.reaction) reactionCount++;
-        for (const motion of [node.motion?.idle, node.motion?.reaction]) {
+        for (const motion of [node.motion?.idle, node.motion?.reaction, ...(node.motion?.idleVariants ?? [])]) {
           if (!motion) continue;
           assert.ok(motion.duration > 0);
           assert.equal(motion.frames[0].at, 0);

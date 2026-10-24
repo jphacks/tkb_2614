@@ -87,6 +87,11 @@ for (const character of characters) {
         if ((origin.includes('%') || origin === 'center') && idleStyle['transform-box'] !== 'fill-box') throw new Error(`Relative origin requires fill-box: ${origin}`);
         origins.set(node, origin);
         node.motion = { origin: [], ...(idle && { idle }), ...(reaction && { reaction }) };
+        // Body gestures share timing and a rest interval, allowing seamless random choices.
+        if (idle && nodeClasses.includes('breath')) {
+          const variants = Object.entries(keyframes).filter(([name]) => name.startsWith(`${character}-idle-`));
+          if (variants.length) node.motion.idleVariants = variants.map(([, frames]) => ({ ...idle, frames }));
+        }
       }
       stack.at(-1).children.push(node);
       if (!token.endsWith('/>')) stack.push(node);
