@@ -63,11 +63,10 @@ function gridTimes(start: number, end: number) {
   return times;
 }
 
-/** 最新順の履歴から、最新の計測時刻を右端とする直近24hのグラフ形状を作る。時刻未同期の記録は使わない。 */
+/** 最新順の履歴から、最新の計測時刻を右端とする直近24hのグラフ形状を作る。 */
 export function buildChart(measurements: readonly Measurement[], kind: ChartKind, box: Box): ChartGeometry {
   const timed = measurements
-    .filter((m) => m.measuredAt !== null)
-    .map((m) => ({ t: Date.parse(m.measuredAt as string), v: valueOf(m, kind) }))
+    .map((m) => ({ t: Date.parse(m.measuredAt), v: valueOf(m, kind) }))
     .sort((a, b) => a.t - b.t);
   const end = timed.at(-1)?.t;
   if (end === undefined) return { paths: [], points: [], latest: null, grid: [], dangerY: null };

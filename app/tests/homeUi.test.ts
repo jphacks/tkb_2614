@@ -9,7 +9,7 @@ const hour = 3600000;
 const end = Date.UTC(2026, 9, 2);
 function record(hoursAgo: number, humidity: number | null, temperature: number | null = 24): Measurement {
   const at = new Date(end - hoursAgo * hour).toISOString();
-  return { seq: 100 - hoursAgo, deviceId: 'test', temperatureC: temperature, relativeHumidityPercent: humidity, measuredAt: at, receivedAt: at };
+  return { deviceId: 'test', temperatureC: temperature, relativeHumidityPercent: humidity, measuredAt: at, receivedAt: at };
 }
 const prediction = (riskLevel: MoldPrediction['riskLevel']): MoldPrediction =>
   ({ moldIndex: 0, riskLevel, daysToMoldIndex1: null, isProvisional: false, basedOnReceivedAt: '' });
@@ -58,8 +58,8 @@ test('グラフの縦線はローカル時刻の6時間おきの正時に引く'
   }
 });
 
-test('時刻未同期だけの履歴ではグラフを描かない', () => {
-  const chart = buildChart([{ ...record(0, 60), measuredAt: null }], 'humidity', { left: 0, top: 0, width: 100, height: 100 });
+test('履歴がなければグラフを描かない', () => {
+  const chart = buildChart([], 'humidity', { left: 0, top: 0, width: 100, height: 100 });
   assert.equal(chart.latest, null);
   assert.deepEqual(chart.paths, []);
 });

@@ -45,9 +45,30 @@ function riskLevel(moldIndex: number): MoldRiskLevel {
   return moldIndex < 1 ? 'low' : moldIndex < 3 ? 'medium' : 'high';
 }
 
-/** 間隔をmeasuredAtの差、時刻未同期ならseqの差（毎時1件）から求める。 */
+function mean(values: readonly (number | null)[]) {
+  const present = values.filter((v): v is number => v !== null);
+  return present.length === 0 ? null : present.reduce((a, b) => a + b, 0) / present.length;
+}
+
+/** 計測間隔が1時間より短くても1時間ずつ進めるよう、同じ時台の記録を平均して1件にする。最新順で返す。 */
+function toHourly(measurements: readonly Measurement[]): Measurement[] {
+  const byHour = new Map<number, Measurement[]>();
+  for (const record of measurements) {
+    const hour = Math.floor(Date.parse(record.measuredAt) / HOUR_MS);
+    const bucket = byHour.get(hour);
+    if (bucket) bucket.push(record);
+    else byHour.set(hour, [record]);
+  }
+  return [...byHour].sort(([a], [b]) => b - a).map(([hour, records]) => ({
+    deviceId: records[0].deviceId,
+    temperatureC: mean(records.map((r) => r.temperatureC)),
+    relativeHumidityPercent: mean(records.map((r) => r.relativeHumidityPercent)),
+    measuredAt: new Date(hour * HOUR_MS).toISOString(),
+    receivedAt: records.map((r) => r.receivedAt).sort().at(-1)!,
+  }));
+}
+
 function hoursBetween(previous: Measurement, next: Measurement) {
-  if (previous.measuredAt === null || next.measuredAt === null) return next.seq - previous.seq;
   return Math.round((Date.parse(next.measuredAt) - Date.parse(previous.measuredAt)) / HOUR_MS);
 }
 
@@ -60,9 +81,9 @@ export function createVttMoldPredictor({
   humidityOffsetPercent = 0,
   cmat = 0.5,
 }: { surfaceDeltaByMonthC?: readonly number[]; humidityOffsetPercent?: number; cmat?: number } = {}): MoldPredictor {
-  function surfaceOf({ temperatureC, relativeHumidityPercent, measuredAt, receivedAt }: Measurement): Surface | null {
+  function surfaceOf({ temperatureC, relativeHumidityPercent, measuredAt }: Measurement): Surface | null {
     if (temperatureC === null || relativeHumidityPercent === null) return null;
-    const deltaC = surfaceDeltaByMonthC[new Date(measuredAt ?? receivedAt).getMonth()];
+    const deltaC = surfaceDeltaByMonthC[new Date(measuredAt).getMonth()];
     return surfaceConditions(temperatureC, relativeHumidityPercent, deltaC, humidityOffsetPercent);
   }
 
@@ -96,7 +117,8 @@ export function createVttMoldPredictor({
   }
 
   return {
-    predict(measurements) {
+    predict(records) {
+      const measurements = toHourly(records);
       const state: GrowthState = { moldIndex: 0, unfavorableHours: 0 };
       let observedHours = 0;
       let last: { record: Measurement; surface: Surface } | null = null;

@@ -16,6 +16,14 @@
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": false
         }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "neverForLocation": true,
+          "bluetoothAlwaysPermission": "部屋の温湿度センサーから記録を受け取るために Bluetooth を使います。"
+        }
       ]
     ],
     "ios": {
