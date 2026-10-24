@@ -11,10 +11,12 @@ interface MeasurementState {
   readonly measurements: readonly Measurement[];
   readonly status: SyncStatus;
   readonly error: string | null;
+  /** 最後に同期が成功した時刻。このプロセスでまだなら null。 */
+  readonly lastSyncedAt: number | null;
 }
 
 export function useMeasurements(services: AppServices, intervalMs = DEFAULT_SYNC_INTERVAL_MS) {
-  const [state, setState] = useState<MeasurementState>({ measurements: [], status: 'loading', error: null });
+  const [state, setState] = useState<MeasurementState>({ measurements: [], status: 'loading', error: null, lastSyncedAt: null });
   const [refreshKey, setRefreshKey] = useState(0);
   // 手動同期用のAPI。ホームの更新UIは意図的に設けず、通信側の接続用に維持する。
   // effect の再実行を待たずに、呼び出した描画で loading にする。
@@ -40,7 +42,7 @@ export function useMeasurements(services: AppServices, intervalMs = DEFAULT_SYNC
           setState((previous) => ({ ...previous, measurements }));
         },
         onReady() {
-          setState((previous) => ({ ...previous, status: 'ready', error: null }));
+          setState((previous) => ({ ...previous, status: 'ready', error: null, lastSyncedAt: Date.now() }));
         },
         onError(error) {
           setState((previous) => ({ ...previous, status: 'error', error: error.message }));

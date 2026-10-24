@@ -4,5 +4,5 @@
     "strict": true,
     "types": ["react"]
   },
-  "exclude": ["tests", "node_modules"]
+  "exclude": ["tests", "scripts", "node_modules"]
 }
