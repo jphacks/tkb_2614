@@ -7,12 +7,14 @@ import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
 import { useOutdoorWeather } from '../hooks/useOutdoorWeather';
+import { useVentilationAdvice } from '../hooks/useVentilationAdvice';
 import { useWidgetSync } from '../hooks/useWidgetSync';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
+import { ventilationMessage } from '../ui/ventilationMessage';
 import { WeatherDebug } from '../ui/WeatherDebug';
 import { ARPage } from './ARPage';
 import { GraphPage } from './GraphPage';
@@ -31,6 +33,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const outdoor = useOutdoorWeather(services.weatherSource);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
+  const ventilation = useVentilationAdvice(measurements, outdoor.weather, now);
+  const bubble = ventilationMessage(ventilation.advice, ventilation.spots, home.risk);
   const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();
@@ -86,7 +90,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE}
+            <MainPage home={home} bubble={bubble} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE}
               debugWeather={<WeatherDebug {...outdoor} label={services.weatherSource.label} />}
             />
           </View>

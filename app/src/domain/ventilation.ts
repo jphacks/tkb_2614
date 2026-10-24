@@ -1,7 +1,7 @@
 import { relativeHumidityAt, vaporPressureHpa } from './humidity';
 import { type Measurement, STALE_AFTER_MS } from './measurement';
 import { criticalHumidity } from './moldModel';
-import type { SpotPredictions } from './roomSpots';
+import { ROOM_SPOTS, type SpotId, type SpotPredictions } from './roomSpots';
 import type { OutdoorWeather } from './weather';
 
 export type VentilationAdvice =
@@ -50,11 +50,14 @@ function latestValid(measurements: readonly Measurement[]) {
   return latest;
 }
 
-/** 窓が結露しているか、どれかのスポットの今の表面 RH が臨界湿度以上か。 */
-function anySpotAtRisk(spots: SpotPredictions) {
-  if (spots.window?.isCondensing) return true;
-  return Object.values(spots).some((spot) =>
-    spot !== null && spot.currentSurface.relativeHumidityPercent >= criticalHumidity(spot.currentSurface.temperatureC));
+/** 窓が結露しているか、今の表面 RH が臨界湿度以上のスポット。ROOM_SPOTS の順に返す。 */
+export function riskySpots(spots: SpotPredictions): SpotId[] {
+  return ROOM_SPOTS.map(({ id }) => id).filter((id) => {
+    const spot = spots[id];
+    if (spot === null) return false;
+    if (id === 'window' && spots.window?.isCondensing) return true;
+    return spot.currentSurface.relativeHumidityPercent >= criticalHumidity(spot.currentSurface.temperatureC);
+  });
 }
 
 function isNight(now: number) {
@@ -84,7 +87,7 @@ export function adviseVentilation(
   const indoor = latestValid(measurements);
   if (indoor === null || weather === null || now - Date.parse(indoor.measuredAt) > STALE_AFTER_MS) return { kind: 'none' };
   // 2. 窓が結露しておらず、どのスポットでもカビが育たない。
-  if (!anySpotAtRisk(spots)) return { kind: 'none' };
+  if (riskySpots(spots).length === 0) return { kind: 'none' };
   // 3. 外と室内を水蒸気圧で比べる。温度の違う空気の絶対湿度は、温めると体積が増えて下がるので、そのままは比べられない。
   const indoorHpa = vaporPressureHpa(indoor.temperatureC, indoor.relativeHumidityPercent);
   const outdoorHpa = vaporPressureHpa(weather.temperatureC, weather.relativeHumidityPercent);

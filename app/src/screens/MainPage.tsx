@@ -2,18 +2,33 @@ import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
+import type { VentilationAdvice } from '../domain/ventilation';
 import { space, type as typography, useScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
 import type { HomeState } from '../ui/homeState';
 import { characterNames, nextCharacter, type CharacterKind } from '../ui/mascot/types';
 import { Reading } from '../ui/Reading';
+import { SpeechBubble, speechBubbleHeight } from '../ui/SpeechBubble';
+import { ventilationMessage, type BubbleMessage } from '../ui/ventilationMessage';
 
 const previewStages = [null, 'fine', 'worried', 'dizzy'] as const;
 const previewLabels = ['自動', '低', '中', '高'] as const;
+const bubblePreviews: readonly (readonly [string, VentilationAdvice])[] = [
+  ['開ける', { kind: 'open', brief: false, predictedIndoorRh: 42 }],
+  ['少し開ける', { kind: 'open', brief: true }],
+  ['閉める', { kind: 'close', reason: 'outdoorWetter' }],
+  ['雨', { kind: 'keep', reason: 'rain' }],
+  ['夜', { kind: 'keep', reason: 'night' }],
+  ['強風', { kind: 'keep', reason: 'wind' }],
+  ['暑い', { kind: 'keep', reason: 'hot' }],
+  ['なし', { kind: 'none' }],
+];
 
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
-export function MainPage({ home, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
+export function MainPage({ home, bubble, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
   home: HomeState;
+  /** 窓の開閉判定のひとこと。null なら吹き出しを出さない（場所は空けたまま）。 */
+  bubble: BubbleMessage | null;
   bottomInset: number;
   topInset: number;
   character: CharacterKind;
@@ -26,11 +41,16 @@ export function MainPage({ home, bottomInset, topInset, character, onCharacterCh
   // Preview only the mascot. Never mutate measurements, prediction, or theme.
   const [previewStage, setPreviewStage] = useState(0);
   const previewMood = __DEV__ ? previewStages[previewStage] : null;
+  // 0 は自動。1 以降は bubblePreviews を順に見せる（開発用）。
+  const [bubblePreview, setBubblePreview] = useState(0);
+  const previewAdvice = __DEV__ && bubblePreview > 0 ? bubblePreviews[bubblePreview - 1] : null;
+  const shownBubble = previewAdvice ? ventilationMessage(previewAdvice[1], null, null) : bubble;
   const { width, height, fontScale } = useWindowDimensions();
   // Give the mascot nearly the full screen width, reserving room for the
   // reading, top button, and movement during a tap reaction.
   const contentTop = topInset + 56;
-  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32;
+  const bubbleHeight = speechBubbleHeight(fontScale);
+  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + bubbleHeight + space.s16;
   const size = Math.max(120, Math.min(440, width - space.s24, height - bottomInset - contentTop - reservedHeight));
 
   return (
@@ -47,6 +67,20 @@ export function MainPage({ home, bottomInset, topInset, character, onCharacterCh
           }]}
         >
           <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
+        </Pressable>
+      )}
+      {__DEV__ && (
+        <Pressable
+          onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
+          accessibilityRole="button"
+          accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
+          accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
+          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
+            top: topInset + space.s8 + 48 + space.s8,
+            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+          }]}
+        >
+          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
         </Pressable>
       )}
       <Pressable
@@ -67,6 +101,7 @@ export function MainPage({ home, bottomInset, topInset, character, onCharacterCh
           <Path d="M10.5 13.3q1.5 1.4 3 0" fill="none" stroke={scheme.onSurfaceVariant} strokeWidth={1.2} strokeLinecap="round" />
         </Svg>
       </Pressable>
+      <SpeechBubble message={shownBubble} height={bubbleHeight} maxWidth={width - space.s24 * 2} />
       <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
       <Reading state={home.reading} />
       {debugWeather}
