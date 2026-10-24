@@ -2,6 +2,8 @@ import type { Measurement, MeasurementSource } from '../domain/measurement';
 
 export const DEFAULT_SYNC_INTERVAL_MS = 15 * 60 * 1000;
 export const DEFAULT_REQUEST_TIMEOUT_MS = 15_000;
+/** デバイスと同じく1年分だけ残す（AsyncStorageの1件あたりの上限対策も兼ねる）。 */
+export const RETENTION_MS = 365 * 24 * 60 * 60 * 1000;
 
 export interface MeasurementStore {
   load(deviceId: string): Promise<readonly Measurement[]>;
@@ -37,7 +39,7 @@ async function request<T>(operation: (signal: AbortSignal) => Promise<T>, signal
   }
 }
 
-/** 手動同期や再開も直列化し、保存前にはACKしない。 */
+/** 手動同期や再開も直列化し、計測時刻をキーに保存済み履歴へ上書きする。 */
 export function createMeasurementSync(source: MeasurementSource, store: MeasurementStore, timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS) {
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error('タイムアウトは正数にしてください。');
   let tail: Promise<unknown> = Promise.resolve();
@@ -47,25 +49,24 @@ export function createMeasurementSync(source: MeasurementSource, store: Measurem
       const saved = await store.load(source.deviceId);
       checkAbort(signal);
       onSaved([...saved].reverse());
-      const lastSeq = saved.at(-1)?.seq ?? 0;
-      const fetched = await request((requestSignal) => source.fetchSince(lastSeq, requestSignal), signal, timeoutMs);
+      // デバイスは前より新しい時刻の記録しか作らないので、保存済みの最新以降を取れば抜けない。
+      const latest = saved.at(-1);
+      const since = latest ? new Date(latest.measuredAt) : null;
+      const fetched = await request((requestSignal) => source.fetchSince(since, requestSignal), signal, timeoutMs);
       checkAbort(signal);
-      const bySeq = new Map(saved.map((record) => [record.seq, record]));
-      let previousSeq = 0;
+      const byTime = new Map(saved.map((record) => [Date.parse(record.measuredAt), record]));
+      let previous = -Infinity;
       for (const record of fetched) {
-        if (record.deviceId !== source.deviceId || !Number.isInteger(record.seq) || record.seq <= 0 || record.seq > 0xffffffff || record.seq < previousSeq) {
-          throw new Error('履歴のデバイスまたはseqの順序が不正です。');
-        }
-        previousSeq = record.seq;
-        if (!bySeq.has(record.seq)) bySeq.set(record.seq, record);
+        const time = Date.parse(record.measuredAt);
+        if (record.deviceId !== source.deviceId || !(time > previous)) throw new Error('履歴のデバイスまたは時刻の順序が不正です。');
+        previous = time;
+        byTime.set(time, record);
       }
-      const merged = [...bySeq.values()].sort((a, b) => a.seq - b.seq);
+      const newest = Math.max(...byTime.keys());
+      const merged = [...byTime].filter(([time]) => time > newest - RETENTION_MS).sort(([a], [b]) => a - b).map(([, record]) => record);
       await store.save(source.deviceId, merged);
       checkAbort(signal);
       onSaved([...merged].reverse());
-      const seq = merged.at(-1)?.seq;
-      // 前回ACKだけ失敗した場合、空バッチでも保存済みのseqを再ACKする。
-      if (seq !== undefined) await request((requestSignal) => source.ack(seq, requestSignal), signal, timeoutMs);
     });
     tail = pending.catch(() => {});
     return pending;
