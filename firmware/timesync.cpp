@@ -1,6 +1,8 @@
 #include "timesync.h"
 
 #include <WiFi.h>
+#include <esp_sntp.h>
+#include <sys/time.h>
 #include <time.h>
 
 #include "secrets.h"
@@ -12,6 +14,43 @@
 // これより前の時刻は「未同期」とみなす（2024-01-01 00:00:00 UTC）
 static const time_t VALID_EPOCH_MIN = 1704067200;
 
+// 最後に時計を合わせた記録。NTP は自動同期のタスク、端末の時刻は loop から書き換える
+static portMUX_TYPE syncMux = portMUX_INITIALIZER_UNLOCKED;
+static uint32_t lastSyncEpoch = 0;
+static ClockSource lastSyncSource = CLOCK_SOURCE_NONE;
+static unsigned long lastSyncMs = 0;  // 経過時間は時計を合わせても変わらない millis() で測る
+
+static TaskHandle_t syncTask = nullptr;
+
+// NTP の応答で時計が合わせられたら立つ
+static volatile bool ntpDone = false;
+
+static void onNtpSynced(struct timeval* tv) {
+  ntpDone = true;
+}
+
+static void recordSync(ClockSource source) {
+  portENTER_CRITICAL(&syncMux);
+  lastSyncEpoch = (uint32_t)time(nullptr);
+  lastSyncSource = source;
+  lastSyncMs = millis();
+  portEXIT_CRITICAL(&syncMux);
+}
+
+static bool isStale() {
+  portENTER_CRITICAL(&syncMux);
+  bool stale = lastSyncSource == CLOCK_SOURCE_NONE || millis() - lastSyncMs >= CLOCK_STALE_MS;
+  portEXIT_CRITICAL(&syncMux);
+  return stale;
+}
+
+void clockBegin() {
+  // 内部時刻は UTC のまま、表示用のタイムゾーンを日本時間にする
+  setenv("TZ", "JST-9", 1);
+  tzset();
+  sntp_set_time_sync_notification_cb(onNtpSynced);
+}
+
 uint32_t clockNow() {
   time_t now = time(nullptr);
   return now > VALID_EPOCH_MIN ? (uint32_t)now : 0;
@@ -19,6 +58,20 @@ uint32_t clockNow() {
 
 bool clockIsValid() {
   return clockNow() != 0;
+}
+
+uint32_t clockLastSync() {
+  portENTER_CRITICAL(&syncMux);
+  uint32_t epoch = lastSyncEpoch;
+  portEXIT_CRITICAL(&syncMux);
+  return epoch;
+}
+
+ClockSource clockLastSyncSource() {
+  portENTER_CRITICAL(&syncMux);
+  ClockSource source = lastSyncSource;
+  portEXIT_CRITICAL(&syncMux);
+  return source;
 }
 
 void clockFormat(uint32_t epoch, char* buf, size_t len) {
@@ -36,27 +89,83 @@ bool syncClock() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-  // Wi-Fi 接続（最大15秒）
+  // Wi-Fi 接続（最大30秒）。アクセスポイントがすぐに見つからないことがあるので長めに待つ
   unsigned long start = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - start < 15000) {
+  while (WiFi.status() != WL_CONNECTED && millis() - start < 30000) {
     delay(500);
   }
 
   bool ok = false;
   if (WiFi.status() == WL_CONNECTED) {
-    // 内部時刻は UTC のまま、表示用のタイムゾーンを日本時間にする
+    // 端末の時刻ですでに時計が合っていることもあるので、時計が有効かではなく NTP の応答で判断する
+    ntpDone = false;
     configTzTime("JST-9", NTP_SERVER, "pool.ntp.org");
 
     // NTP 応答待ち（最大10秒）
     start = millis();
-    while (!clockIsValid() && millis() - start < 10000) {
+    while (!ntpDone && millis() - start < 10000) {
       delay(200);
     }
-    ok = clockIsValid();
+    ok = ntpDone && clockIsValid();
+    if (!ok) {
+      Serial.println("NTP サーバーから応答がありません");
+    }
+    // Wi-Fi を切った後も SNTP が再送を続けないよう止める
+    esp_sntp_stop();
+  } else {
+    Serial.printf("Wi-Fi に接続できません（status %d）\n", (int)WiFi.status());
   }
 
   // BLE との共存・省電力のため、成功・失敗にかかわらず Wi-Fi を切る
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
+
+  if (ok) {
+    recordSync(CLOCK_SOURCE_NTP);
+  }
   return ok;
+}
+
+// 未同期か、最後に合わせてから時間が経っていれば NTP を試す。頼まれたときはすぐ試す
+static void syncTaskMain(void*) {
+  for (;;) {
+    bool requested = ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(CLOCK_RETRY_MS)) > 0;
+    if (requested || !clockIsValid() || isStale()) {
+      Serial.println(syncClock() ? "NTP 時刻同期成功" : "NTP 時刻同期失敗");
+    }
+  }
+}
+
+void clockStartAutoSync() {
+  if (syncTask == nullptr) {
+    xTaskCreate(syncTaskMain, "clockSync", 6144, nullptr, 1, &syncTask);
+  }
+}
+
+void clockRequestSync() {
+  if (syncTask != nullptr) {
+    xTaskNotifyGive(syncTask);
+  }
+}
+
+bool clockSetFromPhone(uint32_t epoch) {
+  if (epoch <= VALID_EPOCH_MIN) {
+    return false;
+  }
+  if (clockIsValid() && !isStale()) {
+    return false;
+  }
+  struct timeval tv = {(time_t)epoch, 0};
+  settimeofday(&tv, nullptr);
+  recordSync(CLOCK_SOURCE_PHONE);
+  return true;
+}
+
+void clockReset() {
+  struct timeval tv = {0, 0};
+  settimeofday(&tv, nullptr);
+  portENTER_CRITICAL(&syncMux);
+  lastSyncEpoch = 0;
+  lastSyncSource = CLOCK_SOURCE_NONE;
+  portEXIT_CRITICAL(&syncMux);
 }
