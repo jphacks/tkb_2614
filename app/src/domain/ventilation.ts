@@ -6,7 +6,13 @@ import type { OutdoorWeather } from './weather';
 
 export type VentilationAdvice =
   /**
-   * 開けると乾く。predictedIndoorRh は、室内の空気が外の空気に全部入れ替わり、室温まで温まった（冷えた）ときの相対湿度 [%]。
+   * 開けると乾く。次をすべて満たすとき（adviseVentilation のルール 1〜6）。
+   * - 室内の計測が STALE_AFTER_MS 以内、外の天気の取得が WEATHER_STALE_AFTER_MS 以内。
+   * - 窓が結露しているか、どこかのスポットの表面 RH が臨界湿度以上（開ける理由がある）。
+   * - 外の水蒸気圧が室内より VAPOR_PRESSURE_THRESHOLD_HPA 以上低い（入れ替えると乾く）。
+   * - 雨でない・風速 STRONG_WIND_MPS 未満・夜間（NIGHT_START_HOUR〜NIGHT_END_HOUR 時）でない・外気 HOT_OUTDOOR_C 以下。
+   * - 外気 BRIEF_BELOW_OUTDOOR_C 以上（未満なら brief）。
+   * predictedIndoorRh は、室内の空気が外の空気に全部入れ替わり、室温まで温まった（冷えた）ときの相対湿度 [%]。
    * 実際は壁や家具が水分を吸ったり吐いたりするので、そこまでは下がらない。
    */
   | { readonly kind: 'open'; readonly brief: false; readonly predictedIndoorRh: number }

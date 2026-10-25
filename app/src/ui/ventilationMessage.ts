@@ -1,11 +1,14 @@
 import type { MoldRiskLevel } from '../domain/prediction';
 import type { SpotId, SpotPredictions } from '../domain/roomSpots';
 import { riskySpots, type VentilationAdvice } from '../domain/ventilation';
+import type { ActionName } from './action/types';
 
 export interface BubbleMessage {
   /** 吹き出しの1行目に小さく出す理由。キャラの表情と食い違うときだけ出す。 */
   readonly reason: string | null;
   readonly text: string;
+  /** 吹き出しに出すアニメーション。文を読まなくても、何をすればいいかわかるようにする。 */
+  readonly animation: ActionName;
 }
 
 /**
@@ -13,6 +16,11 @@ export interface BubbleMessage {
  * 丸めて 0% にはしない（外がとても乾いていても、室内の湿度が 0% になることはない）。
  */
 const PREDICTED_RH_STEP = 5;
+/**
+ * 「◯% くらい」の下限 [%]。外がとても乾いている日（春先の 15℃・30% など）は全部入れ替わったときの値が 20% 台になるが、
+ * 実際は壁や家具が水分を吐き出すのでそこまでは下がらず、勧めたい値（乾燥しすぎない範囲）でもないので、これより下は出さない。
+ */
+const PREDICTED_RH_FLOOR = 40;
 
 const spotReasons: Record<SpotId, string> = {
   window: '窓のまわりが湿っているよ',
@@ -20,18 +28,31 @@ const spotReasons: Record<SpotId, string> = {
   bed: 'ベッドの裏が湿っているよ',
 };
 
-function adviceText(advice: Exclude<VentilationAdvice, { kind: 'none' }>) {
+/**
+ * 判定ごとのひとことと絵。window-close-pollen（花粉）の絵は、花粉の判定を作るまで使わない。
+ * 外のほうが湿っている（close）ときに合う絵はないので、エアコン・除湿機の絵を出す（窓を閉めたうえで、乾かすのはエアコンや除湿機になるため）。
+ */
+function adviceContent(advice: Exclude<VentilationAdvice, { kind: 'none' }>): { text: string; animation: ActionName } {
   switch (advice.kind) {
     case 'open':
-      return advice.brief
-        ? '寒いけど、5〜10分だけ開けると湿気が抜けるよ'
-        : `窓を開けよう！ ${Math.max(PREDICTED_RH_STEP, Math.round(advice.predictedIndoorRh / PREDICTED_RH_STEP) * PREDICTED_RH_STEP)}% くらいまで下がりそう`;
+      if (advice.brief) return { text: '外が寒いから、5〜10分だけ窓を開けよう', animation: 'window-open-brief' };
+      return { text: `窓を開けよう！ ${predictedRhLabel(advice.predictedIndoorRh)}% くらいまで下がりそう`, animation: 'window-open' };
     case 'close':
-      return '外のほうがジメジメ。窓は閉めておこう';
+      return { text: '外のほうがジメジメ。窓は閉めておこう', animation: 'aircon-dry' };
     case 'keep':
-      if (advice.reason === 'rain') return '雨だから窓はそのままで';
-      return '今日はエアコンや除湿機を使おう';
+      if (advice.reason === 'rain') return { text: '雨だから窓を閉めよう', animation: 'window-close-rain' };
+      if (advice.reason === 'wind') return { text: '風が強いから窓を閉めよう', animation: 'window-close-wind' };
+      return { text: '今日はエアコンや除湿機を使おう', animation: 'aircon-dry' };
   }
+}
+
+/**
+ * 吹き出しに出す「◯%」。5% 刻みに丸め、PREDICTED_RH_FLOOR より下は出さない。
+ * 開ける判定は水蒸気圧の差が VAPOR_PRESSURE_THRESHOLD_HPA 以上のときだけなので、室温 30℃ でも 3 ポイント以上は下がる。
+ * 丸めで最大 2.5 ポイント上がっても、今の湿度（画面の数字）より低い値になる（下限で切り上げたときを除く）。
+ */
+function predictedRhLabel(predictedIndoorRh: number) {
+  return Math.max(PREDICTED_RH_FLOOR, Math.round(predictedIndoorRh / PREDICTED_RH_STEP) * PREDICTED_RH_STEP);
 }
 
 /**
@@ -42,8 +63,8 @@ function adviceText(advice: Exclude<VentilationAdvice, { kind: 'none' }>) {
  */
 export function ventilationMessage(advice: VentilationAdvice, spots: SpotPredictions | null, risk: MoldRiskLevel | null): BubbleMessage | null {
   if (advice.kind === 'none' || (advice.kind === 'keep' && advice.reason === 'night')) return null;
-  const asksToDry = advice.kind === 'open' || (advice.kind === 'keep' && (advice.reason === 'wind' || advice.reason === 'hot'));
+  const asksToDry = advice.kind === 'open' || (advice.kind === 'keep' && advice.reason === 'hot');
   const cause = asksToDry && risk !== 'medium' && risk !== 'high' && spots !== null ? riskySpots(spots)[0] : undefined;
   const reason = cause === undefined ? null : cause === 'window' && spots?.window?.isCondensing ? '窓が結露しているよ' : spotReasons[cause];
-  return { reason, text: adviceText(advice) };
+  return { reason, ...adviceContent(advice) };
 }

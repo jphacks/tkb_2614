@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:c2pa="http://c2pa.org/manifest" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-rain" role="img" aria-label="雨のため窓を開けない"><style>
+.anim-rain .rain-1 {animation: rainFall 1.3s ease-in infinite;animation-play-state:var(--motion,running)}
+.anim-rain .rain-2 {animation: rainFall 1.55s ease-in infinite;animation-delay:-.75s;animation-play-state:var(--motion,running)}
+.anim-rain .rain-3 {animation: rainFall 1.15s ease-in infinite;animation-delay:-.3s;animation-play-state:var(--motion,running)}
+.anim-rain .rain-4 {animation: rainFall 1.4s ease-in infinite;animation-delay:-.95s;animation-play-state:var(--motion,running)}
+.anim-rain .umbrella {transform-box:view-box;transform-origin:206px 30px;animation: umbrellaBob 2.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-rain .close-arrow {animation: rainArrow 2.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes rainFall {0%{opacity:0;transform:translate(5px,-10px)} 20%{opacity:1} 85%{opacity:1} 100%{opacity:0;transform:translate(-8px,13px)} }
+@keyframes umbrellaBob {0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(2px) rotate(2deg)} }
+@keyframes rainArrow {0%,100%{opacity:1} 50%{opacity:.6} }
+@media (prefers-reduced-motion: reduce) {
+  svg * {animation:none !important;}
+}
+</style><path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<path d="M144 72H100C97.7909 72 96 73.7909 96 76V188C96 190.209 97.7909 192 100 192H144C146.209 192 148 190.209 148 188V76C148 73.7909 146.209 72 144 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M137 81H107C105.895 81 105 81.8954 105 83V181C105 182.105 105.895 183 107 183H137C138.105 183 139 182.105 139 181V83C139 81.8954 138.105 81 137 81Z" fill="#DDEFF7"/>
+<path d="M111 102L123 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="close-arrow"><path d="M133 150H111" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M119 142L111 150L119 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="rain-1"><path d="M188 4L182 16" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-2"><path d="M222 6L216 18" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-3"><path d="M232 30L226 42" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-4"><path d="M180 40L174 52" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="umbrella"><path d="M184 30C184 24.1652 186.318 18.5695 190.444 14.4437C194.569 10.3179 200.165 8 206 8C211.835 8 217.431 10.3179 221.556 14.4437C225.682 18.5695 228 24.1652 228 30C223.013 26.6667 218.113 26.6667 213.3 30C208.433 26.6667 203.567 26.6667 198.7 30C193.887 26.6667 188.987 26.6667 184 30Z" fill="#6EC6F0" stroke="#3A3A3A" stroke-width="5" stroke-linejoin="round"/>
+<path d="M206 28V50C206 54.6667 204 57 200 57C196.667 57 195 55.3333 195 52" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>
+<path d="M206 8V4" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>
+</g></svg>
