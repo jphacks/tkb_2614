@@ -1,5 +1,5 @@
 import { relativeHumidityAt, vaporPressureHpa } from './humidity';
-import { type Measurement, STALE_AFTER_MS } from './measurement';
+import { latestValid, type Measurement, STALE_AFTER_MS } from './measurement';
 import { criticalHumidity } from './moldModel';
 import type { SpotPredictions } from './roomSpots';
 import type { OutdoorWeather } from './weather';
@@ -20,7 +20,9 @@ export type VentilationAdvice =
   | { readonly kind: 'none' };
 
 /**
- * 室内のほうがこれ以上水蒸気圧が高いときだけ、開けると乾くとみなす [hPa]。
+ * 室内のほうがこれ以上水蒸気圧が高いときだけ開けると乾く、外のほうがこれ以上高いときだけ外のほうが湿っているとみなす [hPa]。
+ * 窓を開けてしばらく経つと外と室内はほぼ同じになるので、両側に効かせないと、センサーの誤差
+ * （Si7021 の ±3%RH は 20℃ で約 ±0.7 hPa）だけで判定が入れ替わり、開けた直後に「閉めよう」と出てしまう。
  * 前の判定の「絶対湿度 1 g/m³」を水蒸気圧に直した値。e[hPa] = AH[g/m³] × (T + 273.15) / 216.7 なので、
  * 1 g/m³ は 10℃ で 1.31 hPa、20℃ で 1.35 hPa になる。
  */
@@ -39,23 +41,13 @@ export const NIGHT_END_HOUR = 6;
 export const HOT_OUTDOOR_C = 33;
 /**
  * 取得からこれより経った外の天気は使わず、天気がないときと同じに扱う。雨・気温・湿度は1時間もあれば変わる。
- * 取得元のキャッシュは30分で、useOutdoorWeather は起動時とフォアグラウンド復帰時にしか取り直さないので、
- * アプリを開いたままにすると、何時間も前の天気で「開けよう」と言ってしまう。
+ * useOutdoorWeather はフォアグラウンドにいる間5分ごとに取り直すが、取得が失敗し続けたり止まったりしたときに、
+ * 何時間も前の天気で「開けよう」と言わないための保険。
  * 観測時刻（observedAt）は Open-Meteo では15分ごと、モックでは正時に切り下げられるので、取得時刻（fetchedAt）で測る。
  */
 export const WEATHER_STALE_AFTER_MS = 60 * 60 * 1000;
 /** これ未満の外気なら短時間だけ開ける [℃]。冬の冷たい外気は水蒸気が少なく、短時間でも入れ替えれば結露を減らすのに一番効く。 */
 export const BRIEF_BELOW_OUTDOOR_C = 5;
-
-/** 欠測でない計測のうち、計測時刻が一番新しいもの。 */
-function latestValid(measurements: readonly Measurement[]) {
-  let latest: { temperatureC: number; relativeHumidityPercent: number; measuredAt: string } | null = null;
-  for (const { temperatureC, relativeHumidityPercent, measuredAt } of measurements) {
-    if (temperatureC === null || relativeHumidityPercent === null) continue;
-    if (latest === null || Date.parse(measuredAt) > Date.parse(latest.measuredAt)) latest = { temperatureC, relativeHumidityPercent, measuredAt };
-  }
-  return latest;
-}
 
 /** 窓が結露しているか、どれかのスポットの今の表面 RH が臨界湿度以上か。 */
 function anySpotAtRisk(spots: SpotPredictions) {
@@ -97,7 +89,7 @@ export function adviseVentilation(
   const indoorHpa = vaporPressureHpa(indoor.temperatureC, indoor.relativeHumidityPercent);
   const outdoorHpa = vaporPressureHpa(weather.temperatureC, weather.relativeHumidityPercent);
   if (indoorHpa === null || outdoorHpa === null) return { kind: 'none' };
-  if (outdoorHpa > indoorHpa) return { kind: 'close', reason: 'outdoorWetter' };
+  if (outdoorHpa - indoorHpa >= VAPOR_PRESSURE_THRESHOLD_HPA) return { kind: 'close', reason: 'outdoorWetter' };
   if (indoorHpa - outdoorHpa < VAPOR_PRESSURE_THRESHOLD_HPA) return { kind: 'none' };
   // 4. 乾くとしても今は勧めない。
   const reason = keepReason(weather, now);

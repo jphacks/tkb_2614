@@ -67,16 +67,19 @@ test('窓が結露せず、どのスポットも臨界湿度未満なら何も�
   assert.equal(advise(winterRoom, weather(), january()).kind, 'open');
 });
 
-test('外のほうが水蒸気圧が高ければ閉める', () => {
+test('外のほうが水蒸気圧がしきい値以上高ければ閉める', () => {
   assert.deepEqual(advise(winterRoom, weather({ temperatureC: 25, relativeHumidityPercent: 80 }), january()), { kind: 'close', reason: 'outdoorWetter' });
 });
 
-test('室内のほうが高くても、差がしきい値未満なら何も言わない', () => {
+test('差がしきい値未満なら、どちらが高くても何も言わない', () => {
   const indoorHpa = vaporPressureHpa(winterRoom.temperatureC, winterRoom.relativeHumidityPercent)!;
   const outdoor = (diffHpa: number) => weather({ temperatureC: 15, relativeHumidityPercent: rhFor(15, indoorHpa - diffHpa) });
   assert.deepEqual(advise(winterRoom, outdoor(0), january()), { kind: 'none' });
   assert.deepEqual(advise(winterRoom, outdoor(VAPOR_PRESSURE_THRESHOLD_HPA - 0.01), january()), { kind: 'none' });
   assert.equal(advise(winterRoom, outdoor(VAPOR_PRESSURE_THRESHOLD_HPA + 0.01), january()).kind, 'open');
+  // 外のほうが高いときも同じ。開けて外と室内がほぼ同じになっても「閉めよう」とは言わない。
+  assert.deepEqual(advise(winterRoom, outdoor(-(VAPOR_PRESSURE_THRESHOLD_HPA - 0.01)), january()), { kind: 'none' });
+  assert.deepEqual(advise(winterRoom, outdoor(-(VAPOR_PRESSURE_THRESHOLD_HPA + 0.01)), january()), { kind: 'close', reason: 'outdoorWetter' });
 });
 
 test('開けると乾くときは、外の空気に入れ替わったときの室内の相対湿度を返す', () => {
