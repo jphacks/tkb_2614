@@ -13,12 +13,14 @@ import { characterNames, type CharacterKind } from './mascot/types';
 const levels = { fine: 'low', worried: 'medium', dizzy: 'high', sleep: 'low' } as const;
 const moodLabels: Record<Mood, string> = { fine: '危険度：低', worried: '危険度：中', dizzy: '危険度：高', sleep: '計測データなし' };
 
-export function Character({ mood, size, character = 'mimi', active = true, stale = false }: {
+export function Character({ mood, size, character = 'mimi', active = true, stale = false, onLongPress }: {
   mood: Mood;
   size: number;
   character?: CharacterKind;
   active?: boolean;
   stale?: boolean;
+  /** 長押し。温湿度計を探し直す隠し操作に使う。 */
+  onLongPress?: () => void;
 }) {
   const [clock] = useState(() => new MascotClock(requestAnimationFrame, cancelAnimationFrame));
   const playTapSound = useTapSound();
@@ -42,6 +44,13 @@ export function Character({ mood, size, character = 'mimi', active = true, stale
         playTapSound();
         if (animate) clock.react();
       }}
+      onLongPress={onLongPress && (() => {
+        playTapSound();
+        if (animate) clock.react();
+        onLongPress();
+      })}
+      accessibilityActions={onLongPress && [{ name: 'longpress', label: '温湿度計を探し直す' }]}
+      onAccessibilityAction={onLongPress && ((event) => { if (event.nativeEvent.actionName === 'longpress') onLongPress(); })}
       accessibilityRole="button"
       accessibilityLabel={`${characterNames[character]}、${moodLabels[mood]}${stale ? '（前回のデータ）' : ''}`}
       accessibilityHint="タップするとキャラクターが音を出して反応します"

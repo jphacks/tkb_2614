@@ -29,7 +29,19 @@ const INDICATOR_AREA = 32 + space.s24;
 
 /** [グラフ] ← [メイン] → [部屋] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
-  const { measurements, status, lastSyncedAt } = useMeasurements(services);
+  const { measurements, status, lastSyncedAt, refresh } = useMeasurements(services);
+  const { forgetDevice } = services;
+  // 長押しから、探し直した同期が終わる（ready か error になる）まで同期アイコンを出す。
+  const [rescanning, setRescanning] = useState(false);
+  const [rescanStatus, setRescanStatus] = useState(status);
+  if (rescanStatus !== status) {
+    setRescanStatus(status);
+    if (rescanning && (status === 'ready' || status === 'error')) setRescanning(false);
+  }
+  const rescan = useMemo(() => forgetDevice && (() => {
+    setRescanning(true);
+    void forgetDevice().catch(() => {}).then(refresh);
+  }), [forgetDevice, refresh]);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const outdoor = useOutdoorWeather(services.weatherSource);
   const now = useNow(60_000);
@@ -105,7 +117,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bubble={bubble} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
+            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bubble={bubble} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} onRescan={rescan} rescanning={rescanning} active={!paging && activePage === MAIN_PAGE}
             />
           </View>
           <View style={{ width }}>

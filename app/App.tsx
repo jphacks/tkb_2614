@@ -5,10 +5,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { HomeScreen } from './src/screens/HomeScreen';
-import { createAppServices } from './src/services/createAppServices';
+import { getAppServices } from './src/services/createAppServices';
 
 export default function App() {
-  const [services] = useState(createAppServices);
+  const [services] = useState(getAppServices);
   const [fontsLoaded, fontError] = useFonts({ Roboto_500Medium, Roboto_600SemiBold });
 
   // 読み込みに失敗したらシステムフォントで表示する。

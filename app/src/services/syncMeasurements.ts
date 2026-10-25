@@ -46,7 +46,10 @@ export function createMeasurementSync(source: MeasurementSource, store: Measurem
   return (signal: AbortSignal, onSaved: (records: readonly Measurement[]) => void): Promise<void> => {
     const pending = tail.then(async () => {
       checkAbort(signal);
-      const saved = await store.load(source.deviceId);
+      if (source.prepare) await request((requestSignal) => source.prepare!(requestSignal), signal, timeoutMs);
+      checkAbort(signal);
+      const deviceId = source.deviceId;
+      const saved = await store.load(deviceId);
       checkAbort(signal);
       onSaved([...saved].reverse());
       // デバイスは前より新しい時刻の記録しか作らないので、保存済みの最新以降を取れば抜けない。
@@ -58,13 +61,13 @@ export function createMeasurementSync(source: MeasurementSource, store: Measurem
       let previous = -Infinity;
       for (const record of fetched) {
         const time = Date.parse(record.measuredAt);
-        if (record.deviceId !== source.deviceId || !(time > previous)) throw new Error('履歴のデバイスまたは時刻の順序が不正です。');
+        if (record.deviceId !== deviceId || !(time > previous)) throw new Error('履歴のデバイスまたは時刻の順序が不正です。');
         previous = time;
         byTime.set(time, record);
       }
       const newest = Math.max(...byTime.keys());
       const merged = [...byTime].filter(([time]) => time > newest - RETENTION_MS).sort(([a], [b]) => a - b).map(([, record]) => record);
-      await store.save(source.deviceId, merged);
+      await store.save(deviceId, merged);
       checkAbort(signal);
       onSaved([...merged].reverse());
     });

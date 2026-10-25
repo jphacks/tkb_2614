@@ -5,7 +5,7 @@ export const CONTROL_UUID = 'a29c0003-756b-4378-90b5-8651bbdbe79e';
 export const DATA_UUID = 'a29c0004-756b-4378-90b5-8651bbdbe79e';
 
 const PROTOCOL_VERSION = 2;
-const COMPANY_ID = 0xffff;
+export const COMPANY_ID = 0xffff;
 const RECORD_SIZE = 8;
 
 export interface BleRecord {
