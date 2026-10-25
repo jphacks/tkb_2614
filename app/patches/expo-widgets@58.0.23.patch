@@ -1,0 +1,137 @@
+diff --git a/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt b/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
+index 3df9e4a4d92155a00d3f5652d17d20be10bef1c1..30f0e6eea145e434601245cb3300a1dc9b9e9163 100644
+--- a/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
++++ b/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
+@@ -4,7 +4,12 @@ package expo.modules.widgets
+ 
+ import android.annotation.SuppressLint
+ import android.content.Context
++import android.content.Intent
++import android.content.res.ColorStateList
+ import android.graphics.Color as AndroidColor
++import android.net.Uri
++import android.os.Build
++import android.widget.RemoteViews
+ import androidx.compose.ui.unit.DpSize
+ import androidx.compose.ui.unit.TextUnit
+ import androidx.compose.ui.unit.dp
+@@ -67,6 +72,7 @@ import androidx.glance.TintColorFilterParams
+ import androidx.glance.GlanceModifier
+ import androidx.glance.action.clickable
+ import androidx.glance.appwidget.CheckboxDefaults
++import androidx.glance.appwidget.action.actionStartActivity
+ import androidx.glance.appwidget.cornerRadius
+ import androidx.glance.appwidget.EmittableCheckBox
+ import androidx.glance.appwidget.EmittableCircularProgressIndicator
+@@ -235,6 +241,9 @@ private fun ReadableMap.toPeekImage(converterContext: WidgetConverterContext): E
+   val props = props<WidgetImageProps>(converterContext)
+   val source = props.source
+     ?: return createErrorText("Image has no source. Pass source={{ uri }} with a drawable resource name or a file URI.")
++  if (source.uri.startsWith(REMOTE_LAYOUT_PREFIX)) {
++    return toRemoteLayout(converterContext, source.uri.removePrefix(REMOTE_LAYOUT_PREFIX), props)
++  }
+   val provider = runCatching {
+     loadWidgetImage(converterContext.applicationContext, source, props.imageTarget(converterContext))
+   }.getOrElse { error ->
+@@ -250,6 +259,29 @@ private fun ReadableMap.toPeekImage(converterContext: WidgetConverterContext): E
+   }
+ }
+ 
++private const val REMOTE_LAYOUT_PREFIX = "remote-layout:"
++private const val REMOTE_LAYOUT_TINT_TARGET = "expo_widgets_tint_target"
++
++/**
++ * Places a layout from the app's res/layout as is, for views Glance cannot express, such as a ProgressBar
++ * whose indeterminate drawable is an animated-rotate icon. `tint` is applied to the ProgressBar with the id
++ * `expo_widgets_tint_target` on Android 12+.
++ */
++private fun toRemoteLayout(converterContext: WidgetConverterContext, name: String, props: WidgetImageProps): Emittable {
++  val context = converterContext.applicationContext
++  val layoutId = context.resources.getIdentifier(name, "layout", context.packageName)
++  if (layoutId == 0) {
++    return createErrorText("Layout '$name' was not found in the app's res/layout.")
++  }
++  val remoteViews = RemoteViews(context.packageName, layoutId)
++  val tintTarget = context.resources.getIdentifier(REMOTE_LAYOUT_TINT_TARGET, "id", context.packageName)
++  val tint = props.tint
++  if (tint != null && tintTarget != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
++    remoteViews.setColorStateList(tintTarget, "setIndeterminateTintList", ColorStateList.valueOf(tint.toArgb()))
++  }
++  return createRemoteViewsEmittable(remoteViews, props.imageModifier(converterContext))
++}
++
+ private fun WidgetImageProps.imageModifier(converterContext: ConverterContext): GlanceModifier {
+   val modifier = modifiers.toPeekModifier(converterContext)
+   val description = contentDescription ?: return modifier
+@@ -419,6 +451,11 @@ private fun ModifierType.toPeekModifier(converterContext: ConverterContext): Gla
+     "background" -> asRecord<BackgroundParams>(converterContext)?.color?.toGlanceColorProvider()
+       ?.let { GlanceModifier.background(it) }
+     "cornerRadius" -> asRecord<CornerRadiusParams>(converterContext)?.let { GlanceModifier.cornerRadius(it.radius.dp) }
++    // Same name as the SwiftUI modifier: opens the URL in the app when the view is tapped.
++    "widgetURL" -> this["url"]?.asString()?.let { url ->
++      val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage(converterContext.applicationContext.packageName)
++      GlanceModifier.clickable(actionStartActivity(intent))
++    }
+     // Unsupported Expo UI modifiers are ignored until they have exact Glance semantics.
+     else -> null
+   } ?: GlanceModifier
+diff --git a/android/src/main/java/expo/modules/widgets/RemoteViewsEmittable.kt b/android/src/main/java/expo/modules/widgets/RemoteViewsEmittable.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..2de61b9004d5a6e21e72762c14481381d072c406
+--- /dev/null
++++ b/android/src/main/java/expo/modules/widgets/RemoteViewsEmittable.kt
+@@ -0,0 +1,17 @@
++// EmittableAndroidRemoteViews is internal to Glance; its public counterpart is the AndroidRemoteViews
++// composable, which the emittable tree cannot call. Keep the access to this one file.
++@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
++
++package expo.modules.widgets
++
++import android.widget.RemoteViews
++import androidx.glance.Emittable
++import androidx.glance.GlanceModifier
++import androidx.glance.appwidget.EmittableAndroidRemoteViews
++
++internal fun createRemoteViewsEmittable(remoteViews: RemoteViews, modifier: GlanceModifier): Emittable {
++  return EmittableAndroidRemoteViews().also {
++    it.remoteViews = remoteViews
++    it.modifier = modifier
++  }
++}
+diff --git a/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt b/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
+index b0b6479c2292763fd18eaee78b5e8d2dc4234493..b6869182a10c701e4db8c2a2cca4272a5772af85 100644
+--- a/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
++++ b/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
+@@ -63,7 +63,12 @@ internal object WidgetsInteraction {
+       WidgetsStorage.set(context, "__expo_widgets_${source}_props", props.orEmpty() + updatedProps)
+     }
+ 
+-    WidgetsEvents.sendUserInteraction(source, target)
++    if (!WidgetsEvents.sendUserInteraction(source, target)) {
++      // Nobody in JS can handle the tap, so open the app and let it react on launch.
++      context.packageManager.getLaunchIntentForPackage(context.packageName)
++        ?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++        ?.let { intent -> runCatching { context.startActivity(intent) } }
++    }
+     WidgetsUpdater.reload(context, source)
+   }
+ }
+diff --git a/android/src/main/java/expo/modules/widgets/WidgetsEvents.kt b/android/src/main/java/expo/modules/widgets/WidgetsEvents.kt
+index 191cd52b7d3b4eabf123209a60462f4d4daa9353..4f8e458b57003b1d5ec694a8055094c51ad6048d 100644
+--- a/android/src/main/java/expo/modules/widgets/WidgetsEvents.kt
++++ b/android/src/main/java/expo/modules/widgets/WidgetsEvents.kt
+@@ -17,9 +17,12 @@ internal object WidgetsEvents {
+     userInteractionObserver = null
+   }
+ 
++  /** Returns false when no JS listener is registered, which usually means the app is not running. */
+   @Synchronized
+-  fun sendUserInteraction(source: String, target: String, notificationId: String? = null) {
+-    userInteractionObserver?.invoke(userInteractionEvent(source, target, notificationId))
++  fun sendUserInteraction(source: String, target: String, notificationId: String? = null): Boolean {
++    val observer = userInteractionObserver ?: return false
++    observer.invoke(userInteractionEvent(source, target, notificationId))
++    return true
+   }
+ 
+   private fun userInteractionEvent(source: String, target: String, notificationId: String?): Map<String, Any?> {

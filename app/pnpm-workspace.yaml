@@ -22,3 +22,4 @@ minimumReleaseAgeExclude:
   - expo-location@58.0.19
 patchedDependencies:
   react-native-ble-plx: patches/react-native-ble-plx.patch
+  expo-widgets@58.0.23: patches/expo-widgets@58.0.23.patch

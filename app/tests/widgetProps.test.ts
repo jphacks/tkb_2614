@@ -92,3 +92,9 @@ test('iOS のタイムラインは15分ごとに経過時間と古さを先回�
   assert.ok(timeline[firstStale].date.getTime() - (now - 10 * minute) > STALE_AFTER_MS);
   assert.ok(timeline[firstStale - 1].date.getTime() - (now - 10 * minute) <= STALE_AFTER_MS);
 });
+
+test('同期中は syncing を立てる', () => {
+  assert.equal(deriveWidgetProps(source({ status: 'loading' }), images, now).syncing, true);
+  assert.equal(deriveWidgetProps(source(), images, now).syncing, false);
+  assert.equal(initialWidgetProps.syncing, false);
+});

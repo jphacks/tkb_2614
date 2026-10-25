@@ -4,13 +4,14 @@ import { createWidget } from 'expo-widgets';
 
 import { initialWidgetProps, type MoldWidgetProps } from '../widgetProps';
 
+/** 押すとグラフを開く。 */
 const TemperatureWidget = (props: MoldWidgetProps) => {
   'widget';
   const { palette } = props;
   const valueColor = props.stale ? palette.outline : palette.onSurface;
   const unitColor = props.stale ? palette.outline : palette.onSurfaceVariant;
   return (
-    <Box contentAlignment="bottomStart" modifiers={[fillMaxSize(), background(palette.surface), cornerRadius(24), paddingAll(16)]}>
+    <Box contentAlignment="bottomStart" modifiers={[fillMaxSize(), background(palette.surface), cornerRadius(24), paddingAll(16), { $type: 'widgetURL', url: 'tkb2614://graph' }]}>
       <Box contentAlignment="topStart" modifiers={[fillMaxSize()]}>
         {props.icons.temperature ? <Image source={{ uri: props.icons.temperature }} tint={palette.primary} modifiers={[size(28, 28)]} /> : null}
       </Box>

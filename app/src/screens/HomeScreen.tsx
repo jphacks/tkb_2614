@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Animated, Linking, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { scrollTo, setNativeProps, useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,17 +10,19 @@ import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
 import { useOutdoorWeather } from '../hooks/useOutdoorWeather';
 import { useVentilationAdvice } from '../hooks/useVentilationAdvice';
-import { useWidgetSync } from '../hooks/useWidgetSync';
+import { useWidgetSync, useWidgetSyncRequests } from '../hooks/useWidgetSync';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
 import { ventilationMessage } from '../ui/ventilationMessage';
+import { widgetLinkPage } from '../widgets/widgetLinks';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 import { RoomPage } from './RoomPage';
 
+const GRAPH_PAGE = 0;
 const MAIN_PAGE = 1;
 const ROOM_PAGE = 2;
 const PAGE_COUNT = 3;
@@ -29,7 +31,7 @@ const INDICATOR_AREA = 32 + space.s24;
 
 /** [グラフ] ← [メイン] → [部屋] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
-  const { measurements, status, lastSyncedAt, refresh } = useMeasurements(services);
+  const { measurements, status, lastSyncedAt, historyLoaded, refresh, syncNow } = useMeasurements(services);
   const { forgetDevice } = services;
   // 長押しから、探し直した同期が終わる（ready か error になる）まで同期アイコンを出す。
   const [rescanning, setRescanning] = useState(false);
@@ -57,7 +59,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
   const [character, setCharacter] = useState<CharacterKind>('mimi');
-  useWidgetSync({ measurements, status, prediction, lastSyncedAt, character });
+  useWidgetSync({ measurements, status, prediction, lastSyncedAt, character }, historyLoaded);
+  useWidgetSyncRequests(syncNow);
   const [activePage, setActivePage] = useState(MAIN_PAGE);
   // スワイプ中は全ページのキャラの動きを止め、JS の負荷を下げてページ送りを滑らかにする。
   const [paging, setPaging] = useState(false);
@@ -74,6 +77,21 @@ export function HomeScreen({ services }: { services: AppServices }) {
     setActivePage(activePageRef.current);
     setPaging(false);
   }, []);
+  // ウィジェットから開かれたら、押したウィジェットに合うページへ送る。起動前ならレイアウト時に onLayout が送る。
+  useEffect(() => {
+    const open = (url: string | null | undefined) => {
+      const link = widgetLinkPage(url);
+      if (link === null) return;
+      activePageRef.current = link === 'graph' ? GRAPH_PAGE : MAIN_PAGE;
+      const x = width * activePageRef.current;
+      pager.current?.scrollTo({ x, animated: false });
+      scrollX.setValue(x);
+      settle();
+    };
+    Linking.getInitialURL().then(open, () => {});
+    const subscription = Linking.addEventListener('url', ({ url }) => open(url));
+    return () => subscription.remove();
+  }, [width, scrollX, pager, settle]);
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;

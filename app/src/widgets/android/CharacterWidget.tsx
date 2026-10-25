@@ -4,12 +4,15 @@ import { createWidget } from 'expo-widgets';
 
 import { initialWidgetProps, type MoldWidgetProps } from '../widgetProps';
 
-/** 選んでいるマスコットの表情と配色だけでリスクを表す。'widget' の関数は別ランタイムで動くので、外側の値を参照しない。 */
+/**
+ * 選んでいるマスコットの表情と配色だけでリスクを表す。'widget' の関数は別ランタイムで動くので、外側の値を参照しない。
+ * widgetURL はパッチを当てた expo-widgets が解釈し、押すとアプリのホームを開く。
+ */
 const CharacterWidget = (props: MoldWidgetProps) => {
   'widget';
   const { palette, character } = props;
   return (
-    <Box contentAlignment="center" modifiers={[fillMaxSize(), background(palette.surface), cornerRadius(24), paddingAll(4)]}>
+    <Box contentAlignment="center" modifiers={[fillMaxSize(), background(palette.surface), cornerRadius(24), paddingAll(4), { $type: 'widgetURL', url: 'tkb2614://home' }]}>
       {character ? <Image source={{ uri: character }} contentScale="fit" alpha={props.characterOpacity} contentDescription="カビのリスク" modifiers={[fillMaxSize()]} /> : null}
     </Box>
   );

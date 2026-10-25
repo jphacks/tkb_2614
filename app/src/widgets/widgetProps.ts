@@ -30,6 +30,8 @@ export interface MoldWidgetProps {
   /** 最後に同期した時刻（HH:mm）。未同期なら '–'。 */
   readonly syncTime: string;
   readonly syncAgo: string;
+  /** アプリがデバイスと同期している間。Android は同期アイコンを回す。 */
+  readonly syncing: boolean;
   /** 古い値や不明な値は outline 色で表示する。 */
   readonly stale: boolean;
   /** アプリと同じくライトの配色だけを使う。 */
@@ -70,6 +72,7 @@ export const initialWidgetProps: MoldWidgetProps = {
   temperature: '–',
   syncTime: '–',
   syncAgo: '未同期',
+  syncing: false,
   stale: true,
   palette: paletteFor(null),
   character: '',
@@ -120,6 +123,7 @@ export function deriveWidgetProps(source: WidgetSource, images: WidgetImages | n
     temperature: temperature === null ? '–' : Math.round(temperature).toString(),
     syncTime: syncedAt === null ? '–' : formatClock(syncedAt),
     syncAgo: syncedAt === null ? '未同期' : formatSyncAgo(syncedAt, at),
+    syncing: source.status === 'loading',
     stale: home.reading.kind !== 'live',
     palette: paletteFor(home.risk),
     character: images?.characters[source.character][moodLevels[home.mood]] ?? '',
