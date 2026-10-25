@@ -1,10 +1,8 @@
+import type { SpotId } from '../domain/roomSpots';
 import type { ColorScheme } from '../theme/theme';
 
 // Figma の「Room 案A」（明るいオーク / 北欧）を react-native-svg のパスに起こしたもの。
 // 部屋は 10×10・壁高 10 の箱で、x は右の壁沿い、y は左の壁沿い、z は高さ。
-
-export type SpotId = 'window' | 'bed' | 'shelf';
-export const SPOT_IDS: readonly SpotId[] = ['window', 'bed', 'shelf'];
 
 /** テーマの色名か、テーマに依存しない固定色（木の色・影）。 */
 export type Paint = keyof ColorScheme | `#${string}`;
@@ -17,7 +15,6 @@ export interface Shape {
   readonly opacity?: number;
 }
 
-export interface Rect { readonly x: number; readonly y: number; readonly width: number; readonly height: number }
 type Point = readonly [number, number];
 type Range = readonly [number, number];
 
@@ -117,82 +114,24 @@ function bedShapes(): Shape[] {
   ];
 }
 
-/** 選択中に、スポットの下や背面へ敷く primaryContainer の面。 */
-const SELECTED_PADS: Record<SpotId, readonly (readonly Point[])[]> = {
-  window: [onRightWall(0.005, [0.1, 4.9], [3.2, 9.1])],
-  bed: [onFloor(0, [0.05, 6.2], [5.0, 9.95])],
-  shelf: [onRightWall(0.005, [6.6, 9.8], [0, 7.5]), onFloor(0, [6.6, 9.8], [0, 2.0])],
-};
-
-/** スポットの外形を囲う直方体（縁取り・タップ領域の計算に使う）。 */
-const SPOT_BOXES: Record<SpotId, readonly (readonly [Range, Range, Range])[]> = {
-  window: [[[0.4, 4.6], [0, 0.5], [3.5, 8.8]]],
-  shelf: [[[6.9, 9.5], [0, 1.7], [0, 7.2]]],
-  bed: [[[0, 5.6], [5.6, 9.4], [0, 3.6]]],
-};
-
-function corners(id: SpotId): Point[] {
-  return SPOT_BOXES[id].flatMap(([xs, ys, zs]) => xs.flatMap((x) => ys.flatMap((y) => zs.map((z) => P(x, y, z)))));
-}
-
-/** 凸包（Andrew の単調連鎖法）。 */
-function hull(points: readonly Point[]): Point[] {
-  const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const cross = (o: Point, a: Point, b: Point) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
-  const half = (list: readonly Point[]) => {
-    const out: Point[] = [];
-    for (const p of list) {
-      while (out.length >= 2 && cross(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop();
-      out.push(p);
-    }
-    return out.slice(0, -1);
-  };
-  return [...half(sorted), ...half([...sorted].reverse())];
-}
-
 export const ROOM_SHAPES: readonly Shape[] = room();
 
-/** 描く順（奥から手前）。タップ領域が重なるところは後のスポットを優先する。 */
+/** 描く順（奥から手前）。 */
 export const SPOT_SHAPES: Readonly<Record<SpotId, readonly Shape[]>> = { window: windowShapes(), shelf: shelfShapes(), bed: bedShapes() };
 export const DRAW_ORDER: readonly SpotId[] = ['window', 'shelf', 'bed'];
 
-export function selectedPads(id: SpotId): Shape[] {
-  return SELECTED_PADS[id].map((points) => poly(points, 'primaryContainer'));
-}
+/** 窓が結露しているときにガラスへ重ねる水滴。下端（サッシ・パッキン）ほど多くたまる。 */
+export const CONDENSATION_SHAPES: readonly Shape[] = ([
+  [1.3, 5.6], [2.0, 6.9], [1.6, 4.6], [2.15, 4.4], [3.0, 7.4], [3.7, 6.2], [3.2, 4.7], [3.85, 4.4],
+] as const).map(([x, z]) => {
+  const [cx, cy] = P(x, 0.03, z);
+  // 上がとがった雫の形。壁の傾きに合わせず、縦に落ちる向きで描く。
+  return { d: `M${round(cx)} ${round(cy - 6)} Q${round(cx + 4)} ${round(cy)} ${round(cx)} ${round(cy + 3)} Q${round(cx - 4)} ${round(cy)} ${round(cx)} ${round(cy - 6)} Z`, fill: 'surfaceContainerLowest', opacity: 0.9 };
+});
 
-export function selectedOutline(id: SpotId): Shape {
-  return { d: polygon(hull(corners(id))), stroke: 'primary', strokeWidth: 3 };
-}
-
-/** スポットの外形に 8 の余白を足し、最小 48×48 にした矩形。 */
-function hitArea(id: SpotId): Rect {
-  const points = corners(id);
-  const xs = points.map(([x]) => x);
-  const ys = points.map(([, y]) => y);
-  let x = Math.min(...xs) - 8;
-  let y = Math.min(...ys) - 8;
-  let width = Math.max(...xs) + 8 - x;
-  let height = Math.max(...ys) + 8 - y;
-  if (width < 48) { x -= (48 - width) / 2; width = 48; }
-  if (height < 48) { y -= (48 - height) / 2; height = 48; }
-  return { x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height) };
-}
-
-export const HIT_AREAS: Readonly<Record<SpotId, Rect>> = { window: hitArea('window'), shelf: hitArea('shelf'), bed: hitArea('bed') };
-
-/**
- * スポットごとのカビの画像の中心座標。結露から目で追えるよう、窓はガラスではなくサッシ下端のパッキンに置く。
- * 窓 = サッシ下端、ベッド = 枕元の壁とベッド下、棚 = 棚の脇と棚の上の壁。
- */
-export const MOLD_ANCHORS: Readonly<Record<SpotId, readonly Point[]>> = {
-  window: [P(0.9, 0, 4.15), P(4.0, 0, 4.15)],
-  bed: [P(0.05, 9.75, 2.4), P(3.2, 9.4, 0.15)],
-  shelf: [P(9.75, 0, 2.2), P(8.2, 0, 7.7)],
-};
-
-/** 選んだスポットの前の床。キャラの足元をここに合わせる。 */
+/** キャラの足元を置く床の位置。家具を隠しすぎないよう、スポットの手前に立たせる。 */
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
-  window: P(2.5, 2.4, 0),
-  bed: P(7.4, 7.6, 0),
-  shelf: P(8.2, 3.6, 0),
+  window: P(2.5, 0.8, 0),
+  bed: P(6.5, 9.2, 0),
+  shelf: P(9.0, 2.8, 0),
 };

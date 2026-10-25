@@ -1,25 +1,15 @@
 import { useEffect, useState } from 'react';
-import { AppState, Pressable, StyleSheet, View } from 'react-native';
+import { AppState, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import type { MoldRiskLevel } from '../domain/prediction';
-import { useScheme, type ColorScheme } from '../theme/theme';
+import type { SpotId, SpotPredictions } from '../domain/roomSpots';
+import { schemeFor, type, useScheme, type ColorScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
-import type { Mood } from '../ui/homeState';
-import { Mold } from '../ui/Mold';
-import type { CharacterKind } from '../ui/mascot/types';
-import {
-  CHARACTER_ANCHORS, DRAW_ORDER, HIT_AREAS, MOLD_ANCHORS, ROOM_SHAPES, SCENE, SPOT_SHAPES, selectedOutline, selectedPads,
-  type Paint, type Shape, type SpotId,
-} from '../ui/roomGeometry';
+import { moods } from '../ui/homeState';
+import { characterKinds, type CharacterKind } from '../ui/mascot/types';
+import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, DRAW_ORDER, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
 
-/** スポットのカビの画像の [大きさ, 種類]。MOLD_ANCHORS の順に置き、リスクが高いほど数と大きさを増やす。 */
-const MOLDS: Record<MoldRiskLevel, readonly (readonly [number, 'small' | 'normal' | 'big'])[]> = {
-  low: [[26, 'small']],
-  medium: [[40, 'normal'], [28, 'small']],
-  high: [[56, 'big'], [42, 'normal']],
-};
-const CHARACTER_SIZE = 84;
+const CHARACTER_SIZE = 72;
 const SPOT_LABELS: Record<SpotId, string> = { window: '窓', bed: 'ベッド', shelf: '棚' };
 
 function paint(scheme: ColorScheme, value: Paint | undefined) {
@@ -42,21 +32,28 @@ function Shapes({ shapes, scheme }: { shapes: readonly Shape[]; scheme: ColorSch
   ));
 }
 
+/** スポットの数だけ、重ならないようにキャラを選ぶ。ページを開くたびに変わらないよう、最初の1回だけ選ぶ。 */
+function pickCharacters(): Record<SpotId, CharacterKind> {
+  const shuffled = [...characterKinds];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return { window: shuffled[0], shelf: shuffled[1], bed: shuffled[2] };
+}
+
 /**
- * 部屋の絵と、窓・ベッド・棚のスポット。選んだスポットは縁取りを強め、その前にキャラを出す。
- * カビの画像は今は部屋全体のリスクで出す（スポットごとのリスクは #24 で入れる）。
+ * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情と配色、足元の数字（カビ指数 M）で、
+ * どこが危ないかをタップせずにひと目で見せる。窓が結露していればガラスに水滴を出す。
  */
-export function RoomPage({ risk, mood, character, selected, onSelect, active, topInset, bottomInset }: {
-  risk: MoldRiskLevel | null;
-  mood: Mood;
-  character: CharacterKind;
-  selected: SpotId | null;
-  onSelect: (spot: SpotId) => void;
+export function RoomPage({ spots, active, topInset, bottomInset }: {
+  spots: SpotPredictions;
   active: boolean;
   topInset: number;
   bottomInset: number;
 }) {
   const scheme = useScheme();
+  const [characters] = useState(pickCharacters);
   const [isActive, setIsActive] = useState(AppState.currentState === 'active');
   const [bounds, setBounds] = useState<{ width: number; height: number } | null>(null);
   useEffect(() => {
@@ -64,50 +61,41 @@ export function RoomPage({ risk, mood, character, selected, onSelect, active, to
     return () => subscription.remove();
   }, []);
 
-  // 絵の全体が収まるよう、縦横の小さい方の倍率に合わせる（meet）。タップ領域とカビ・キャラも同じ変換で置く。
+  // 絵の全体が収まるよう、縦横の小さい方の倍率に合わせる（meet）。キャラも同じ変換で置く。
   const scale = bounds ? Math.min(bounds.width / SCENE.width, bounds.height / SCENE.height) : 0;
   const offsetX = bounds ? (bounds.width - SCENE.width * scale) / 2 - SCENE.x * scale : 0;
   const offsetY = bounds ? (bounds.height - SCENE.height * scale) / 2 - SCENE.y * scale : 0;
-  const toScreen = (x: number, y: number) => ({ left: x * scale + offsetX, top: y * scale + offsetY });
-  const moving = active && isActive;
+  const size = CHARACTER_SIZE * scale;
 
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <View style={styles.stage} onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}>
         <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false}>
           <Shapes shapes={ROOM_SHAPES} scheme={scheme} />
-          {DRAW_ORDER.map((id) => (
-            <Shapes key={id} scheme={scheme} shapes={id === selected ? [...selectedPads(id), ...SPOT_SHAPES[id], selectedOutline(id)] : SPOT_SHAPES[id]} />
-          ))}
+          {DRAW_ORDER.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
+          {spots.window?.isCondensing && <Shapes shapes={CONDENSATION_SHAPES} scheme={scheme} />}
         </Svg>
-        {bounds && (
-          <>
-            {DRAW_ORDER.map((id) => {
-              const area = HIT_AREAS[id];
-              return (
-                <Pressable
-                  key={id}
-                  onPress={() => onSelect(id)}
-                  accessibilityRole="button"
-                  accessibilityLabel={SPOT_LABELS[id]}
-                  accessibilityState={{ selected: id === selected }}
-                  style={[styles.hit, toScreen(area.x, area.y), { width: area.width * scale, height: area.height * scale }]}
-                />
-              );
-            })}
-            <View style={StyleSheet.absoluteFill} pointerEvents="none">
-              {risk && DRAW_ORDER.flatMap((id) => MOLDS[risk].map(([size, variant], index) => {
-                const [x, y] = MOLD_ANCHORS[id][index];
-                return <Mold key={`${id}-${index}`} x={(x - size / 2) * scale + offsetX} y={(y - size / 2) * scale + offsetY} size={size * scale} variant={variant} moving={moving} />;
-              }))}
-            </View>
-            {selected && (
-              <View style={[styles.character, toScreen(CHARACTER_ANCHORS[selected][0] - CHARACTER_SIZE / 2, CHARACTER_ANCHORS[selected][1] - CHARACTER_SIZE)]} pointerEvents="box-none">
-                <Character mood={mood} size={CHARACTER_SIZE * scale} character={character} active={moving} />
+        {bounds && DRAW_ORDER.map((id) => {
+          const prediction = spots[id];
+          // 配色もスポットのリスクで選ぶ。データがなければ眠らせ、メイン画面と同じく low の配色にする。
+          const spotScheme = schemeFor(prediction?.riskLevel ?? null);
+          const [x, y] = CHARACTER_ANCHORS[id];
+          const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
+          return (
+            <View
+              key={id}
+              style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
+              accessible
+              accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
+            >
+              <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
+              <View style={[styles.badge, { backgroundColor: spotScheme.primaryContainer }]}>
+                {/* 参考値はメイン画面の古い値と同じく、色を落とすだけにする。 */}
+                <Text style={[type.label, { color: prediction && !prediction.isProvisional ? spotScheme.onPrimaryContainer : spotScheme.outline }]}>{value}</Text>
               </View>
-            )}
-          </>
-        )}
+            </View>
+          );
+        })}
       </View>
     </View>
   );
@@ -116,6 +104,6 @@ export function RoomPage({ risk, mood, character, selected, onSelect, active, to
 const styles = StyleSheet.create({
   page: { flex: 1, overflow: 'hidden' },
   stage: { flex: 1 },
-  hit: { position: 'absolute', borderRadius: 12 },
-  character: { position: 'absolute' },
+  spot: { position: 'absolute', alignItems: 'center' },
+  badge: { marginTop: -6, minWidth: 40, paddingHorizontal: 8, borderRadius: 9999, alignItems: 'center' },
 });

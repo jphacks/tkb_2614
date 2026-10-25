@@ -18,7 +18,8 @@ export interface HomeState {
 /** これより古い計測値は薄く表示する。計測は1時間ごとなので、1回取りこぼしたら古いとみなす。 */
 export const STALE_AFTER_MS = 2 * 60 * 60 * 1000;
 
-const moods: Record<MoldRiskLevel, Mood> = { low: 'fine', medium: 'worried', high: 'dizzy' };
+/** リスク → 表情。部屋ページのスポットのキャラも同じ対応を使う。 */
+export const moods: Record<MoldRiskLevel, Mood> = { low: 'fine', medium: 'worried', high: 'dizzy' };
 
 /** 画面に文言を出さない代わりに、配色・表情・数字の濃さへ状態を割り当てる。 */
 export function deriveHomeState(

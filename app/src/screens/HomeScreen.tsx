@@ -3,6 +3,7 @@ import { useLayoutEffect, useMemo, useRef, useState, type ComponentRef } from 'r
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { predictSpots } from '../domain/roomSpots';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
@@ -12,7 +13,6 @@ import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
-import type { SpotId } from '../ui/roomGeometry';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 import { RoomPage } from './RoomPage';
@@ -29,6 +29,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
+  // 外気温（#19）はまだ取らないので、窓の結露も月別の表で判定する。
+  const spots = useMemo(() => predictSpots(measurements, null), [measurements]);
   const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();
@@ -46,7 +48,6 @@ export function HomeScreen({ services }: { services: AppServices }) {
     scrollX.setValue(x);
   }, [width, scrollX]);
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
-  const [spot, setSpot] = useState<SpotId | null>(null);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -79,7 +80,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <RoomPage risk={home.risk} mood={home.mood} character={character} selected={spot} onSelect={setSpot} active={activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
+            <RoomPage spots={spots} active={activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">

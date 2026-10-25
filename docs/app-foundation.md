@@ -4,7 +4,7 @@
 
 毎時の温湿度履歴を ESP32（chiikabi）から BLE でまとめて受け取り、計測時刻をキーにして端末のAsyncStorageに保存する（通信仕様は `docs/ble-protocol.md`）。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで1年分保持する。
 
-画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [部屋]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。部屋ページは斜め上から見下ろした木の部屋（Figma の「Room 案A」）で、窓・ベッド・棚をタップして選ぶ。選んだスポットは縁取りを強め、その前にキャラが現れる。カビ画像は各スポットのそばに置き、リスクに応じて数と大きさが増え、ゆっくり漂う。
+画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [部屋]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。部屋ページは斜め上から見下ろした木の部屋（Figma の「Room 案A」）で、窓・棚・ベッドの前に、ページを開いたときにランダムに選んだ別々のキャラを1体ずつ立たせる。キャラの表情と足元の数字（カビ指数 M、参考値は色を落とす）でスポットごとの予測（`predictSpots`）を見せるので、タップしなくてもどこが危ないかがひと目でわかる。窓が結露していればガラスに水滴を出す。
 
 カビのリスクはVTTモデル（[mold-model.md](mold-model.md)）で計算する。
 
@@ -66,9 +66,9 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
-- `src/ui/roomGeometry.ts`: 部屋の絵の形状（Figma の「Room 案A」をアイソメトリックの投影 `project(x, y, z)` で起こしたもの）、スポット（`SpotId`）ごとのタップ領域・カビの画像の座標・キャラの立ち位置。色はテーマの色名か固定の木の色で持つ。
+- `src/ui/roomGeometry.ts`: 部屋の絵の形状（Figma の「Room 案A」をアイソメトリックの投影 `project(x, y, z)` で起こしたもの）、スポット（`SpotId`）ごとのキャラの立ち位置と、窓の結露の水滴。色はテーマの色名か固定の木の色で持つ。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
-- `src/ui/`: Character（おむすび形のメインキャラ）・Mold・Reading・PageIndicator・ChartCard。
+- `src/ui/`: Character（おむすび形のメインキャラ）・Reading・PageIndicator・ChartCard。
 - `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`GraphPage`・`MainPage`・`RoomPage` が各ページ。
 - `src/widgets/`: ホーム画面ウィジェット（expo-widgets）。Figma の Widgets セクションと同じ5種類（キャラ・湿度・温度・同期時刻の小サイズと、それらをまとめた中サイズ）。レイアウトは `ios/`（`@expo/ui/swift-ui`）と `android/`（`@expo/ui/jetpack-compose`）に分かれ、`'widget'` の関数は別ランタイムで動くため外側の値やモジュールを参照できない。表示する値・配色は `widgetProps.ts` の純粋関数で文字列にして渡し、古さと表情は `deriveHomeState` と同じ判定にする。iOS は15分ごとのタイムラインで「◯分前」と古さを先回りして更新し、Android はスナップショットのみ。ウィジェットは BLE を使わず、アプリが最後に同期した値を表示する。
 - `scripts/renderWidgetImages.ts`: ウィジェットは SVG を描けないので、`assets/mascots` の5種類×危険度3段階のマスコットとアイコンを `assets/widgets/` に PNG で書き出す。マスコットの SVG を変えたら `pnpm render:widget-images` で作り直す。ウィジェットはメイン画面で選んでいるマスコットを表示し、計測値がないときはアプリと同じく low の絵を薄く出す。iOS はアプリが App Group の共有ディレクトリへ画像をコピーし、Android のリリースビルドは drawable 名をそのまま渡す。
@@ -96,7 +96,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - pull-to-refresh で新しい毎時計測がなければ履歴が増えない。
 - failEveryで失敗しても保存済み履歴が残り、次回同期で復旧する。
 - バックグラウンドで停止し、復帰直後に同期する。iOSの権限ダイアログやコントロールセンターによるinactiveでは中断しない。
-- 部屋ページで窓・ベッド・棚をタップすると選択が切り替わり、スポットの上から始めた横スワイプでもページを移動できることを確認する。縦横比の違う端末（タブレットを含む）で部屋が見切れないことを確認する。
+- 部屋ページで、冬のモックでは窓のキャラが危ない表情になり、ほかが穏やかな表情になることを確認する。縦横比の違う端末（タブレットを含む）で部屋とキャラが見切れないことを確認する。
 - 実機の描画・ネイティブストレージ・BLEは自動テストでは検証していないため実機で確認する。
 
 ## 公式資料
