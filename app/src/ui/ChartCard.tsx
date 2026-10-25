@@ -6,7 +6,10 @@ import type { Measurement } from '../domain/measurement';
 import { corner, space, type, useScheme } from '../theme/theme';
 import { buildChart, HUMIDITY_DANGER_PERCENT, type ChartKind } from './chartGeometry';
 
-const PLOT_HEIGHT = 140;
+/** 画面が縦に短くても、推移が読み取れる程度の高さは確保する。 */
+const MIN_PLOT_HEIGHT = 96;
+/** 縦長の画面でカードが間延びしないよう、カードの高さに上限を設ける。余った分はページの上下に振り分ける。 */
+const MAX_CARD_HEIGHT = 380;
 /**
  * 左端の余白。危険帯の境界の数字を軸の目盛りとして置く。右端に置くと最新値に見えてしまう。
  * 温度のカードも同じ幅を空け、2つのグラフの時刻の位置をそろえる。
@@ -18,8 +21,8 @@ const AXIS_GAP = space.s8;
 const BAND_RADIUS = 8;
 /** 時刻（「18時」など）の幅の半分の目安。 */
 const AXIS_LABEL_HALF = 16;
-const AXIS_Y = INSET + PLOT_HEIGHT + AXIS_GAP + type.label.fontSize;
-const SVG_HEIGHT = AXIS_Y + INSET;
+/** Svg のうち、グラフ本体以外（上下の INSET と時刻の行）の高さ。 */
+const SVG_CHROME = 2 * INSET + AXIS_GAP + type.label.fontSize;
 
 const ICONS: Record<ChartKind, string> = {
   humidity: 'M12 2.6c-.3 0-.5.1-.7.3C9.4 5 5 10.3 5 14.6 5 18.7 8.1 22 12 22s7-3.3 7-7.4c0-4.3-4.4-9.6-6.3-11.7-.2-.2-.4-.3-.7-.3z',
@@ -42,8 +45,12 @@ function topRoundedRect(x: number, y: number, width: number, height: number, r: 
  */
 export function ChartCard({ kind, measurements }: { kind: ChartKind; measurements: readonly Measurement[] }) {
   const scheme = useScheme();
-  const [width, setWidth] = useState(0);
-  const plot = { left: INSET + GUTTER, top: INSET, width: width - GUTTER, height: PLOT_HEIGHT };
+  // グラフの高さはカードに割り当てられた高さから決め、画面の縦横比が違っても余白を作らない。
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const width = size.width;
+  const plotHeight = Math.max(MIN_PLOT_HEIGHT, size.height - SVG_CHROME);
+  const plot = { left: INSET + GUTTER, top: INSET, width: width - GUTTER, height: plotHeight };
+  const axisY = INSET + plotHeight + AXIS_GAP + type.label.fontSize;
   const chart = buildChart(measurements, kind, plot);
   const color = kind === 'humidity' ? scheme.primary : scheme.tertiary;
   const latest = chart.latest;
@@ -58,9 +65,15 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
         </Svg>
         <Text style={[type.headline, { color: scheme.onSurface }]}>{latest ? format(kind, latest.value) : ' '}</Text>
       </View>
-      <View style={styles.chart} onLayout={(e) => setWidth(e.nativeEvent.layout.width - 2 * INSET)}>
+      <View
+        style={styles.chart}
+        onLayout={(e) => {
+          const { width: w, height: h } = e.nativeEvent.layout;
+          setSize({ width: w - 2 * INSET, height: h });
+        }}
+      >
         {width > 0 && (
-          <Svg width={svgWidth} height={SVG_HEIGHT}>
+          <Svg width={svgWidth} height={axisY + INSET}>
             {chart.dangerY !== null && (
               <>
                 <Path d={topRoundedRect(plot.left, plot.top, plot.width, chart.dangerY - plot.top, BAND_RADIUS)} fill={scheme.errorContainer} />
@@ -77,14 +90,14 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
               </>
             )}
             {chart.grid.map((g) => (
-              <Line key={g.x} x1={g.x} x2={g.x} y1={plot.top} y2={plot.top + PLOT_HEIGHT} stroke={scheme.outlineVariant} strokeWidth={1} />
+              <Line key={g.x} x1={g.x} x2={g.x} y1={plot.top} y2={plot.top + plotHeight} stroke={scheme.outlineVariant} strokeWidth={1} />
             ))}
             {chart.grid.map((g) => (
               <SvgText
                 key={g.x}
                 // 最新の計測が正時ちょうどだと縦線が右端に来るので、時刻が切れないよう右端にそろえる。
                 x={g.x + AXIS_LABEL_HALF > svgWidth ? svgWidth : g.x}
-                y={AXIS_Y}
+                y={axisY}
                 textAnchor={g.x + AXIS_LABEL_HALF > svgWidth ? 'end' : 'middle'}
                 fill={scheme.onSurfaceVariant}
                 fontFamily={type.label.fontFamily}
@@ -108,7 +121,7 @@ export function ChartCard({ kind, measurements }: { kind: ChartKind; measurement
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: corner.extraLargeIncreased, padding: space.s24, gap: space.s16 },
+  card: { flex: 1, maxHeight: MAX_CARD_HEIGHT, borderRadius: corner.extraLargeIncreased, padding: space.s24, gap: space.s16 },
   header: { flexDirection: 'row', alignItems: 'center', gap: space.s8 },
-  chart: { height: SVG_HEIGHT, marginHorizontal: -INSET, marginVertical: -INSET },
+  chart: { flex: 1, minHeight: MIN_PLOT_HEIGHT + SVG_CHROME, marginHorizontal: -INSET, marginVertical: -INSET },
 });
