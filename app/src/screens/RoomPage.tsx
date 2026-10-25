@@ -58,10 +58,8 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
  * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
  * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動でき、ダブルタップで拡大と等倍を切り替える。
  */
-export function RoomPage({ spots, current, active, topInset, bottomInset, onTwoFingers }: {
+export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
-  /** 今のページか。離れたら拡大を戻す。 */
-  current: boolean;
   /** キャラを動かすか。スワイプ中は止める。 */
   onTwoFingers: (active: boolean) => void;
   active: boolean;
@@ -86,7 +84,7 @@ export function RoomPage({ spots, current, active, topInset, bottomInset, onTwoF
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <View style={styles.stage} onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}>
-        <ZoomView active={current} onTwoFingers={onTwoFingers}>
+        <ZoomView onTwoFingers={onTwoFingers}>
           {LAYERS.map((layer, index) => (
             <Fragment key={index}>
               <Layer index={index} scheme={scheme} isCondensing={spots.window?.isCondensing ?? false} />

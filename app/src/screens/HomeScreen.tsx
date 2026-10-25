@@ -97,7 +97,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <RoomPage spots={spots} onTwoFingers={lockPager} current={activePage === ROOM_PAGE} active={!paging && activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
+            <RoomPage spots={spots} onTwoFingers={lockPager} active={!paging && activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">

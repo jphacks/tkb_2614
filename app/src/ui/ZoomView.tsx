@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureDetector, usePanGesture, usePinchGesture, useSimultaneousGestures, useTapGesture, type GestureTouchEvent } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -11,9 +11,10 @@ const TAP_SCALE = 2;
 /**
  * 2本指のピンチで拡大し、2本指のドラッグで動かす。1本指の操作は受けないので、ページャーの横スワイプとぶつからない。
  * 2本指が触れている間は onTwoFingers(true) を呼ぶので、親はその間ページャーを止める。
- * ダブルタップで、等倍ならタップした所を拡大し、拡大中なら等倍に戻す。active が false になる（ページを離れる）と等倍に戻す。
+ * ダブルタップで、等倍ならタップした所を拡大し、拡大中なら等倍に戻す。
+ * ページを離れても拡大は戻さない。スワイプ中に戻すと、戻す動きとページ送りが重なって引っかかるため。
  */
-export function ZoomView({ children, active, onTwoFingers }: { children: ReactNode; active: boolean; onTwoFingers: (active: boolean) => void }) {
+export function ZoomView({ children, onTwoFingers }: { children: ReactNode; onTwoFingers: (active: boolean) => void }) {
   const size = useSharedValue({ width: 0, height: 0 });
   const scale = useSharedValue(1);
   const x = useSharedValue(0);
@@ -104,10 +105,6 @@ export function ZoomView({ children, active, onTwoFingers }: { children: ReactNo
     },
   });
   const gesture = useSimultaneousGestures(pinch, pan, doubleTap);
-  // ページを離れたら等倍に戻す。
-  useEffect(() => {
-    if (!active) zoomTo(1, 0, 0);
-  }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
   const style = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }, { translateY: y.value }, { scale: scale.value }] }));
 
   return (

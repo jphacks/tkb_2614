@@ -150,5 +150,5 @@ const below = ([x, y]: Point, dy: number): Point => [x, y + dy];
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
   window: below(P(2.5, 0.25, 3.8), 8),
   bed: below(P(2.6, 7.6, 1.95), 20),
-  shelf: below(P(5.25, 0.3, 0), 8),
+  shelf: below(P(4.75, 0.3, 0), 8),
 };
