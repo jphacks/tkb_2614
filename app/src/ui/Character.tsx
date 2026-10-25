@@ -13,7 +13,7 @@ import { characterNames, type CharacterKind } from './mascot/types';
 const levels = { fine: 'low', worried: 'medium', dizzy: 'high', sleep: 'low' } as const;
 const moodLabels: Record<Mood, string> = { fine: '危険度：低', worried: '危険度：中', dizzy: '危険度：高', sleep: '計測データなし' };
 
-export function Character({ mood, size, character = 'mushroom', active = true, stale = false }: {
+export function Character({ mood, size, character = 'mimi', active = true, stale = false }: {
   mood: Mood;
   size: number;
   character?: CharacterKind;

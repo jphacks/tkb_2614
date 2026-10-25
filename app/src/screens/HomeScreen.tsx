@@ -40,7 +40,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [scrollX] = useState(() => new Animated.Value(width * MAIN_PAGE));
-  const [character, setCharacter] = useState<CharacterKind>('mushroom');
+  const [character, setCharacter] = useState<CharacterKind>('mimi');
   useWidgetSync({ measurements, status, prediction, lastSyncedAt, character });
   const [activePage, setActivePage] = useState(MAIN_PAGE);
   // スワイプ中は全ページのキャラの動きを止め、JS の負荷を下げてページ送りを滑らかにする。
