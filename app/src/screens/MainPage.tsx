@@ -1,19 +1,19 @@
-import { type ReactNode, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import type { VentilationAdvice } from '../domain/ventilation';
-import { space, type as typography, useScheme } from '../theme/theme';
+import { space, useScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
 import type { HomeState } from '../ui/homeState';
 import { characterNames, nextCharacter, type CharacterKind } from '../ui/mascot/types';
-import { Reading } from '../ui/Reading';
+import { MoldBackground } from '../ui/MoldBackground';
 import { SPEECH_BUBBLE_HEIGHT, SpeechBubble } from '../ui/SpeechBubble';
 import { ventilationMessage, type BubbleMessage } from '../ui/ventilationMessage';
-import { weatherDebugHeight } from '../ui/WeatherDebug';
 
-const previewStages = [null, 'fine', 'worried', 'dizzy'] as const;
-const previewLabels = ['自動', '低', '中', '高'] as const;
+const previewStages = [null, 'fine', 'worried', 'worried', 'dizzy'] as const;
+const previewIndices = [null, 0, 1, 2, 3] as const;
+const previewLabels = ['自動', '低', '中 · VTT 1', '中 · VTT 2', '高'] as const;
 const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvice])[] = [
   ['開ける', { kind: 'open', brief: false, predictedIndoorRh: 42 }],
   ['少し開ける', { kind: 'open', brief: true }],
@@ -25,8 +25,9 @@ const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvi
 ];
 
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
-export function MainPage({ home, bubble, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
+export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, character, onCharacterChange, active }: {
   home: HomeState;
+  moldIndex: number | null;
   /** 窓の開閉判定。null なら吹き出しを出さない（場所は空けたまま）。 */
   bubble: BubbleMessage | null;
   bottomInset: number;
@@ -34,51 +35,55 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
   character: CharacterKind;
   onCharacterChange: (character: CharacterKind) => void;
   active: boolean;
-  /** TODO: 天気の取得確認用の仮表示。 */
-  debugWeather?: ReactNode;
 }) {
   const scheme = useScheme();
-  // Preview only the mascot. Never mutate measurements, prediction, or theme.
+  // Preview the mascot and background together without changing the actual prediction.
   const [previewStage, setPreviewStage] = useState(0);
   const previewMood = __DEV__ ? previewStages[previewStage] : null;
   // 0 は自動。1 以降は bubblePreviews を順に見せる（開発用）。
   const [bubblePreview, setBubblePreview] = useState(0);
   const previewAdvice = __DEV__ && bubblePreview > 0 ? bubblePreviews[bubblePreview - 1] : null;
-  const previewBubble = previewAdvice && ventilationMessage(previewAdvice[1], null, null);
-  const shownBubble = previewAdvice ? previewBubble : bubble;
-  const { width, height, fontScale } = useWindowDimensions();
+  const shownBubble = previewAdvice ? ventilationMessage(previewAdvice[1], null, null) : bubble;
+  const backgroundIndex = previewMood ? previewIndices[previewStage] : home.risk === null ? null : moldIndex;
+  const stale = home.reading.kind === 'stale';
+  const { width, height } = useWindowDimensions();
   // Give the mascot nearly the full screen width, reserving room for the
-  // reading, top button, and movement during a tap reaction.
+  // top button and movement during a tap reaction.
   const contentTop = topInset + 56;
-  // TODO(#34): 天気の仮表示を消すときに、この分も消す。空けないと中身があふれて上にずれ、吹き出しが上のボタンに重なる。
-  const debugHeight = debugWeather ? weatherDebugHeight(fontScale) + space.s16 : 0;
-  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + SPEECH_BUBBLE_HEIGHT + space.s16 + debugHeight;
+  const reservedHeight = 32 + SPEECH_BUBBLE_HEIGHT + space.s16;
   const size = Math.max(120, Math.min(440, width - space.s24, height - bottomInset - contentTop - reservedHeight));
 
   return (
     <View style={[styles.content, { paddingBottom: bottomInset, paddingTop: contentTop }]}>
+      <MoldBackground moldIndex={backgroundIndex} character={character} stale={stale} />
       {__DEV__ && (
-        // 横に並べ、キャラ切り替えのボタンと同じ高さに置く。下に置くと、上に詰まったときの吹き出しに重なる。
-        <View style={[styles.previewRow, { top: topInset + space.s8, maxWidth: width - space.s16 * 2 - 48 - space.s8 }]}>
-          <Pressable
-            onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
-            accessibilityRole="button"
-            accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
-            accessibilityHint="自動、低、中、高の順に切り替えます。実際の危険度には影響しません"
-            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
-          >
-            <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
-            accessibilityRole="button"
-            accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
-            accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
-            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
-          >
-            <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
+          accessibilityRole="button"
+          accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
+          accessibilityHint="自動、低、中のVTT 1、中のVTT 2、高の順にキャラクターと背景を切り替えます。実際の危険度には影響しません"
+          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
+            top: topInset + space.s8,
+            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+          }]}
+        >
+          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
+        </Pressable>
+      )}
+      {__DEV__ && (
+        // 段階のボタンの下に置く。
+        <Pressable
+          onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
+          accessibilityRole="button"
+          accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
+          accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
+          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
+            top: topInset + space.s8 + 48 + space.s8,
+            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+          }]}
+        >
+          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
+        </Pressable>
       )}
       <Pressable
         onPress={() => onCharacterChange(nextCharacter(character, 1))}
@@ -99,18 +104,16 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
         </Svg>
       </Pressable>
       <SpeechBubble message={shownBubble} live={active} />
-      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
-      <Reading state={home.reading} />
-      {debugWeather}
+      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} stale={stale} />
+      {home.reading.kind === 'searching' && <ActivityIndicator color={scheme.primary} accessibilityLabel="デバイスを探しています" />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.s16 },
+  content: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.s16, overflow: 'hidden' },
   cornerButton: { position: 'absolute', height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
   switchButton: { right: space.s16, width: 48 },
-  previewRow: { position: 'absolute', left: space.s16, flexDirection: 'row', flexWrap: 'wrap', gap: space.s8, zIndex: 1 },
-  previewButton: { height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.s16 },
+  previewButton: { left: space.s16, paddingHorizontal: space.s16 },
   previewLabel: { fontSize: 12, fontWeight: '600' },
 });

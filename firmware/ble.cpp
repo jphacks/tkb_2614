@@ -4,6 +4,7 @@
 
 #include "logstore.h"
 #include "timesync.h"
+#include "voice.h"
 
 static const size_t MFG_DATA_SIZE = 8;
 
@@ -48,6 +49,7 @@ static bool sending = false;
 static uint32_t sendNextTime = 0;
 static uint32_t sentCount = 0;
 static unsigned long retryAtMs = 0;
+static bool phoneSynced = false;  // この送信要求で端末の時刻を使って時計を合わせたか
 
 static void put32(uint8_t* p, uint32_t v) {
   p[0] = v;
@@ -166,7 +168,8 @@ static void handleCommand(const Command& cmd) {
     return;
   }
 
-  if (clockSetFromPhone(cmd.phoneNow)) {
+  bool synced = clockSetFromPhone(cmd.phoneNow);
+  if (synced) {
     char timeBuf[32];
     clockFormat(cmd.phoneNow, timeBuf, sizeof(timeBuf));
     Serial.printf("BLE: 端末の時刻で時計を合わせました（%s）\n", timeBuf);
@@ -174,8 +177,13 @@ static void handleCommand(const Command& cmd) {
 
   if (!subscribed) {
     Serial.println("BLE: データの Notify が購読されていないので送信しません");
+    if (synced) {
+      voicePlay(VOICE_SYNC_OK);
+    }
     return;
   }
+  // 送信中に次の要求が来ても、前の要求で時計を合わせたことは引き継ぐ
+  phoneSynced = (sending && phoneSynced) || synced;
   sending = true;
   sendNextTime = cmd.since;
   sentCount = 0;
@@ -190,6 +198,9 @@ static void continueSending() {
   if (connHandle == BLE_HS_CONN_HANDLE_NONE || !subscribed) {
     sending = false;
     Serial.printf("BLE: 送信中断（%lu 件送信済み）\n", (unsigned long)sentCount);
+    if (phoneSynced) {
+      voicePlay(VOICE_SYNC_OK);
+    }
     return;
   }
   if ((long)(millis() - retryAtMs) < 0) {
@@ -224,6 +235,10 @@ static void continueSending() {
   if (withEndMarker) {
     sending = false;
     Serial.printf("BLE: 送信完了（%lu 件）\n", (unsigned long)sentCount);
+    voicePlay(VOICE_DATA_SENT);
+    if (phoneSynced) {
+      voicePlay(VOICE_SYNC_OK);
+    }
   }
 }
 

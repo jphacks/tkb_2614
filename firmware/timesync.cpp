@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "secrets.h"
+#include "voice.h"
 
 #ifndef NTP_SERVER
 #define NTP_SERVER "ntp.nict.jp"
@@ -20,6 +21,9 @@ static uint32_t lastSyncEpoch = 0;
 static ClockSource lastSyncSource = CLOCK_SOURCE_NONE;
 static unsigned long lastSyncMs = 0;  // 経過時間は時計を合わせても変わらない millis() で測る
 
+// 端末の時刻で時計を合わせた回数。NTP 同期の最中に端末の時刻で合ったかを見分けるのに使う
+static volatile uint32_t phoneSyncCount = 0;
+
 static TaskHandle_t syncTask = nullptr;
 
 // NTP の応答で時計が合わせられたら立つ
@@ -30,8 +34,10 @@ static void onNtpSynced(struct timeval* tv) {
 }
 
 static void recordSync(ClockSource source) {
+  // time() は中でロックを取るので、割り込みを止めた区間（portENTER_CRITICAL）の中では呼ばない
+  uint32_t now = (uint32_t)time(nullptr);
   portENTER_CRITICAL(&syncMux);
-  lastSyncEpoch = (uint32_t)time(nullptr);
+  lastSyncEpoch = now;
   lastSyncSource = source;
   lastSyncMs = millis();
   portEXIT_CRITICAL(&syncMux);
@@ -86,6 +92,8 @@ void clockFormat(uint32_t epoch, char* buf, size_t len) {
 }
 
 bool syncClock() {
+  uint32_t phoneSyncCountAtStart = phoneSyncCount;
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
@@ -123,6 +131,10 @@ bool syncClock() {
   if (ok) {
     recordSync(CLOCK_SOURCE_NTP);
   }
+  // 同期の最中にアプリからの要求で時計が合っていたら、そちらで「成功しました」と言っているので言わない
+  if (ok && phoneSyncCount == phoneSyncCountAtStart) {
+    voicePlay(VOICE_SYNC_OK);
+  }
   return ok;
 }
 
@@ -158,6 +170,7 @@ bool clockSetFromPhone(uint32_t epoch) {
   struct timeval tv = {(time_t)epoch, 0};
   settimeofday(&tv, nullptr);
   recordSync(CLOCK_SOURCE_PHONE);
+  phoneSyncCount = phoneSyncCount + 1;  // 書き換えるのは loop だけ
   return true;
 }
 

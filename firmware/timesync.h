@@ -19,7 +19,7 @@ const unsigned long CLOCK_RETRY_MS = 10UL * 60 * 1000;
 void clockBegin();
 
 // Wi-Fi に接続して NTP で時刻を合わせ、Wi-Fi を切る。成功したら true。
-// 終わるまで最大40秒ほど待つので、起動時以外は clockRequestSync() を使う
+// Wi-Fi 接続と NTP の応答を待つので最大40秒ほどかかる。普段は clockRequestSync() で自動同期のタスクに頼む
 bool syncClock();
 
 // 未同期・古いときに NTP を自動で試すタスクを始める

@@ -1,7 +1,9 @@
 // ESP32 + Si7021 温湿度ロガー
 //
-// 起動時に Wi-Fi に接続して NTP で時刻を合わせ、Wi-Fi を切る。
+// 起動時に裏のタスクで Wi-Fi に接続して NTP で時刻を合わせ、Wi-Fi を切る。
 // 未同期のときや、最後に時計を合わせてから時間が経ったときは、自動で NTP を試し直す（timesync.h 参照）。
+// 起動・時刻同期・データ送信のときに DFPlayer Mini で音声を流す（voice.h 参照）。
+// 起動時は「起動しました」を流し終えてから動き始める。
 // MEASURE_INTERVAL_MS ごとに温湿度を測り、計測時刻を主キーとして LittleFS に1年分記録する。
 // 時刻が未同期の間は記録せず、時計が合った時点で計測し直す。
 // BLE で "chiikabi" としてアドバタイズし、スマホが送信要求を書くと指定の時刻以降の記録を Notify で送る。
@@ -13,6 +15,7 @@
 #include "logstore.h"
 #include "sensor.h"
 #include "timesync.h"
+#include "voice.h"
 
 // 計測間隔。本番は1時間（60UL * 60 * 1000）。
 // 今はアプリの表示確認用にデータを増やすため、5分にしている
@@ -84,8 +87,7 @@ void printHelp() {
   Serial.println("  clear    記録をすべて削除");
   Serial.println("  sync     NTP 時刻同期をやり直す（裏で実行）");
   Serial.println("  unsync   時計を未同期に戻す（端末の時刻で合わせる確認用）");
-  Serial.println("  ble      BLE の状態（接続・送信の進み具合）");
-}
+  Serial.println("  ble      BLE の状態（接続・送信の進み具合）");}
 
 void printStatus() {
   char timeBuf[32];
@@ -147,8 +149,7 @@ void handleCommand(String line) {
     clockReset();
     Serial.println("時計を未同期に戻しました");
   } else if (cmd == "ble") {
-    blePrintStatus();
-  } else {
+    blePrintStatus();  } else {
     Serial.printf("不明なコマンド: %s（help で一覧）\n", cmd.c_str());
   }
 }
@@ -170,6 +171,12 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
 
+  // 「起動しました」を流し終えてから、計測・BLE・時刻同期を始める
+  if (voiceBegin()) {
+    voicePlayAndWait(VOICE_STARTUP);
+  } else {
+    Serial.println("DFPlayer が応答しません（音声なしで動作します）");
+  }
   if (!sensorBegin()) {
     Serial.println("Si7021 が応答しません（配線を確認してください）");
   }
@@ -179,23 +186,19 @@ void setup() {
   Serial.printf("記録: %lu 件\n", (unsigned long)logstoreCount());
 
   clockBegin();
-  if (syncClock()) {
-    Serial.println("時刻同期成功");
-  } else {
-    Serial.println("時刻同期失敗（未同期の間は記録しません。NTP を自動で再試行します）");
-  }
-  clockStartAutoSync();
-
-  // Wi-Fi を切った後に始める（起動時の同期と無線を取り合わないように）
   if (bleBegin()) {
     Serial.printf("BLE アドバタイズ開始: %s\n", BLE_DEVICE_NAME);
   } else {
     Serial.println("BLE の初期化に失敗しました");
   }
+
+  // 起動時の NTP 同期も裏のタスクで行う。setup で待つと、その間 loop が回らず音声が流れないため
+  clockStartAutoSync();
+  clockRequestSync();
   Serial.println("help でコマンド一覧");
 
-  // 起動直後に1件記録し、以降は一定間隔で記録する
-  measureAndStore();
+  // 起動直後の1件は時計が合った時点で記録し、以降は一定間隔で記録する
+  measurePending = true;
   lastMeasureMs = millis();
 }
 
@@ -210,4 +213,5 @@ void loop() {
   }
 
   bleLoop();
+  voiceLoop();
 }

@@ -1,4 +1,4 @@
-import type { Measurement } from './measurement';
+import { latestValid, type Measurement } from './measurement';
 import { createVttMoldPredictor, SURFACE_DELTA_BY_MONTH_C, surfaceConditions, uncappedSurfaceRelativeHumidity } from './moldModel';
 import type { MoldPrediction, MoldPredictor } from './prediction';
 
@@ -35,18 +35,6 @@ export interface WindowSpotPrediction extends SpotPrediction {
 }
 
 export type SpotPredictions = { readonly [K in SpotId]: (K extends 'window' ? WindowSpotPrediction : SpotPrediction) | null };
-
-/** 欠測でない計測のうち、計測時刻が一番新しいもの。 */
-function latestValid(measurements: readonly Measurement[]) {
-  let latest: (Measurement & { temperatureC: number; relativeHumidityPercent: number }) | null = null;
-  for (const record of measurements) {
-    if (record.temperatureC === null || record.relativeHumidityPercent === null) continue;
-    if (latest === null || Date.parse(record.measuredAt) > Date.parse(latest.measuredAt)) {
-      latest = { ...record, temperatureC: record.temperatureC, relativeHumidityPercent: record.relativeHumidityPercent };
-    }
-  }
-  return latest;
-}
 
 const spotModels = ROOM_SPOTS.map((spot) => {
   const surfaceDeltaByMonthC = surfaceDeltaByMonthFor(spot.fRsi);
