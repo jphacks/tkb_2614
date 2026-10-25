@@ -58,7 +58,7 @@ export function relativeHumidityAt(targetTempC: number | null, sourceTempC: numb
  * 空気を温めると体積が増えて g/m³ が下がるので、温度の違う空気の比較には vaporPressureHpa を使う。
  */
 export function absoluteHumidity(tempC: number | null, rh: number | null) {
-  if (!isTemperature(tempC) || !isRelativeHumidity(rh)) return null;
-  const e = saturationVaporPressureHpa(tempC) * (rh / 100);
+  const e = vaporPressureHpa(tempC, rh);
+  if (e === null || !isTemperature(tempC)) return null;
   return (ABSOLUTE_HUMIDITY_FACTOR * e) / (tempC + 273.15);
 }
