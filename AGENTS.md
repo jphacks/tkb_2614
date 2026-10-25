@@ -25,12 +25,15 @@ arduino-cli は PATH に入っていない場合がある。CLI から操作す�
 ```bash
 arduino-cli core install esp32:esp32
 arduino-cli lib install "NimBLE-Arduino@2.5.1"
+arduino-cli lib install "DFRobotDFPlayerMini@1.0.6"
 arduino-cli compile --fqbn esp32:esp32:esp32:PartitionScheme=huge_app firmware
 arduino-cli upload -p <port> --fqbn esp32:esp32:esp32:PartitionScheme=huge_app firmware
 arduino-cli monitor -p <port> -c baudrate=115200
 ```
 
 BLE には NimBLE-Arduino（2.x）を使う。esp32 コア同梱の `BLEDevice.h` より軽い。
+
+音声は DFPlayer Mini を UART2（ESP32 の RX=GPIO16、TX=GPIO17、9600 baud）につないで流す。流す音声の番号（SD カードのファイル番号）と内容は `firmware/voice.h` にまとめている。
 
 ## app
 
