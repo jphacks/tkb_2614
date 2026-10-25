@@ -78,7 +78,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 
 ## モックの変更
 
-`src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件を作り、配列の値を繰り返す。BLEと同じく、since以上の時刻の記録を返し、再取得しても同じ時刻の計測値は同じ。
+`src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件を作り、配列の値を繰り返す。起点は `createMockMeasurementSource` の `epoch` で変えられる（冬の挙動を見るときは1月にする）。BLEと同じく、since以上の時刻の記録を返し、再取得しても同じ時刻の計測値は同じ。
 
 `createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
 
