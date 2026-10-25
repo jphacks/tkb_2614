@@ -8,7 +8,10 @@ export interface BubbleMessage {
   readonly text: string;
 }
 
-/** 「◯% くらい」の刻み [%]。全部入れ替わったときの値で実際はそこまで下がらず、センサーにも ±3% の誤差があるので細かく出さない。 */
+/**
+ * 「◯% くらい」の刻み [%]。全部入れ替わったときの値で実際はそこまで下がらず、センサーにも ±3% の誤差があるので細かく出さない。
+ * 丸めて 0% にはしない（外がとても乾いていても、室内の湿度が 0% になることはない）。
+ */
 const PREDICTED_RH_STEP = 5;
 
 const spotReasons: Record<SpotId, string> = {
@@ -22,7 +25,7 @@ function adviceText(advice: Exclude<VentilationAdvice, { kind: 'none' }>) {
     case 'open':
       return advice.brief
         ? '外が寒いから、5〜10分だけ窓を開けよう'
-        : `窓を開けよう！ ${Math.round(advice.predictedIndoorRh / PREDICTED_RH_STEP) * PREDICTED_RH_STEP}% くらいまで下がりそう`;
+        : `窓を開けよう！ ${Math.max(PREDICTED_RH_STEP, Math.round(advice.predictedIndoorRh / PREDICTED_RH_STEP) * PREDICTED_RH_STEP)}% くらいまで下がりそう`;
     case 'close':
       return '外のほうがジメジメ。窓は閉めておこう';
     case 'keep':

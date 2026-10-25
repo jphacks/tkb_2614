@@ -3,6 +3,15 @@ import { StyleSheet, Text } from 'react-native';
 import type { OutdoorWeather } from '../domain/weather';
 import { useScheme } from '../theme/theme';
 
+const LINE_HEIGHT = 18;
+/** 一番長いとき（天気が取れたとき）の行数。 */
+const MAX_LINES = 5;
+
+/** 仮表示が一番長いときの高さ。MainPage がキャラの大きさを決めるときに空ける。 */
+export function weatherDebugHeight(fontScale: number) {
+  return LINE_HEIGHT * MAX_LINES * fontScale;
+}
+
 // TODO: Open-Meteoの取得確認用の仮表示。外の天気の表示を作ったら消す。
 export function WeatherDebug({ weather, loading, label }: { weather: OutdoorWeather | null; loading: boolean; label: string }) {
   const scheme = useScheme();
@@ -17,5 +26,5 @@ export function WeatherDebug({ weather, loading, label }: { weather: OutdoorWeat
 }
 
 const styles = StyleSheet.create({
-  text: { fontSize: 12, lineHeight: 18, textAlign: 'center' },
+  text: { fontSize: 12, lineHeight: LINE_HEIGHT, textAlign: 'center' },
 });

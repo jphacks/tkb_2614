@@ -10,11 +10,14 @@ import { characterNames, nextCharacter, type CharacterKind } from '../ui/mascot/
 import { Reading } from '../ui/Reading';
 import { SpeechBubble, speechBubbleHeight } from '../ui/SpeechBubble';
 import { ventilationMessage, type BubbleMessage } from '../ui/ventilationMessage';
+import { weatherDebugHeight } from '../ui/WeatherDebug';
 
 const previewStages = [null, 'fine', 'worried', 'dizzy'] as const;
 const previewLabels = ['自動', '低', '中', '高'] as const;
-const bubblePreviews: readonly (readonly [string, VentilationAdvice])[] = [
+// 3つ目は理由（1行目）。理由が出て吹き出しが一番高くなるときの見た目も確かめる。
+const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvice, reason?: string])[] = [
   ['開ける', { kind: 'open', brief: false, predictedIndoorRh: 42 }],
+  ['開ける・理由', { kind: 'open', brief: false, predictedIndoorRh: 42 }, '窓が結露しているよ'],
   ['少し開ける', { kind: 'open', brief: true }],
   ['閉める', { kind: 'close', reason: 'outdoorWetter' }],
   ['雨', { kind: 'keep', reason: 'rain' }],
@@ -44,44 +47,42 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
   // 0 は自動。1 以降は bubblePreviews を順に見せる（開発用）。
   const [bubblePreview, setBubblePreview] = useState(0);
   const previewAdvice = __DEV__ && bubblePreview > 0 ? bubblePreviews[bubblePreview - 1] : null;
-  const shownBubble = previewAdvice ? ventilationMessage(previewAdvice[1], null, null) : bubble;
+  const previewBubble = previewAdvice && ventilationMessage(previewAdvice[1], null, null);
+  const shownBubble = previewAdvice ? previewBubble && { ...previewBubble, reason: previewAdvice[2] ?? null } : bubble;
   const { width, height, fontScale } = useWindowDimensions();
   // Give the mascot nearly the full screen width, reserving room for the
   // reading, top button, and movement during a tap reaction.
   const contentTop = topInset + 56;
   const bubbleHeight = speechBubbleHeight(fontScale);
-  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + bubbleHeight + space.s16;
+  // TODO(#34): 天気の仮表示を消すときに、この分も消す。空けないと中身があふれて上にずれ、吹き出しが上のボタンに重なる。
+  const debugHeight = debugWeather ? weatherDebugHeight(fontScale) + space.s16 : 0;
+  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + bubbleHeight + space.s16 + debugHeight;
   const size = Math.max(120, Math.min(440, width - space.s24, height - bottomInset - contentTop - reservedHeight));
 
   return (
     <View style={[styles.content, { paddingBottom: bottomInset, paddingTop: contentTop }]}>
       {__DEV__ && (
-        <Pressable
-          onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
-          accessibilityRole="button"
-          accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
-          accessibilityHint="自動、低、中、高の順に切り替えます。実際の危険度には影響しません"
-          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
-            top: topInset + space.s8,
-            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
-          }]}
-        >
-          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
-        </Pressable>
-      )}
-      {__DEV__ && (
-        <Pressable
-          onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
-          accessibilityRole="button"
-          accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
-          accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
-          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
-            top: topInset + space.s8 + 48 + space.s8,
-            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
-          }]}
-        >
-          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
-        </Pressable>
+        // 横に並べ、キャラ切り替えのボタンと同じ高さに置く。下に置くと、上に詰まったときの吹き出しに重なる。
+        <View style={[styles.previewRow, { top: topInset + space.s8, maxWidth: width - space.s16 * 2 - 48 - space.s8 }]}>
+          <Pressable
+            onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
+            accessibilityRole="button"
+            accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
+            accessibilityHint="自動、低、中、高の順に切り替えます。実際の危険度には影響しません"
+            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
+          >
+            <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
+            accessibilityRole="button"
+            accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
+            accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
+            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
+          >
+            <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
+          </Pressable>
+        </View>
       )}
       <Pressable
         onPress={() => onCharacterChange(nextCharacter(character, 1))}
@@ -101,7 +102,7 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
           <Path d="M10.5 13.3q1.5 1.4 3 0" fill="none" stroke={scheme.onSurfaceVariant} strokeWidth={1.2} strokeLinecap="round" />
         </Svg>
       </Pressable>
-      <SpeechBubble message={shownBubble} height={bubbleHeight} maxWidth={width - space.s24 * 2} />
+      <SpeechBubble message={shownBubble} height={bubbleHeight} maxWidth={width - space.s24 * 2} live={active} />
       <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
       <Reading state={home.reading} />
       {debugWeather}
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.s16 },
   cornerButton: { position: 'absolute', height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
   switchButton: { right: space.s16, width: 48 },
-  previewButton: { left: space.s16, paddingHorizontal: space.s16 },
+  previewRow: { position: 'absolute', left: space.s16, flexDirection: 'row', flexWrap: 'wrap', gap: space.s8, zIndex: 1 },
+  previewButton: { height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.s16 },
   previewLabel: { fontSize: 12, fontWeight: '600' },
 });

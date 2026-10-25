@@ -16,8 +16,11 @@ export function speechBubbleHeight(fontScale: number) {
   return (type.label.lineHeight + type.body.lineHeight * BODY_LINES) * fontScale + space.s12 * 2 + TAIL_HEIGHT;
 }
 
-/** キャラの頭の上に出す、しっぽが下を向いた吹き出し。message が null なら場所だけ空ける。 */
-export function SpeechBubble({ message, height, maxWidth }: { message: BubbleMessage | null; height: number; maxWidth: number }) {
+/**
+ * キャラの頭の上に出す、しっぽが下を向いた吹き出し。message が null なら場所だけ空ける。
+ * live のときだけ、文が変わったら読み上げる（Android のみ）。メインページを見ていないときに読み上げないようにする。
+ */
+export function SpeechBubble({ message, height, maxWidth, live }: { message: BubbleMessage | null; height: number; maxWidth: number; live: boolean }) {
   const scheme = useScheme();
   return (
     <View style={[styles.area, { height, maxWidth }]} pointerEvents="none">
@@ -26,7 +29,7 @@ export function SpeechBubble({ message, height, maxWidth }: { message: BubbleMes
           accessible
           accessibilityRole="text"
           accessibilityLabel={[message.reason, message.text].filter(Boolean).join('。')}
-          accessibilityLiveRegion="polite"
+          accessibilityLiveRegion={live ? 'polite' : 'none'}
           style={styles.bubble}
         >
           <View style={[styles.body, { backgroundColor: scheme.surfaceContainerHigh }]}>
