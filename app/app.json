@@ -26,6 +26,16 @@
         }
       ],
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "現在地の外の天気を取得し、部屋のカビやすさと比べるために位置情報を使います。",
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
+      [
         "expo-widgets",
         {
           "enableAndroid": true,
