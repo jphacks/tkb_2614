@@ -1,12 +1,18 @@
 import { relativeHumidityAt, vaporPressureHpa } from './humidity';
 import { latestValid, type Measurement, STALE_AFTER_MS } from './measurement';
 import { criticalHumidity } from './moldModel';
-import type { SpotPredictions } from './roomSpots';
+import { ROOM_SPOTS, type SpotId, type SpotPredictions } from './roomSpots';
 import type { OutdoorWeather } from './weather';
 
 export type VentilationAdvice =
   /**
-   * 開けると乾く。predictedIndoorRh は、室内の空気が外の空気に全部入れ替わり、室温まで温まった（冷えた）ときの相対湿度 [%]。
+   * 開けると乾く。次をすべて満たすとき（adviseVentilation のルール 1〜6）。
+   * - 室内の計測が STALE_AFTER_MS 以内、外の天気の取得が WEATHER_STALE_AFTER_MS 以内。
+   * - 窓が結露しているか、どこかのスポットの表面 RH が臨界湿度以上（開ける理由がある）。
+   * - 外の水蒸気圧が室内より VAPOR_PRESSURE_THRESHOLD_HPA 以上低い（入れ替えると乾く）。
+   * - 雨でない・風速 STRONG_WIND_MPS 未満・夜間（NIGHT_START_HOUR〜NIGHT_END_HOUR 時）でない・外気 HOT_OUTDOOR_C 以下。
+   * - 外気 BRIEF_BELOW_OUTDOOR_C 以上（未満なら brief）。
+   * predictedIndoorRh は、室内の空気が外の空気に全部入れ替わり、室温まで温まった（冷えた）ときの相対湿度 [%]。
    * 実際は壁や家具が水分を吸ったり吐いたりするので、そこまでは下がらない。
    */
   | { readonly kind: 'open'; readonly brief: false; readonly predictedIndoorRh: number }
@@ -49,11 +55,14 @@ export const WEATHER_STALE_AFTER_MS = 60 * 60 * 1000;
 /** これ未満の外気なら短時間だけ開ける [℃]。冬の冷たい外気は水蒸気が少なく、短時間でも入れ替えれば結露を減らすのに一番効く。 */
 export const BRIEF_BELOW_OUTDOOR_C = 5;
 
-/** 窓が結露しているか、どれかのスポットの今の表面 RH が臨界湿度以上か。 */
-function anySpotAtRisk(spots: SpotPredictions) {
-  if (spots.window?.isCondensing) return true;
-  return Object.values(spots).some((spot) =>
-    spot !== null && spot.currentSurface.relativeHumidityPercent >= criticalHumidity(spot.currentSurface.temperatureC));
+/** 窓が結露しているか、今の表面 RH が臨界湿度以上のスポット。ROOM_SPOTS の順に返す。 */
+export function riskySpots(spots: SpotPredictions): SpotId[] {
+  return ROOM_SPOTS.map(({ id }) => id).filter((id) => {
+    const spot = spots[id];
+    if (spot === null) return false;
+    if (id === 'window' && spots.window?.isCondensing) return true;
+    return spot.currentSurface.relativeHumidityPercent >= criticalHumidity(spot.currentSurface.temperatureC);
+  });
 }
 
 function isNight(now: number) {
@@ -84,7 +93,7 @@ export function adviseVentilation(
   if (indoor === null || weather === null || now - Date.parse(indoor.measuredAt) > STALE_AFTER_MS) return { kind: 'none' };
   if (!(now - Date.parse(weather.fetchedAt) <= WEATHER_STALE_AFTER_MS)) return { kind: 'none' };
   // 2. 窓が結露しておらず、どのスポットでもカビが育たない。
-  if (!anySpotAtRisk(spots)) return { kind: 'none' };
+  if (riskySpots(spots).length === 0) return { kind: 'none' };
   // 3. 外と室内を水蒸気圧で比べる。温度の違う空気の絶対湿度は、温めると体積が増えて下がるので、そのままは比べられない。
   const indoorHpa = vaporPressureHpa(indoor.temperatureC, indoor.relativeHumidityPercent);
   const outdoorHpa = vaporPressureHpa(weather.temperatureC, weather.relativeHumidityPercent);

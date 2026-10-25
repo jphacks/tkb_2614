@@ -21,7 +21,10 @@ export { STALE_AFTER_MS };
 /** リスク → 表情。部屋ページのスポットのキャラも同じ対応を使う。 */
 export const moods: Record<MoldRiskLevel, Mood> = { low: 'fine', medium: 'worried', high: 'dizzy' };
 
-/** 画面に文言を出さない代わりに、配色・表情・数字の濃さへ状態を割り当てる。 */
+/**
+ * 画面に文言を出さない代わりに、配色・表情・数字の濃さへ状態を割り当てる。
+ * 窓の開閉判定の吹き出しも、文言ではなくアニメーションで伝える（ventilationMessage）。
+ */
 export function deriveHomeState(
   measurements: readonly Measurement[],
   status: SyncStatus,

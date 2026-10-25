@@ -9,12 +9,14 @@ import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
 import { useOutdoorWeather } from '../hooks/useOutdoorWeather';
+import { useVentilationAdvice } from '../hooks/useVentilationAdvice';
 import { useWidgetSync } from '../hooks/useWidgetSync';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
+import { ventilationMessage } from '../ui/ventilationMessage';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 import { RoomPage } from './RoomPage';
@@ -35,6 +37,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   // 窓の結露は今の外気温で判定する。取れないとき（権限拒否・オフライン）は月別の表で判定する。
   const outdoorTemperatureC = outdoor.weather?.temperatureC ?? null;
   const spots = useMemo(() => predictSpots(measurements, outdoorTemperatureC), [measurements, outdoorTemperatureC]);
+  const advice = useVentilationAdvice(measurements, spots, outdoor.weather, now);
+  const bubble = ventilationMessage(advice, spots, home.risk);
   const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();
@@ -101,7 +105,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
+            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bubble={bubble} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
             />
           </View>
           <View style={{ width }}>

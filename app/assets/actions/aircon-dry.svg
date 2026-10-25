@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-aircon" role="img" aria-label="エアコンで除湿する">
+<style>
+.anim-aircon .status-led{animation:airconLED 2.1s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-aircon .arrow-stream{animation:intakePulse 1.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-aircon .vapor-a,.anim-aircon .vapor-b,.anim-aircon .vapor-c{animation-play-state:var(--motion,running);transform-box:fill-box;transform-origin:center}
+.anim-aircon .vapor-a{animation:suckA 2.6s ease-in infinite}
+.anim-aircon .vapor-b{animation:suckB 2.9s ease-in infinite}
+.anim-aircon .vapor-c{animation:suckC 2.4s ease-in infinite}
+@keyframes airconLED{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes intakePulse{0%,100%{opacity:.5;transform:translateY(2px)}50%{opacity:1;transform:translateY(-2px)}}
+@keyframes suckA{0%{transform:translate(0,0) scale(1);opacity:.12}18%{opacity:.88}100%{transform:translate(22px,-96px) scale(.32);opacity:0}}
+@keyframes suckB{0%{transform:translate(0,0) scale(1);opacity:.14}18%{opacity:.92}100%{transform:translate(0,-102px) scale(.28);opacity:0}}
+@keyframes suckC{0%{transform:translate(0,0) scale(1);opacity:.12}18%{opacity:.86}100%{transform:translate(-22px,-98px) scale(.3);opacity:0}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none !important;}}
+</style>
+<path d="M196 34H44C36.268 34 30 40.268 30 48V90C30 97.732 36.268 104 44 104H196C203.732 104 210 97.732 210 90V48C210 40.268 203.732 34 196 34Z" fill="white" stroke="#3A3A3A" stroke-width="7"/>
+<path d="M48 84H192" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<g class="status-led"><path d="M188 59C190.761 59 193 56.7614 193 54C193 51.2386 190.761 49 188 49C185.239 49 183 51.2386 183 54C183 56.7614 185.239 59 188 59Z" fill="#6EC6F0"/></g>
+<path d="M181 92H59C57.3431 92 56 93.3431 56 95C56 96.6569 57.3431 98 59 98H181C182.657 98 184 96.6569 184 95C184 93.3431 182.657 92 181 92Z" fill="#3A3A3A"/>
+<g class="arrow-stream"><path d="M56 196C64 173 76 147 92 122" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M92 122L91 134" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M92 122L80 126" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M184 196C176 173 164 147 148 122" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M148 122L160 126" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M148 122L149 134" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 205V124" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 124L127.2 133.6" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 124L112.8 133.6" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+</g>
+<g class="vapor-a"><circle cx="54" cy="210" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="84" cy="216" r="6.5" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="112" cy="208" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="148" cy="216" r="6.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="184" cy="210" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="70" cy="176" r="6" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="98" cy="182" r="5.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="140" cy="182" r="5.5" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="170" cy="174" r="6" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="104" cy="146" r="4.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="136" cy="146" r="4.5" fill="#6EC6F0"/></g>
+</svg>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>窓・エアコンのアニメーション確認</title>
+<style>
+:root {color-scheme:light;--ink:#3b4650;--muted:#73818b;--bg:#f5f9fb;--cyan:#6ec6f0;--edge:#e4eef2}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;margin:0;line-height:1.6}
+header{max-width:1120px;margin:0 auto;padding:45px 24px 18px;display:flex;gap:24px;align-items:end;justify-content:space-between;flex-wrap:wrap}
+.kicker{display:block;color:#4e9fb7;letter-spacing:.16em;font-size:12px;font-weight:750;margin-bottom:7px}
+h1{font-size:clamp(22px,3.8vw,34px);line-height:1.25;letter-spacing:-.035em;margin:0 0 9px;font-weight:800}
+.lead{font-size:14px;margin:0;color:var(--muted);max-width:600px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{border:1px solid #d8e5ec;color:var(--ink);background:#fff;border-radius:11px;padding:10px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .12s,transform .12s;white-space:nowrap}
+button:hover{background:#eef8fb}button:active{transform:scale(.97)}button:focus-visible{outline:3px solid #9bd8f3;outline-offset:2px}
+button.primary{border-color:#528da7;background:#4684a0;color:#fff}button.primary:hover{background:#36758f}
+main{max-width:1120px;padding:15px 24px 55px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:white;border:1px solid var(--edge);border-radius:22px;padding:18px 20px 20px;min-width:0;box-shadow:0 5px 25px #4a7c9210}
+.card-top{display:flex;align-items:center;justify-content:space-between}
+.pill{display:inline-block;background:#eaf5f9;color:#5188a1;font-size:11px;font-weight:700;border-radius:15px;padding:4px 12px}
+.card-replay{border:0;color:#7298aa;padding:4px 7px;font-size:15px;border-radius:8px}
+.card-replay span{font-size:11px;margin-left:3px}
+.illustration{min-height:230px;display:flex;align-items:center;justify-content:center;padding:4px 0 2px}
+.illustration svg{width:min(100%,240px);height:auto;display:block;overflow:visible}
+h2{font-size:17px;font-weight:800;margin:6px 0 6px;letter-spacing:-.02em}
+.card p{color:#71808a;font-size:12px;line-height:1.75;margin:0;min-height:63px}
+.filename{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#98aab2;font-size:11px;padding-top:12px;border-top:1px solid #edf2f5;margin-top:15px}
+.note{font-size:12px;color:#7c8e99;margin-top:21px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:575px){header{padding-top:30px}.grid{grid-template-columns:1fr}.illustration{min-height:215px}.card p{min-height:0}}
+</style></head>
+<body><header><div><span class="kicker">ROOM CARE · ANIMATION PREVIEW</span><h1>お部屋の環境アクション</h1><p class="lead">6種類のSVGアニメーションをまとめて確認できます。各SVGは単独でもアニメーションします。</p></div>
+<div class="actions"><button id="toggle" class="primary" type="button" aria-pressed="false">⏸ 一時停止</button><button id="replay-all" type="button">↻ すべて再生</button></div></header>
+<main><div class="grid"><article class="card" id="card-window-open">
+      <div class="card-top"><span class="pill">換気</span><button class="card-replay" type="button" data-replay="window-open" aria-label="窓を開けるのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="window-open"><svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-open" role="img" aria-label="窓を開けて換気する">
+<style>
+.anim-open .sash{transform:translateX(0px)}
+.anim-open .inside-air{animation-play-state:var(--motion,running);transform-box:fill-box;transform-origin:center}
+.anim-open .air-one{animation:moistureOutA 2.4s ease-in infinite}
+.anim-open .air-two{animation:moistureOutB 2.8s ease-in infinite}
+.anim-open .air-three{animation:moistureOutC 2.2s ease-in infinite}
+.anim-open .flow-symbol{animation:openFlow 1.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes moistureOutA{0%{transform:translate(0,0) scale(1);opacity:.18}20%{opacity:.88}100%{transform:translate(74px,-6px) scale(.55);opacity:0}}
+@keyframes moistureOutB{0%{transform:translate(0,0) scale(1);opacity:.22}20%{opacity:.92}100%{transform:translate(64px,-10px) scale(.5);opacity:0}}
+@keyframes moistureOutC{0%{transform:translate(0,0) scale(1);opacity:.18}20%{opacity:.9}100%{transform:translate(82px,2px) scale(.48);opacity:0}}
+@keyframes openFlow{0%,100%{opacity:.4;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none !important;}}
+</style>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="sash"><path d="M170 72H126C123.791 72 122 73.7909 122 76V188C122 190.209 123.791 192 126 192H170C172.209 192 174 190.209 174 188V76C174 73.7909 172.209 72 170 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M163 81H133C131.895 81 131 81.8954 131 83V181C131 182.105 131.895 183 133 183H163C164.105 183 165 182.105 165 181V83C165 81.8954 164.105 81 163 81Z" fill="#DDEFF7"/>
+<path d="M137 102L149 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g class="flow-symbol"><path d="M137 150H159" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M151 142L159 150L151 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="inside-air air-one"><path d="M14 103C17.866 103 21 99.866 21 96C21 92.134 17.866 89 14 89C10.134 89 7 92.134 7 96C7 99.866 10.134 103 14 103Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M30 86C33.3137 86 36 83.3137 36 80C36 76.6863 33.3137 74 30 74C26.6863 74 24 76.6863 24 80C24 83.3137 26.6863 86 30 86Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M22 124.5C25.5899 124.5 28.5 121.59 28.5 118C28.5 114.41 25.5899 111.5 22 111.5C18.4101 111.5 15.5 114.41 15.5 118C15.5 121.59 18.4101 124.5 22 124.5Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-one"><path d="M44 106C47.3137 106 50 103.314 50 100C50 96.6863 47.3137 94 44 94C40.6863 94 38 96.6863 38 100C38 103.314 40.6863 106 44 106Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M56 89C58.7614 89 61 86.7614 61 84C61 81.2386 58.7614 79 56 79C53.2386 79 51 81.2386 51 84C51 86.7614 53.2386 89 56 89Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M66 115C68.7614 115 71 112.761 71 110C71 107.239 68.7614 105 66 105C63.2386 105 61 107.239 61 110C61 112.761 63.2386 115 66 115Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-one"><path d="M90 100C92.2091 100 94 98.2091 94 96C94 93.7909 92.2091 92 90 92C87.7909 92 86 93.7909 86 96C86 98.2091 87.7909 100 90 100Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M104 89.5C105.933 89.5 107.5 87.933 107.5 86C107.5 84.067 105.933 82.5 104 82.5C102.067 82.5 100.5 84.067 100.5 86C100.5 87.933 102.067 89.5 104 89.5Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M112 111C113.657 111 115 109.657 115 108C115 106.343 113.657 105 112 105C110.343 105 109 106.343 109 108C109 109.657 110.343 111 112 111Z" fill="#6EC6F0"/></g>
+<g class="flow-symbol"><path d="M116 150H44C33.3333 150 28 153.667 28 161C28 167.667 31.3333 171 38 171C43.3333 171 46 168.667 46 164" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M110 180H60" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M70 171L60 180L70 189" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg></div>
+      <h2>窓を開ける</h2><p>窓は開いたままで固定し、室内の水分が外へ流れ出る様子を動かしています。</p>
+      <div class="filename">window-open.svg</div>
+    </article><article class="card" id="card-window-open-brief">
+      <div class="card-top"><span class="pill">短時間換気</span><button class="card-replay" type="button" data-replay="window-open-brief" aria-label="少しだけ窓を開けるのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="window-open-brief"><svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-brief" role="img" aria-label="窓を少しだけ開けて短時間換気する">
+<style>
+.anim-brief .sash{transform:translateX(-14px)}
+.anim-brief .inside-air{animation-play-state:var(--motion,running);transform-box:fill-box;transform-origin:center}
+.anim-brief .air-one{animation:briefMoistureA 2.4s ease-in infinite}
+.anim-brief .air-two{animation:briefMoistureB 2.9s ease-in infinite}
+.anim-brief .air-three{animation:briefMoistureC 2.3s ease-in infinite}
+.anim-brief .flow-symbol{animation:briefFlow 1.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes briefMoistureA{0%{transform:translate(0,0) scale(1);opacity:.16}20%{opacity:.78}100%{transform:translate(48px,-5px) scale(.68);opacity:0}}
+@keyframes briefMoistureB{0%{transform:translate(0,0) scale(1);opacity:.2}20%{opacity:.82}100%{transform:translate(42px,-8px) scale(.64);opacity:0}}
+@keyframes briefMoistureC{0%{transform:translate(0,0) scale(1);opacity:.16}20%{opacity:.76}100%{transform:translate(52px,1px) scale(.64);opacity:0}}
+@keyframes briefFlow{0%,100%{opacity:.42;transform:translateX(0)}50%{opacity:1;transform:translateX(3px)}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none !important;}}
+</style>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="sash"><path d="M170 72H126C123.791 72 122 73.7909 122 76V188C122 190.209 123.791 192 126 192H170C172.209 192 174 190.209 174 188V76C174 73.7909 172.209 72 170 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M163 81H133C131.895 81 131 81.8954 131 83V181C131 182.105 131.895 183 133 183H163C164.105 183 165 182.105 165 181V83C165 81.8954 164.105 81 163 81Z" fill="#DDEFF7"/>
+<path d="M137 102L149 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g class="flow-symbol"><path d="M137 150H159" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M151 142L159 150L151 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="inside-air air-one"><path d="M14 103C17.866 103 21 99.866 21 96C21 92.134 17.866 89 14 89C10.134 89 7 92.134 7 96C7 99.866 10.134 103 14 103Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M30 86C33.3137 86 36 83.3137 36 80C36 76.6863 33.3137 74 30 74C26.6863 74 24 76.6863 24 80C24 83.3137 26.6863 86 30 86Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M22 124.5C25.5899 124.5 28.5 121.59 28.5 118C28.5 114.41 25.5899 111.5 22 111.5C18.4101 111.5 15.5 114.41 15.5 118C15.5 121.59 18.4101 124.5 22 124.5Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-one"><path d="M44 106C47.3137 106 50 103.314 50 100C50 96.6863 47.3137 94 44 94C40.6863 94 38 96.6863 38 100C38 103.314 40.6863 106 44 106Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M56 89C58.7614 89 61 86.7614 61 84C61 81.2386 58.7614 79 56 79C53.2386 79 51 81.2386 51 84C51 86.7614 53.2386 89 56 89Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M66 115C68.7614 115 71 112.761 71 110C71 107.239 68.7614 105 66 105C63.2386 105 61 107.239 61 110C61 112.761 63.2386 115 66 115Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-one"><path d="M90 100C92.2091 100 94 98.2091 94 96C94 93.7909 92.2091 92 90 92C87.7909 92 86 93.7909 86 96C86 98.2091 87.7909 100 90 100Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-two"><path d="M104 89.5C105.933 89.5 107.5 87.933 107.5 86C107.5 84.067 105.933 82.5 104 82.5C102.067 82.5 100.5 84.067 100.5 86C100.5 87.933 102.067 89.5 104 89.5Z" fill="#6EC6F0"/></g>
+<g class="inside-air air-three"><path d="M112 111C113.657 111 115 109.657 115 108C115 106.343 113.657 105 112 105C110.343 105 109 106.343 109 108C109 109.657 110.343 111 112 111Z" fill="#6EC6F0"/></g>
+<g class="flow-symbol"><path d="M116 150H44C33.3333 150 28 153.667 28 161C28 167.667 31.3333 171 38 171C43.3333 171 46 168.667 46 164" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M110 180H60" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M70 171L60 180L70 189" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="M206 228C219.255 228 230 217.255 230 204C230 190.745 219.255 180 206 180C192.745 180 182 190.745 182 204C182 217.255 192.745 228 206 228Z" fill="white" stroke="#3A3A3A" stroke-width="6"/>
+<path d="M201 173H211" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M206 180V174" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>
+<path d="M206 204V188C210.243 188 214.313 189.686 217.314 192.686C220.314 195.687 222 199.757 222 204H206Z" fill="#3A3A3A"/>
+</svg></div>
+      <h2>少しだけ窓を開ける</h2><p>少しだけ開いた状態を保ちつつ、弱めに水分が抜けます。タイマー表示は動かしません。</p>
+      <div class="filename">window-open-brief.svg</div>
+    </article><article class="card" id="card-window-close-wind">
+      <div class="card-top"><span class="pill">強風</span><button class="card-replay" type="button" data-replay="window-close-wind" aria-label="風が強いため開けないのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="window-close-wind"><svg xmlns="http://www.w3.org/2000/svg" xmlns:c2pa="http://c2pa.org/manifest" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-wind" role="img" aria-label="強風のため窓を開けない"><style>
+.anim-wind .wind-gust-1 {animation: windGustA 1.7s ease-in-out infinite; animation-play-state:var(--motion,running)}
+.anim-wind .wind-gust-2 {animation: windGustB 1.9s ease-in-out infinite; animation-play-state:var(--motion,running)}
+.anim-wind .leaf {transform-box:view-box;transform-origin:226px 27px;animation: windLeaf 2.4s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-wind .close-arrow {animation: closedWindArrow 2.4s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes windGustA {0%{opacity:.5;transform:translateX(6px)} 60%{opacity:1;transform:translateX(-4px)} 100%{opacity:.5;transform:translateX(6px)} }
+@keyframes windGustB {0%{opacity:1;transform:translateX(2px)} 65%{opacity:.5;transform:translateX(-7px)} 100%{opacity:1;transform:translateX(2px)} }
+@keyframes windLeaf {0%,100%{transform:rotate(-7deg) translate(0,0)} 50%{transform:rotate(12deg) translate(-4px,2px)} }
+@keyframes closedWindArrow {0%,100%{opacity:1} 50%{opacity:.55} }
+@media (prefers-reduced-motion: reduce) {
+  svg * {animation:none !important;}
+}
+</style><path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<path d="M144 72H100C97.7909 72 96 73.7909 96 76V188C96 190.209 97.7909 192 100 192H144C146.209 192 148 190.209 148 188V76C148 73.7909 146.209 72 144 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M137 81H107C105.895 81 105 81.8954 105 83V181C105 182.105 105.895 183 107 183H137C138.105 183 139 182.105 139 181V83C139 81.8954 138.105 81 137 81Z" fill="#DDEFF7"/>
+<path d="M111 102L123 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="close-arrow"><path d="M133 150H111" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M119 142L111 150L119 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="wind-gust-1"><path d="M160 20H204C212 20 216 17 216 11C216 5.66667 213.333 3 208 3C203.333 3 201 5.33333 201 10" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="wind-gust-2"><path d="M150 38H212C220 38 224 41 224 47C224 53 220.667 56 214 56C208.667 56 206 53.6667 206 49" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="leaf"><path d="M220.34 32.4279C221.161 23.0357 226.268 18.7504 235.66 19.5721C234.839 28.9643 229.732 33.2496 220.34 32.4279Z" fill="#4C9A5A" stroke="#3A3A3A" stroke-width="4" stroke-linejoin="round"/>
+<path d="M220.34 32.4279L231.83 22.7861" stroke="#3A3A3A" stroke-width="3" stroke-linecap="round"/>
+</g></svg>
+</div>
+      <h2>風が強いため開けない</h2><p>強い風が吹き抜け、葉っぱが揺れます。窓は閉じたままです。</p>
+      <div class="filename">window-close-wind.svg</div>
+    </article><article class="card" id="card-window-close-rain">
+      <div class="card-top"><span class="pill">雨</span><button class="card-replay" type="button" data-replay="window-close-rain" aria-label="雨のため開けないのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="window-close-rain"><svg xmlns="http://www.w3.org/2000/svg" xmlns:c2pa="http://c2pa.org/manifest" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-rain" role="img" aria-label="雨のため窓を開けない"><style>
+.anim-rain .rain-1 {animation: rainFall 1.3s ease-in infinite;animation-play-state:var(--motion,running)}
+.anim-rain .rain-2 {animation: rainFall 1.55s ease-in infinite;animation-delay:-.75s;animation-play-state:var(--motion,running)}
+.anim-rain .rain-3 {animation: rainFall 1.15s ease-in infinite;animation-delay:-.3s;animation-play-state:var(--motion,running)}
+.anim-rain .rain-4 {animation: rainFall 1.4s ease-in infinite;animation-delay:-.95s;animation-play-state:var(--motion,running)}
+.anim-rain .umbrella {transform-box:view-box;transform-origin:206px 30px;animation: umbrellaBob 2.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-rain .close-arrow {animation: rainArrow 2.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes rainFall {0%{opacity:0;transform:translate(5px,-10px)} 20%{opacity:1} 85%{opacity:1} 100%{opacity:0;transform:translate(-8px,13px)} }
+@keyframes umbrellaBob {0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(2px) rotate(2deg)} }
+@keyframes rainArrow {0%,100%{opacity:1} 50%{opacity:.6} }
+@media (prefers-reduced-motion: reduce) {
+  svg * {animation:none !important;}
+}
+</style><path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<path d="M144 72H100C97.7909 72 96 73.7909 96 76V188C96 190.209 97.7909 192 100 192H144C146.209 192 148 190.209 148 188V76C148 73.7909 146.209 72 144 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M137 81H107C105.895 81 105 81.8954 105 83V181C105 182.105 105.895 183 107 183H137C138.105 183 139 182.105 139 181V83C139 81.8954 138.105 81 137 81Z" fill="#DDEFF7"/>
+<path d="M111 102L123 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="close-arrow"><path d="M133 150H111" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M119 142L111 150L119 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="rain-1"><path d="M188 4L182 16" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-2"><path d="M222 6L216 18" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-3"><path d="M232 30L226 42" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="rain-4"><path d="M180 40L174 52" stroke="#6EC6F0" stroke-width="5" stroke-linecap="round"/>
+</g><g class="umbrella"><path d="M184 30C184 24.1652 186.318 18.5695 190.444 14.4437C194.569 10.3179 200.165 8 206 8C211.835 8 217.431 10.3179 221.556 14.4437C225.682 18.5695 228 24.1652 228 30C223.013 26.6667 218.113 26.6667 213.3 30C208.433 26.6667 203.567 26.6667 198.7 30C193.887 26.6667 188.987 26.6667 184 30Z" fill="#6EC6F0" stroke="#3A3A3A" stroke-width="5" stroke-linejoin="round"/>
+<path d="M206 28V50C206 54.6667 204 57 200 57C196.667 57 195 55.3333 195 52" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>
+<path d="M206 8V4" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>
+</g></svg>
+</div>
+      <h2>雨のため開けない</h2><p>雨粒が降り続け、傘がゆっくり揺れます。窓は動きません。</p>
+      <div class="filename">window-close-rain.svg</div>
+    </article><article class="card" id="card-window-close-pollen">
+      <div class="card-top"><span class="pill">花粉</span><button class="card-replay" type="button" data-replay="window-close-pollen" aria-label="花粉のため開けないのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="window-close-pollen"><svg xmlns="http://www.w3.org/2000/svg" xmlns:c2pa="http://c2pa.org/manifest" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-pollen" role="img" aria-label="花粉のため窓を開けない"><style>
+.anim-pollen .tree {transform-box:view-box;transform-origin:206px 60px;animation: pollenTree 3.3s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-pollen .pollen-1 {animation:pollenFloatA 2.7s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-pollen .pollen-2 {animation:pollenFloatB 3.2s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-pollen .pollen-3 {animation:pollenFloatC 2.5s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-pollen .close-arrow {animation:pollenArrow 3.3s ease-in-out infinite;animation-play-state:var(--motion,running)}
+@keyframes pollenTree {0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(3deg)} }
+@keyframes pollenFloatA {0%,100%{transform:translate(2px,-4px);opacity:.65} 50%{transform:translate(-7px,5px);opacity:1} }
+@keyframes pollenFloatB {0%,100%{transform:translate(2px,5px);opacity:1} 50%{transform:translate(-6px,-5px);opacity:.55} }
+@keyframes pollenFloatC {0%,100%{transform:translate(-3px,-2px);opacity:.7} 50%{transform:translate(5px,6px);opacity:1} }
+@keyframes pollenArrow {0%,100%{opacity:1} 50%{opacity:.6} }
+@media (prefers-reduced-motion: reduce) {
+  svg * {animation:none !important;}
+}
+</style><path fill-rule="evenodd" clip-rule="evenodd" d="M78 62H178C183.333 62 186 64.6667 186 70V194C186 199.333 183.333 202 178 202H78C72.6667 202 70 199.333 70 194V70C70 64.6667 72.6667 62 78 62ZM80 72V192H176V72H80Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M172 72H128C125.791 72 124 73.7909 124 76V188C124 190.209 125.791 192 128 192H172C174.209 192 176 190.209 176 188V76C176 73.7909 174.209 72 172 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M165 81H135C133.895 81 133 81.8954 133 83V181C133 182.105 133.895 183 135 183H165C166.105 183 167 182.105 167 181V83C167 81.8954 166.105 81 165 81Z" fill="#DDEFF7"/>
+<path d="M139 102L151 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<path d="M144 72H100C97.7909 72 96 73.7909 96 76V188C96 190.209 97.7909 192 100 192H144C146.209 192 148 190.209 148 188V76C148 73.7909 146.209 72 144 72Z" fill="white" stroke="#3A3A3A" stroke-width="6" stroke-linejoin="round"/>
+<path d="M137 81H107C105.895 81 105 81.8954 105 83V181C105 182.105 105.895 183 107 183H137C138.105 183 139 182.105 139 181V83C139 81.8954 138.105 81 137 81Z" fill="#DDEFF7"/>
+<path d="M111 102L123 90" stroke="white" stroke-width="4" stroke-linecap="round"/>
+<g class="close-arrow"><path d="M133 150H111" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M119 142L111 150L119 158" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g><g class="tree"><path d="M208 52H204C202.895 52 202 52.8954 202 54V60C202 61.1046 202.895 62 204 62H208C209.105 62 210 61.1046 210 60V54C210 52.8954 209.105 52 208 52Z" fill="#8B5E3C" stroke="#3A3A3A" stroke-width="4"/>
+<path d="M206 4L218 20H213L224 36H218L228 54H184L194 36H188L199 20H194L206 4Z" fill="#4C9A5A" stroke="#3A3A3A" stroke-width="5" stroke-linejoin="round"/>
+</g><g class="pollen-1"><path d="M178 18.5C180.485 18.5 182.5 16.4853 182.5 14C182.5 11.5147 180.485 9.5 178 9.5C175.515 9.5 173.5 11.5147 173.5 14C173.5 16.4853 175.515 18.5 178 18.5Z" fill="#F2C94C"/>
+</g><g class="pollen-2"><path d="M182 41C184.761 41 187 38.7614 187 36C187 33.2386 184.761 31 182 31C179.239 31 177 33.2386 177 36C177 38.7614 179.239 41 182 41Z" fill="#F2C94C"/>
+</g><g class="pollen-3"><path d="M234 20.5C236.485 20.5 238.5 18.4853 238.5 16C238.5 13.5147 236.485 11.5 234 11.5C231.515 11.5 229.5 13.5147 229.5 16C229.5 18.4853 231.515 20.5 234 20.5Z" fill="#F2C94C"/>
+</g><g class="pollen-1"><path d="M236 44C238.209 44 240 42.2091 240 40C240 37.7909 238.209 36 236 36C233.791 36 232 37.7909 232 40C232 42.2091 233.791 44 236 44Z" fill="#F2C94C"/>
+</g><g class="pollen-2"><path d="M172 55.5C173.933 55.5 175.5 53.933 175.5 52C175.5 50.067 173.933 48.5 172 48.5C170.067 48.5 168.5 50.067 168.5 52C168.5 53.933 170.067 55.5 172 55.5Z" fill="#F2C94C"/>
+</g><g class="pollen-3"><path d="M194 13.5C195.933 13.5 197.5 11.933 197.5 10C197.5 8.067 195.933 6.5 194 6.5C192.067 6.5 190.5 8.067 190.5 10C190.5 11.933 192.067 13.5 194 13.5Z" fill="#F2C94C"/>
+</g></svg>
+</div>
+      <h2>花粉のため開けない</h2><p>木が揺れ、花粉がふわふわ舞います。窓は閉じたままです。</p>
+      <div class="filename">window-close-pollen.svg</div>
+    </article><article class="card" id="card-aircon-dry">
+      <div class="card-top"><span class="pill">除湿</span><button class="card-replay" type="button" data-replay="aircon-dry" aria-label="エアコンで除湿するのアニメーションを最初から再生" title="最初から再生">↻ <span>再生</span></button></div>
+      <div class="illustration" data-art="aircon-dry"><svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" class="anim-aircon" role="img" aria-label="エアコンで除湿する">
+<style>
+.anim-aircon .status-led{animation:airconLED 2.1s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-aircon .arrow-stream{animation:intakePulse 1.8s ease-in-out infinite;animation-play-state:var(--motion,running)}
+.anim-aircon .vapor-a,.anim-aircon .vapor-b,.anim-aircon .vapor-c{animation-play-state:var(--motion,running);transform-box:fill-box;transform-origin:center}
+.anim-aircon .vapor-a{animation:suckA 2.6s ease-in infinite}
+.anim-aircon .vapor-b{animation:suckB 2.9s ease-in infinite}
+.anim-aircon .vapor-c{animation:suckC 2.4s ease-in infinite}
+@keyframes airconLED{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes intakePulse{0%,100%{opacity:.5;transform:translateY(2px)}50%{opacity:1;transform:translateY(-2px)}}
+@keyframes suckA{0%{transform:translate(0,0) scale(1);opacity:.12}18%{opacity:.88}100%{transform:translate(22px,-96px) scale(.32);opacity:0}}
+@keyframes suckB{0%{transform:translate(0,0) scale(1);opacity:.14}18%{opacity:.92}100%{transform:translate(0,-102px) scale(.28);opacity:0}}
+@keyframes suckC{0%{transform:translate(0,0) scale(1);opacity:.12}18%{opacity:.86}100%{transform:translate(-22px,-98px) scale(.3);opacity:0}}
+@media (prefers-reduced-motion: reduce){svg *{animation:none !important;}}
+</style>
+<path d="M196 34H44C36.268 34 30 40.268 30 48V90C30 97.732 36.268 104 44 104H196C203.732 104 210 97.732 210 90V48C210 40.268 203.732 34 196 34Z" fill="white" stroke="#3A3A3A" stroke-width="7"/>
+<path d="M48 84H192" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<g class="status-led"><path d="M188 59C190.761 59 193 56.7614 193 54C193 51.2386 190.761 49 188 49C185.239 49 183 51.2386 183 54C183 56.7614 185.239 59 188 59Z" fill="#6EC6F0"/></g>
+<path d="M181 92H59C57.3431 92 56 93.3431 56 95C56 96.6569 57.3431 98 59 98H181C182.657 98 184 96.6569 184 95C184 93.3431 182.657 92 181 92Z" fill="#3A3A3A"/>
+<g class="arrow-stream"><path d="M56 196C64 173 76 147 92 122" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M92 122L91 134" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M92 122L80 126" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M184 196C176 173 164 147 148 122" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M148 122L160 126" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M148 122L149 134" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 205V124" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 124L127.2 133.6" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+<path d="M120 124L112.8 133.6" stroke="#3A3A3A" stroke-width="6" stroke-linecap="round"/>
+</g>
+<g class="vapor-a"><circle cx="54" cy="210" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="84" cy="216" r="6.5" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="112" cy="208" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="148" cy="216" r="6.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="184" cy="210" r="7" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="70" cy="176" r="6" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="98" cy="182" r="5.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="140" cy="182" r="5.5" fill="#6EC6F0"/></g>
+<g class="vapor-c"><circle cx="170" cy="174" r="6" fill="#6EC6F0"/></g>
+<g class="vapor-a"><circle cx="104" cy="146" r="4.5" fill="#6EC6F0"/></g>
+<g class="vapor-b"><circle cx="136" cy="146" r="4.5" fill="#6EC6F0"/></g>
+</svg></div>
+      <h2>エアコンで除湿する</h2><p>ランプを点滅させつつ、水分の粒が上方向へ集まり、エアコンに吸い込まれるようにしています。</p>
+      <div class="filename">aircon-dry.svg</div>
+    </article></div><p class="note">※ SVGはCSSアニメーションで動作します。開く系は閉じるアニメーションを入れず、必要な状態を保ったまま他要素だけを動かしています。動きを減らすOS設定では静止します。</p></main>
+<script>
+(()=>{
+  let paused=false;
+  const toggle=document.querySelector('#toggle');
+  const setMotion=svg=>svg.style.setProperty('--motion',paused?'paused':'running');
+  toggle.addEventListener('click',()=>{
+    paused=!paused;
+    document.querySelectorAll('.illustration svg').forEach(setMotion);
+    toggle.textContent=paused?'▶ 再生':'⏸ 一時停止';
+    toggle.setAttribute('aria-pressed',String(paused));
+  });
+  const replay=(name)=>{
+    const art=document.querySelector(`[data-art="${name}"]`);
+    if(!art)return;
+    const old=art.querySelector('svg');const next=old.cloneNode(true);
+    old.replaceWith(next);setMotion(next);
+  };
+  document.querySelectorAll('[data-replay]').forEach(button=>button.addEventListener('click',()=>replay(button.dataset.replay)));
+  document.querySelector('#replay-all').addEventListener('click',()=>document.querySelectorAll('.illustration').forEach(el=>replay(el.dataset.art)));
+})();
+</script></body></html>
