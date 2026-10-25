@@ -29,6 +29,7 @@ export function MainPage({ home, moldIndex, bottomInset, topInset, character, on
   const [previewStage, setPreviewStage] = useState(0);
   const previewMood = __DEV__ ? previewStages[previewStage] : null;
   const backgroundIndex = previewMood ? previewIndices[previewStage] : home.risk === null ? null : moldIndex;
+  const stale = home.reading.kind === 'stale';
   const { width, height } = useWindowDimensions();
   // Give the mascot nearly the full screen width, reserving room for the
   // top button and movement during a tap reaction.
@@ -38,7 +39,7 @@ export function MainPage({ home, moldIndex, bottomInset, topInset, character, on
 
   return (
     <View style={[styles.content, { paddingBottom: bottomInset, paddingTop: contentTop }]}>
-      <MoldBackground moldIndex={backgroundIndex} character={character} />
+      <MoldBackground moldIndex={backgroundIndex} character={character} stale={stale} />
       {__DEV__ && (
         <Pressable
           onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
@@ -71,7 +72,7 @@ export function MainPage({ home, moldIndex, bottomInset, topInset, character, on
           <Path d="M10.5 13.3q1.5 1.4 3 0" fill="none" stroke={scheme.onSurfaceVariant} strokeWidth={1.2} strokeLinecap="round" />
         </Svg>
       </Pressable>
-      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
+      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} stale={stale} />
       {home.reading.kind === 'searching' && <ActivityIndicator color={scheme.primary} accessibilityLabel="デバイスを探しています" />}
       {debugWeather}
     </View>

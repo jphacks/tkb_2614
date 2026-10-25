@@ -1,21 +1,14 @@
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path } from 'react-native-svg';
+import Svg, { G } from 'react-native-svg';
 
 import { companions } from './mascot/companions';
-import type { ArtworkNode, CharacterKind } from './mascot/types';
+import { Drawing } from './mascot/Drawing';
+import type { CharacterKind } from './mascot/types';
 import { moldCoverage, moldTiles } from './moldCoverage';
 
-const elements = { g: G, path: Path, ellipse: Ellipse, circle: Circle };
-function Drawing({ nodes }: { nodes: ArtworkNode[] }) {
-  return nodes.map((node, index) => {
-    const Element = elements[node.tag];
-    return <Element key={index} {...node.props}>{node.children.length ? <Drawing nodes={node.children} /> : undefined}</Element>;
-  });
-}
-
 /** 元のSVGに付いているカビを背景に群生させる。操作・読み上げは前面のUIに任せる。 */
-export function MoldBackground({ moldIndex, character }: { moldIndex: number | null; character: CharacterKind }) {
+export function MoldBackground({ moldIndex, character, stale = false }: { moldIndex: number | null; character: CharacterKind; stale?: boolean }) {
   const [bounds, setBounds] = useState({ width: 0, height: 0 });
   const coverage = moldCoverage(moldIndex);
   const tiles = useMemo(() => moldTiles(bounds.width, bounds.height, coverage), [bounds.width, bounds.height, coverage]);
@@ -25,7 +18,7 @@ export function MoldBackground({ moldIndex, character }: { moldIndex: number | n
       accessible={false}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, { opacity: stale ? 0.45 : 1 }]}
       onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}
     >
       <Svg width="100%" height="100%" accessible={false}>
