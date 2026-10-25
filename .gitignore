@@ -3,3 +3,6 @@
 
 # Local pnpm store
 .pnpm-store/
+
+# macOS
+.DS_Store
