@@ -4,7 +4,7 @@
 
 毎時の温湿度履歴を ESP32（chiikabi）から BLE でまとめて受け取り、計測時刻をキーにして端末のAsyncStorageに保存する（通信仕様は `docs/ble-protocol.md`）。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで1年分保持する。
 
-画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [部屋]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。部屋ページは斜め上から見下ろした木の部屋（Figma の「Room 案A」）で、窓・棚・ベッドの前に、ページを開いたときにランダムに選んだ別々のキャラを1体ずつ立たせる。キャラの表情でスポットごとの予測（`predictSpots`）を見せるので、タップしなくてもどこが危ないかがひと目でわかる。窓が結露していればガラスに水滴を出す。部屋の横幅は最初から画面幅に合わせる。キャラは窓台の上・ベッドの掛け布団の上・棚の左の床（棚の陰から顔を出す）に立つ。2本指のピンチで拡大、2本指のドラッグで移動でき（最大3倍）、2本指が触れている間はページャーを止めるので、1本指の横スワイプとはぶつからない。ダブルタップで、等倍ならタップした所を2倍に、拡大中なら等倍に戻す。ページを離れても拡大は戻さない（スワイプ中に戻すとページ送りが引っかかるため）。スワイプでページを送っている間は、全ページのキャラの動きを止める（部屋のキャラ3体と同時に動かすと JS の負荷でページ送りが引っかかるため）。
+画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [部屋]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。部屋ページは斜め上から見下ろした木の部屋（Figma の「Room 案A」）で、窓・棚・ベッドの前に、ページを開いたときにランダムに選んだ別々のキャラを1体ずつ立たせる。キャラの表情でスポットごとの予測（`predictSpots`）を見せるので、タップしなくてもどこが危ないかがひと目でわかる。窓が結露していればガラスに水滴を出す（結露は今の外気温で判定し、取れないときは月別の表で判定する）。部屋の横幅は最初から画面幅に合わせる。キャラは窓台の上・ベッドの掛け布団の上・棚の左の床（棚の陰から顔を出す）に立つ。2本指のピンチで拡大、2本指のドラッグで移動でき（最大3倍）、2本指が触れている間はページャーを止めるので、1本指の横スワイプとはぶつからない。ダブルタップで、等倍ならタップした所を2倍に、拡大中なら等倍に戻す。ページを離れても拡大は戻さない（スワイプ中に戻すとページ送りが引っかかるため）。スワイプでページを送っている間は、全ページのキャラの動きを止める（部屋のキャラ3体と同時に動かすと JS の負荷でページ送りが引っかかるため）。
 
 カビのリスクはVTTモデル（[mold-model.md](mold-model.md)）で計算する。
 
@@ -64,6 +64,10 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
 - `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAtの差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
+- `src/domain/weather.ts`: 現在地の今の外の天気（気温・相対湿度・降水量・風速・昼夜・観測時刻・取得時刻）と、取得元（`fetchCurrent`）の型。権限の拒否・オフライン・APIの失敗ではnullを返し、画面は「外の天気なし」で動かす。
+- `src/data/weather/OpenMeteoWeatherSource.ts`: Open-Meteo の `current` を取得する。位置は小数2桁（約1km）に丸めて送る。取得から30分は AsyncStorage（キー `weather:v1`）のキャッシュを返し、位置もAPIも使わない。失敗はキャッシュしない。
+- `src/data/weather/deviceLocation.ts`: expo-location で使用中のみの位置権限を要求し、直近1時間の位置か、精度 Low の現在地を返す。拒否されたら null。
+- `src/hooks/useOutdoorWeather.ts`: 起動時・フォアグラウンド復帰時と、フォアグラウンドにいる間は5分ごと（`WEATHER_REFRESH_MS`）に天気を取得する。キャッシュが残っていればそれが返るので、開いたままでも30分を過ぎたら取り直される。
 - `src/theme/`: リスク3段階×ライト/ダークの M3 配色（`schemes.ts`、Figma の Scheme コレクションと同じ値）と、文字・余白・角丸の値。`schemeFor` でリスクから配色を選ぶ。
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/roomGeometry.ts`: 部屋の絵の形状（Figma の「Room 案A」をアイソメトリックの投影 `project(x, y, z)` で起こしたもの）、スポット（`SpotId`）ごとのキャラの立ち位置と、窓の結露の水滴。色はテーマの色名か固定の木の色で持つ。
@@ -80,7 +84,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 
 `src/data/mock/samples.ts` の温湿度を変更する。2026-10-01 UTCを起点に毎時1件を作り、配列の値を繰り返す。起点は `createMockMeasurementSource` の `epoch` で変えられる（冬の挙動を見るときは1月にする）。BLEと同じく、since以上の時刻の記録を返し、再取得しても同じ時刻の計測値は同じ。
 
-`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
+`createMockMeasurementSource({ samples, delayMs: 300, failEvery: 4 })` で遅延や失敗を設定できる。外の天気のモックは `src/data/mock/MockWeatherSource.ts` で、`createMockWeatherSource({ weather: null })` にすると「外の天気なし」を再現できる。天気の取得元は `EXPO_PUBLIC_WEATHER_SOURCE`（`mock` / `open-meteo`）で計測とは別に選べ、未指定なら計測と同じになる。expo-location は Expo Go に含まれるので、`EXPO_PUBLIC_MEASUREMENT_SOURCE=mock` と `EXPO_PUBLIC_WEATHER_SOURCE=open-meteo` を併せて指定すれば、Expo Go で実際の Open-Meteo を試せる。`now` を注入して時計も固定できる。自動同期の間隔は `DEFAULT_SYNC_INTERVAL_MS`、取得の制限は `DEFAULT_REQUEST_TIMEOUT_MS`。
 
 ## 今後の実装
 

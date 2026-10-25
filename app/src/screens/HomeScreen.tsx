@@ -7,12 +7,14 @@ import { predictSpots } from '../domain/roomSpots';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useMoldPrediction } from '../hooks/useMoldPrediction';
 import { useNow } from '../hooks/useNow';
+import { useOutdoorWeather } from '../hooks/useOutdoorWeather';
 import { useWidgetSync } from '../hooks/useWidgetSync';
 import type { AppServices } from '../services/createAppServices';
 import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
+import { WeatherDebug } from '../ui/WeatherDebug';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 import { RoomPage } from './RoomPage';
@@ -27,10 +29,12 @@ const INDICATOR_AREA = 32 + space.s24;
 export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, lastSyncedAt } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
+  const outdoor = useOutdoorWeather(services.weatherSource);
   const now = useNow(60_000);
   const home = deriveHomeState(measurements, status, prediction, now);
-  // 外気温（#19）はまだ取らないので、窓の結露も月別の表で判定する。
-  const spots = useMemo(() => predictSpots(measurements, null), [measurements]);
+  // 窓の結露は今の外気温で判定する。取れないとき（権限拒否・オフライン）は月別の表で判定する。
+  const outdoorTemperatureC = outdoor.weather?.temperatureC ?? null;
+  const spots = useMemo(() => predictSpots(measurements, outdoorTemperatureC), [measurements, outdoorTemperatureC]);
   const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();
@@ -56,11 +60,15 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
-  // 部屋ページで2本指が触れている間はページャーを止め、動きかけていたら今のページに戻す。
+  // 部屋ページで2本指が触れている間はページャーを止め、動きかけていたら部屋ページに戻す。
+  // 2本指の操作は部屋ページでしか始まらないので、戻す先は部屋ページに決め打ちする。起動直後は JS が予測の計算で
+  // 詰まり、スクロールのイベントが遅れて届くので、activePageRef がまだ前のページを指していることがある。
   const [pagerLocked, setPagerLocked] = useState(false);
   const lockPager = useCallback((locked: boolean) => {
     setPagerLocked(locked);
-    if (locked) pager.current?.scrollTo({ x: width * activePageRef.current, animated: true });
+    if (!locked) return;
+    activePageRef.current = ROOM_PAGE;
+    pager.current?.scrollTo({ x: width * ROOM_PAGE, animated: true });
   }, [width]);
 
   return (
@@ -94,7 +102,9 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE} />
+            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
+              debugWeather={<WeatherDebug {...outdoor} label={services.weatherSource.label} />}
+            />
           </View>
           <View style={{ width }}>
             <RoomPage spots={spots} onTwoFingers={lockPager} active={!paging && activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />

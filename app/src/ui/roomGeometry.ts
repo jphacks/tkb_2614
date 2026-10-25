@@ -148,7 +148,7 @@ const below = ([x, y]: Point, dy: number): Point => [x, y + dy];
  * キャラの絵は足元の下に影の分の余白があるので、乗せる面より少し下に置くと面に乗って見える。
  */
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
-  window: below(P(2.5, 0.25, 3.8), 8),
+  window: below(P(2.5, 0.25, 3.8), 14),
   bed: below(P(2.6, 7.6, 1.95), 20),
-  shelf: below(P(4.75, 0.3, 0), 8),
+  shelf: below(P(4.75, 0.3, 0), 16),
 };

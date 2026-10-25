@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
@@ -12,13 +12,15 @@ const previewStages = [null, 'fine', 'worried', 'dizzy'] as const;
 const previewLabels = ['自動', '低', '中', '高'] as const;
 
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
-export function MainPage({ home, bottomInset, topInset, character, onCharacterChange, active }: {
+export function MainPage({ home, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
   home: HomeState;
   bottomInset: number;
   topInset: number;
   character: CharacterKind;
   onCharacterChange: (character: CharacterKind) => void;
   active: boolean;
+  /** TODO: 天気の取得確認用の仮表示。 */
+  debugWeather?: ReactNode;
 }) {
   const scheme = useScheme();
   // Preview only the mascot. Never mutate measurements, prediction, or theme.
@@ -67,6 +69,7 @@ export function MainPage({ home, bottomInset, topInset, character, onCharacterCh
       </Pressable>
       <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
       <Reading state={home.reading} />
+      {debugWeather}
     </View>
   );
 }

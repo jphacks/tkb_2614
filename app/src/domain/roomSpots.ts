@@ -22,7 +22,10 @@ export function surfaceDeltaByMonthFor(fRsi: number): number[] {
 }
 
 export interface SpotPrediction extends MoldPrediction {
-  /** 最新の計測値から、月別の表を換算した ΔT で求めた今の表面の温湿度。#20 の開閉判定で臨界湿度と比べる。 */
+  /**
+   * 最新の計測値から求めた今の表面の温湿度。#20 の開閉判定で臨界湿度と比べる。
+   * 窓は結露判定と同じ ΔT、ほかのスポットは月別の表を換算した ΔT で求める。
+   */
   readonly currentSurface: { readonly temperatureC: number; readonly relativeHumidityPercent: number };
 }
 
@@ -53,27 +56,25 @@ const spotModels = ROOM_SPOTS.map((spot) => {
 
 /**
  * スポットごとのカビの予測。M と M=1 までの日数は月別の表を fRsi で換算した ΔT で計算し、外気温は使わない。
- * 窓の結露だけは、外気温があれば ΔT = max(0, (1 − fRsi)(室温 − 外気温)) で、なければ月別の表で判定する。
+ * 窓の結露と今の表面だけは、外気温があれば ΔT = max(0, (1 − fRsi)(室温 − 外気温)) で、なければ月別の表で判定する。
  * measurements は MoldPredictor.predict と同じく最新順。有効な計測がなければ各スポットとも null。
  */
 export function predictSpots(measurements: readonly Measurement[], outdoorTemperatureC: number | null): SpotPredictions {
   const latest = latestValid(measurements);
-  const month = latest === null ? 0 : new Date(latest.measuredAt).getMonth();
-  const entries = spotModels.map(({ id, fRsi, surfaceDeltaByMonthC, predictor }) => {
-    const prediction = latest === null ? null : predictor.predict(measurements);
-    if (prediction === null || latest === null) return [id, null] as const;
-    const { temperatureC, relativeHumidityPercent } = latest;
-    const spot: SpotPrediction = {
-      ...prediction,
-      currentSurface: surfaceConditions(temperatureC, relativeHumidityPercent, surfaceDeltaByMonthC[month], 0),
-    };
-    if (id !== 'window') return [id, spot] as const;
-    const condensationDeltaC = outdoorTemperatureC === null
-      ? surfaceDeltaByMonthC[month]
-      : Math.max(0, (1 - fRsi) * (temperatureC - outdoorTemperatureC));
-    // 露点と比べず、カビモデルの頭打ちと同じ値で比べる。露点ちょうど付近で浮動小数点の誤差により判定が食い違わない。
-    const isCondensing = uncappedSurfaceRelativeHumidity(temperatureC, relativeHumidityPercent, condensationDeltaC, 0) >= 100;
-    return [id, { ...spot, isCondensing }] as const;
-  });
-  return Object.fromEntries(entries) as unknown as SpotPredictions;
+  if (latest === null) return { window: null, shelf: null, bed: null };
+  const { temperatureC, relativeHumidityPercent } = latest;
+  const month = new Date(latest.measuredAt).getMonth();
+  // ROOM_SPOTS の順。有効な計測があるので predict は null にならない。
+  const [windowSpot, shelf, bed] = spotModels.map(({ surfaceDeltaByMonthC, predictor }): SpotPrediction => ({
+    ...predictor.predict(measurements)!,
+    currentSurface: surfaceConditions(temperatureC, relativeHumidityPercent, surfaceDeltaByMonthC[month], 0),
+  }));
+  const condensationDeltaC = outdoorTemperatureC === null
+    ? spotModels[0].surfaceDeltaByMonthC[month]
+    : Math.max(0, (1 - WINDOW_FRSI.single) * (temperatureC - outdoorTemperatureC));
+  // 露点と比べず、カビモデルの頭打ちと同じ値で比べる。露点ちょうど付近で浮動小数点の誤差により判定が食い違わない。
+  const isCondensing = uncappedSurfaceRelativeHumidity(temperatureC, relativeHumidityPercent, condensationDeltaC, 0) >= 100;
+  // 窓の今の表面は結露判定と同じ ΔT で求め、表面 RH と isCondensing が食い違わないようにする。
+  const currentSurface = surfaceConditions(temperatureC, relativeHumidityPercent, condensationDeltaC, 0);
+  return { window: { ...windowSpot, currentSurface, isCondensing }, shelf, bed };
 }
