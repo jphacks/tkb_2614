@@ -4,7 +4,7 @@
 
 static const int PLAYER_RX_PIN = 16;  // DFPlayer の TX につなぐ
 static const int PLAYER_TX_PIN = 17;  // DFPlayer の RX につなぐ
-static const uint8_t PLAYER_VOLUME = 30;  // 0〜30（30 が最大）
+static const uint8_t PLAYER_VOLUME = 17;  // 0〜30（30 が最大）
 
 // 再生が終わったかは DFPlayer に問い合わせず、音声の長さで判断する（DFPlayer の答えが当てにならないため）。
 // 長さに少し余裕を足して待つ
