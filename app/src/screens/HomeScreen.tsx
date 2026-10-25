@@ -39,6 +39,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const [character, setCharacter] = useState<CharacterKind>('mimi');
   useWidgetSync({ measurements, status, prediction, lastSyncedAt, character });
   const [activePage, setActivePage] = useState(MAIN_PAGE);
+  // スワイプ中は全ページのキャラの動きを止め、JS の負荷を下げてページ送りを滑らかにする。
+  const [paging, setPaging] = useState(false);
   const activePageRef = useRef(MAIN_PAGE);
   const pager = useRef<ComponentRef<typeof ScrollView>>(null);
   const [initialOffset] = useState(() => ({ x: width * MAIN_PAGE, y: 0 }));
@@ -47,6 +49,10 @@ export function HomeScreen({ services }: { services: AppServices }) {
     pager.current?.scrollTo({ x, animated: false });
     scrollX.setValue(x);
   }, [width, scrollX]);
+  const settle = useCallback(() => {
+    setActivePage(activePageRef.current);
+    setPaging(false);
+  }, []);
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
@@ -74,20 +80,24 @@ export function HomeScreen({ services }: { services: AppServices }) {
           }}
           onScroll={(event) => {
             updateScroll(event);
-            const next = Math.max(0, Math.min(PAGE_COUNT - 1, Math.round(event.nativeEvent.contentOffset.x / width)));
-            activePageRef.current = next;
-            setActivePage(next);
+            activePageRef.current = Math.max(0, Math.min(PAGE_COUNT - 1, Math.round(event.nativeEvent.contentOffset.x / width)));
           }}
+          onScrollBeginDrag={() => setPaging(true)}
+          // 離した位置がちょうどページの境目なら慣性のスクロールが起きず、onMomentumScrollEnd が来ない。
+          onScrollEndDrag={(event) => {
+            if (event.nativeEvent.contentOffset.x % width === 0) settle();
+          }}
+          onMomentumScrollEnd={settle}
           scrollEventThrottle={16}
         >
           <View style={{ width }}>
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
+            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <RoomPage spots={spots} onTwoFingers={lockPager} active={activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
+            <RoomPage spots={spots} onTwoFingers={lockPager} current={activePage === ROOM_PAGE} active={!paging && activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">

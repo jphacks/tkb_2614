@@ -22,7 +22,7 @@ const body = (id: (typeof ROOM_SPOTS)[number]['id']) => {
   return { left: x - 52 + 48 * scale, right: x - 52 + 368 * scale, top: y - 104 + 104 * scale, bottom: y - 104 + 384 * scale };
 };
 
-test('スポットのキャラの体同士が重ならない', () => {
+test('スポットのキャラの体同士が重ならない（棚の陰のキャラも含む）', () => {
   const ids = ROOM_SPOTS.map(({ id }) => id);
   for (const a of ids) for (const b of ids) {
     if (a >= b) continue;

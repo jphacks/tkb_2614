@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -8,7 +8,7 @@ import { Character } from '../ui/Character';
 import { moods } from '../ui/homeState';
 import { characterKinds, type CharacterKind } from '../ui/mascot/types';
 import { ZoomView } from '../ui/ZoomView';
-import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, DRAW_ORDER, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
+import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, LAYERS, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
 
 const CHARACTER_SIZE = 104;
 const SPOT_LABELS: Record<SpotId, string> = { window: '窓', bed: 'ベッド', shelf: '棚' };
@@ -33,6 +33,17 @@ function Shapes({ shapes, scheme }: { shapes: readonly Shape[]; scheme: ColorSch
   ));
 }
 
+/** 1層分の絵。最初の層に部屋と結露を含める。描く内容は配色と結露でしか変わらないので、ページの切り替えでは描き直さない。 */
+const Layer = memo(function Layer({ index, scheme, isCondensing }: { index: number; scheme: ColorScheme; isCondensing: boolean }) {
+  return (
+    <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false} pointerEvents="none">
+      {index === 0 && <Shapes shapes={ROOM_SHAPES} scheme={scheme} />}
+      {LAYERS[index].spots.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
+      {index === 0 && isCondensing && <Shapes shapes={CONDENSATION_SHAPES} scheme={scheme} />}
+    </Svg>
+  );
+});
+
 /** スポットの数だけ、重ならないようにキャラを選ぶ。ページを開くたびに変わらないよう、最初の1回だけ選ぶ。 */
 function pickCharacters(): Record<SpotId, CharacterKind> {
   const shuffled = [...characterKinds];
@@ -47,8 +58,11 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
  * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
  * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動でき、ダブルタップで拡大と等倍を切り替える。
  */
-export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
+export function RoomPage({ spots, current, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
+  /** 今のページか。離れたら拡大を戻す。 */
+  current: boolean;
+  /** キャラを動かすか。スワイプ中は止める。 */
   onTwoFingers: (active: boolean) => void;
   active: boolean;
   topInset: number;
@@ -72,27 +86,27 @@ export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }:
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <View style={styles.stage} onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}>
-        <ZoomView active={active} onTwoFingers={onTwoFingers}>
-          <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false}>
-            <Shapes shapes={ROOM_SHAPES} scheme={scheme} />
-            {DRAW_ORDER.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
-            {spots.window?.isCondensing && <Shapes shapes={CONDENSATION_SHAPES} scheme={scheme} />}
-          </Svg>
-          {bounds && DRAW_ORDER.map((id) => {
-            const prediction = spots[id];
-            const [x, y] = CHARACTER_ANCHORS[id];
-            const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
-            return (
-              <View
-                key={id}
-                style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
-                accessible
-                accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
-              >
-                <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
-              </View>
-            );
-          })}
+        <ZoomView active={current} onTwoFingers={onTwoFingers}>
+          {LAYERS.map((layer, index) => (
+            <Fragment key={index}>
+              <Layer index={index} scheme={scheme} isCondensing={spots.window?.isCondensing ?? false} />
+              {bounds && layer.characters.map((id) => {
+                const prediction = spots[id];
+                const [x, y] = CHARACTER_ANCHORS[id];
+                const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
+                return (
+                  <View
+                    key={id}
+                    style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
+                    accessible
+                    accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
+                  >
+                    <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
+                  </View>
+                );
+              })}
+            </Fragment>
+          ))}
         </ZoomView>
       </View>
     </View>

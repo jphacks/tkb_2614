@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { AccessibilityInfo, AppState, Pressable } from 'react-native';
 import Svg, { Circle, Ellipse, G, Path } from 'react-native-svg';
 
@@ -13,7 +13,8 @@ const elements = { g: G, path: Path, ellipse: Ellipse, circle: Circle };
 const levels = { fine: 'low', worried: 'medium', dizzy: 'high', sleep: 'low' } as const;
 const moodLabels: Record<Mood, string> = { fine: '危険度：低', worried: '危険度：中', dizzy: '危険度：高', sleep: '計測データなし' };
 
-function Drawing({ nodes, clock }: { nodes: ArtworkNode[]; clock: MascotClock }) {
+// 絵の木は種類と表情でしか変わらない。動きは clock が動かすので、active が切り替わっても描き直さない。
+const Drawing = memo(function Drawing({ nodes, clock }: { nodes: ArtworkNode[]; clock: MascotClock }) {
   return nodes.map((node, index) => {
     const Element = elements[node.tag];
     const children = <Drawing nodes={node.children} clock={clock} />;
@@ -23,7 +24,7 @@ function Drawing({ nodes, clock }: { nodes: ArtworkNode[]; clock: MascotClock })
       </G>
     ) : <Element key={index} {...node.props}>{node.children.length ? children : undefined}</Element>;
   });
-}
+});
 
 export function Character({ mood, size, character = 'mimi', active = true }: {
   mood: Mood;

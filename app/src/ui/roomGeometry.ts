@@ -18,8 +18,11 @@ export interface Shape {
 type Point = readonly [number, number];
 type Range = readonly [number, number];
 
-/** 部屋（x 33–369, y 274–601）と、その上に置くカビ・キャラが収まる範囲。Figma の 402×874 のフレームの座標で表す。 */
-export const SCENE = { x: 0, y: 236, width: 402, height: 400 } as const;
+/**
+ * 画面に収める範囲。Figma の 402×874 のフレームの座標で表す。横は部屋の外形（x 33–369）ちょうどにして、
+ * 最初から部屋の横幅を画面幅に合わせる。縦は部屋（y 274–601）と、その上に立つキャラが収まる高さ。
+ */
+export const SCENE = { x: 33, y: 236, width: 336, height: 400 } as const;
 
 /** 木は4トーンに固定する。光は左上から当て、天面 > 左前面 > 右前面の順に暗くする。 */
 export const OAK = { o50: '#EBD9BA', o100: '#DCC39B', o200: '#C9A472', o300: '#AE8656' } as const;
@@ -104,6 +107,8 @@ function shelfShapes(): Shape[] {
 function bedShapes(): Shape[] {
   return [
     ...box([0, 0.35], [5.6, 9.4], [0, 3.6], WOOD),
+    // 足元側の2本の脚。頭側の脚はヘッドボードに隠れるので描かない。
+    ...box([5.15, 5.55], [5.6, 6.0], [0, 0.35], WOOD),
     ...box([5.15, 5.55], [9.0, 9.4], [0, 0.35], WOOD),
     ...box([0.35, 5.6], [5.6, 9.4], [0.35, 1.1], WOOD),
     ...box([0.45, 5.45], [5.75, 9.25], [1.1, 1.85], LINEN),
@@ -116,9 +121,16 @@ function bedShapes(): Shape[] {
 
 export const ROOM_SHAPES: readonly Shape[] = room();
 
-/** 描く順（奥から手前）。 */
 export const SPOT_SHAPES: Readonly<Record<SpotId, readonly Shape[]>> = { window: windowShapes(), shelf: shelfShapes(), bed: bedShapes() };
-export const DRAW_ORDER: readonly SpotId[] = ['window', 'shelf', 'bed'];
+
+/**
+ * 奥から手前へ重ねる層。各層で家具を描いてから、その層のキャラを置く。
+ * 棚のキャラは棚より奥の層に置き、棚の陰から顔を出しているように見せる。
+ */
+export const LAYERS: readonly { readonly spots: readonly SpotId[]; readonly characters: readonly SpotId[] }[] = [
+  { spots: ['window'], characters: ['shelf'] },
+  { spots: ['shelf', 'bed'], characters: ['window', 'bed'] },
+];
 
 /** 窓が結露しているときにガラスへ重ねる水滴。下端（サッシ・パッキン）ほど多くたまる。 */
 export const CONDENSATION_SHAPES: readonly Shape[] = ([
@@ -131,10 +143,12 @@ export const CONDENSATION_SHAPES: readonly Shape[] = ([
 
 const below = ([x, y]: Point, dy: number): Point => [x, y + dy];
 
-/** キャラの足元の位置。窓は水滴を隠さないよう窓の下の床、ベッドは掛け布団の上（枕寄り）、棚は天板の上。 */
+/**
+ * キャラの足元の位置。窓は窓台の上、ベッドは掛け布団の上（枕寄り）、棚は棚の左の床で、体の右半分が棚に隠れる。
+ * キャラの絵は足元の下に影の分の余白があるので、乗せる面より少し下に置くと面に乗って見える。
+ */
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
-  window: P(2.2, 1.0, 0),
-  // キャラの絵は足元の下に影の分の余白があるので、乗せる面より少し下に置くと面に乗って見える。
-  bed: below(P(2.6, 7.6, 1.95), 10),
-  shelf: below(P(8.2, 0.85, 7.2), 10),
+  window: below(P(2.5, 0.25, 3.8), 8),
+  bed: below(P(2.6, 7.6, 1.95), 20),
+  shelf: below(P(5.25, 0.3, 0), 8),
 };
