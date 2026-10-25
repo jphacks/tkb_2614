@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
@@ -13,7 +13,7 @@ const previewIndices = [null, 0, 1, 2, 3] as const;
 const previewLabels = ['自動', '低', '中 · VTT 1', '中 · VTT 2', '高'] as const;
 
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
-export function MainPage({ home, moldIndex, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
+export function MainPage({ home, moldIndex, bottomInset, topInset, character, onCharacterChange, active }: {
   home: HomeState;
   moldIndex: number | null;
   bottomInset: number;
@@ -21,8 +21,6 @@ export function MainPage({ home, moldIndex, bottomInset, topInset, character, on
   character: CharacterKind;
   onCharacterChange: (character: CharacterKind) => void;
   active: boolean;
-  /** TODO: 天気の取得確認用の仮表示。 */
-  debugWeather?: ReactNode;
 }) {
   const scheme = useScheme();
   // Preview the mascot and background together without changing the actual prediction.
@@ -74,7 +72,6 @@ export function MainPage({ home, moldIndex, bottomInset, topInset, character, on
       </Pressable>
       <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} stale={stale} />
       {home.reading.kind === 'searching' && <ActivityIndicator color={scheme.primary} accessibilityLabel="デバイスを探しています" />}
-      {debugWeather}
     </View>
   );
 }
