@@ -1,0 +1,5 @@
+# Local Git worktrees
+.worktrees/
+
+# Local pnpm store
+.pnpm-store/

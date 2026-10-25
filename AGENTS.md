@@ -11,6 +11,11 @@ JPHACKS のチームリポジトリ。ESP32 と Si7021 で室内の温度・湿�
 
 サーバーはなく、ESP32 とスマホが BLE で直接つながる。
 
+## 開発ドキュメント
+
+- [アプリの起動・構成・モックデータの変更方法](docs/app-foundation.md)
+- [ハードウェア側の制作予定](docs/plan.md)
+
 ## firmware と app にまたがる取り決め
 
 - BLE の Service/Characteristic の UUID と payload の形式は、両側にハードコードされる。仕様は `docs/ble-protocol.md` にまとめている。変えるときは `firmware/`・`app/`・`docs/ble-protocol.md` を同じコミットで直す。
