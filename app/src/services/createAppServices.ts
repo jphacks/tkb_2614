@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createBleMeasurementSource } from '../data/ble/BleMeasurementSource';
+import { createAutoMeasurementSource } from '../data/ble/AutoMeasurementSource';
 import { createMeasurementStore } from '../data/measurementStore';
 import { createMockMeasurementSource } from '../data/mock/MockMeasurementSource';
 import { createMockWeatherSource } from '../data/mock/MockWeatherSource';
@@ -16,6 +16,8 @@ export interface AppServices {
   readonly weatherSource: WeatherSource;
   readonly moldPredictor: MoldPredictor;
   readonly syncMeasurements: ReturnType<typeof createMeasurementSync>;
+  /** 選んだ温湿度計を忘れ、次の同期で近くの温湿度計を探し直す。モックでは undefined。 */
+  readonly forgetDevice?: () => Promise<void>;
 }
 
 /** スキャンから受信完了までにかける時間。1年分（約8,800件）でも収まる長さにする。 */
@@ -30,8 +32,10 @@ export function createAppServices(): AppServices {
   const useMock = process.env.EXPO_PUBLIC_MEASUREMENT_SOURCE === 'mock';
   const weatherSource = process.env.EXPO_PUBLIC_WEATHER_SOURCE;
   const useMockWeather = weatherSource === 'mock' || (weatherSource !== 'open-meteo' && useMock);
-  const measurementSource = useMock ? createMockMeasurementSource({ delayMs: 300, failEvery: 0 }) : createBleMeasurementSource();
+  const autoSource = useMock ? undefined : createAutoMeasurementSource(AsyncStorage);
+  const measurementSource = autoSource ?? createMockMeasurementSource({ delayMs: 300, failEvery: 0 });
   return {
+    forgetDevice: autoSource?.forget,
     measurementSource,
     weatherSource: useMockWeather
       ? createMockWeatherSource({ delayMs: 300 })
@@ -40,3 +44,7 @@ export function createAppServices(): AppServices {
     syncMeasurements: createMeasurementSync(measurementSource, createMeasurementStore(AsyncStorage), useMock ? undefined : BLE_TIMEOUT_MS),
   };
 }
+
+let shared: AppServices | undefined;
+/** 画面とバックグラウンドのタスクで同じものを使い、同期を直列にする（BLE のスキャンを重ねない）。 */
+export const getAppServices = () => (shared ??= createAppServices());

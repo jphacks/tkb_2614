@@ -8,6 +8,7 @@
     "userInterfaceStyle": "light",
     "plugins": [
       "expo-font",
+      "expo-background-task",
       [
         "react-native-ble-plx",
         {

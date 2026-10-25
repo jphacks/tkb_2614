@@ -178,3 +178,22 @@ test('ストアの新規インスタンスでも履歴・欠測を復元し、�
     assert.equal(data.get('measurements:v2:room'), broken);
   }
 });
+
+test('prepare で取得元の端末が決まってから、その端末の履歴を読み書きする', async () => {
+  const loaded: string[] = [];
+  const savedIds: string[] = [];
+  const store: MeasurementStore = {
+    async load(deviceId) { loaded.push(deviceId); return []; },
+    async save(deviceId) { savedIds.push(deviceId); },
+  };
+  let deviceId = 'unresolved';
+  const source: MeasurementSource = {
+    label: 'auto',
+    get deviceId() { return deviceId; },
+    async prepare() { deviceId = 'room'; },
+    async fetchSince() { return [record(1)]; },
+  };
+  await createMeasurementSync(source, store)(signal(), () => {});
+  assert.deepEqual(loaded, ['room']);
+  assert.deepEqual(savedIds, ['room']);
+});

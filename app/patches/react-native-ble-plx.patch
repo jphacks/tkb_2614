@@ -1,0 +1,104 @@
+diff --git a/android/src/main/java/com/bleplx/BlePlxModule.java b/android/src/main/java/com/bleplx/BlePlxModule.java
+index d4ef9c5eb505a67c7a565d9403e266d5ec4d5ccc..d7d5daaf128a053064b96aad788c5382100a23ea 100644
+--- a/android/src/main/java/com/bleplx/BlePlxModule.java
++++ b/android/src/main/java/com/bleplx/BlePlxModule.java
+@@ -214,6 +214,7 @@ public class BlePlxModule extends ReactContextBaseJavaModule {
+     int scanMode = DEFAULT_SCAN_MODE_LOW_POWER;
+     int callbackType = DEFAULT_CALLBACK_TYPE_ALL_MATCHES;
+     boolean legacyScan = true;
++    int manufacturerId = -1;
+ 
+     if (options != null) {
+       if (options.hasKey("scanMode") && options.getType("scanMode") == ReadableType.Number) {
+@@ -225,11 +226,14 @@ public class BlePlxModule extends ReactContextBaseJavaModule {
+       if (options.hasKey("legacyScan") && options.getType("legacyScan") == ReadableType.Boolean) {
+         legacyScan = options.getBoolean("legacyScan");
+       }
++      if (options.hasKey("manufacturerId") && options.getType("manufacturerId") == ReadableType.Number) {
++        manufacturerId = options.getInt("manufacturerId");
++      }
+     }
+ 
+     bleAdapter.startDeviceScan(
+       filteredUUIDs != null ? ReadableArrayConverter.toStringArray(filteredUUIDs) : null,
+-      scanMode, callbackType, legacyScan,
++      scanMode, callbackType, legacyScan, manufacturerId,
+       new OnEventCallback<ScanResult>() {
+         @Override
+         public void onEvent(ScanResult data) {
+diff --git a/android/src/main/java/com/bleplx/adapter/BleAdapter.java b/android/src/main/java/com/bleplx/adapter/BleAdapter.java
+index 07f0995d76cf45b196a35762dc81611a18189a67..e584bc033c6f25a11326a3c63ea175ba9f9e6a74 100644
+--- a/android/src/main/java/com/bleplx/adapter/BleAdapter.java
++++ b/android/src/main/java/com/bleplx/adapter/BleAdapter.java
+@@ -29,6 +29,7 @@ public interface BleAdapter {
+     int scanMode,
+     int callbackType,
+     boolean legacyScan,
++    int manufacturerId,
+     OnEventCallback<ScanResult> onEventCallback,
+     OnErrorCallback onErrorCallback);
+ 
+diff --git a/android/src/main/java/com/bleplx/adapter/BleModule.java b/android/src/main/java/com/bleplx/adapter/BleModule.java
+index 44392b65d7f08e747fdfed2d3750d7bb9ae2bff2..9e094fb729c9e1769b225ec4dae03cced32b673c 100755
+--- a/android/src/main/java/com/bleplx/adapter/BleModule.java
++++ b/android/src/main/java/com/bleplx/adapter/BleModule.java
+@@ -190,6 +190,7 @@ public class BleModule extends ReactContextBaseJavaModule implements BleAdapter
+                               int scanMode,
+                               int callbackType,
+                               boolean legacyScan,
++                              int manufacturerId,
+                               OnEventCallback<ScanResult> onEventCallback,
+                               OnErrorCallback onErrorCallback) {
+     UUID[] uuids = null;
+@@ -202,7 +203,7 @@ public class BleModule extends ReactContextBaseJavaModule implements BleAdapter
+       }
+     }
+ 
+-    safeStartDeviceScan(uuids, scanMode, callbackType, legacyScan, onEventCallback, onErrorCallback);
++    safeStartDeviceScan(uuids, scanMode, callbackType, legacyScan, manufacturerId, onEventCallback, onErrorCallback);
+   }
+ 
+   @Override
+@@ -1176,6 +1177,7 @@ public class BleModule extends ReactContextBaseJavaModule implements BleAdapter
+                                    final int scanMode,
+                                    final int callbackType,
+                                    final boolean legacyScan,
++                                   final int manufacturerId,
+                                    final OnEventCallback<ScanResult> onEventCallback,
+                                    final OnErrorCallback onErrorCallback) {
+     if (rxBleClient == null) {
+@@ -1190,9 +1192,15 @@ public class BleModule extends ReactContextBaseJavaModule implements BleAdapter
+       .build();
+ 
+     int length = uuids == null ? 0 : uuids.length;
+-    ScanFilter[] filters = new ScanFilter[length];
+-    for (int i = 0; i < length; i++) {
+-      filters[i] = new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString(uuids[i].toString())).build();
++    ScanFilter[] filters;
++    if (manufacturerId >= 0) {
++      // Android stops unfiltered scans while the screen is off; a manufacturer filter keeps them running.
++      filters = new ScanFilter[] { new ScanFilter.Builder().setManufacturerData(manufacturerId, new byte[0]).build() };
++    } else {
++      filters = new ScanFilter[length];
++      for (int i = 0; i < length; i++) {
++        filters[i] = new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString(uuids[i].toString())).build();
++      }
+     }
+ 
+     scanSubscription = rxBleClient
+diff --git a/src/index.d.ts b/src/index.d.ts
+index d1ef75c9c51aca387b1752eac444000f8e57be60..0ffd50039963fde3944a547f1a8619d201da9409 100644
+--- a/src/index.d.ts
++++ b/src/index.d.ts
+@@ -172,6 +172,11 @@ declare module 'react-native-ble-plx' {
+      * https://developer.android.com/reference/android/bluetooth/le/ScanSettings.Builder#setLegacy(boolean)
+      */
+     legacyScan?: boolean
++    /**
++     * Only report devices whose Manufacturer Data has this company id [Android only, patched in]
++     * Android stops unfiltered scans while the screen is off, so background scans need a filter.
++     */
++    manufacturerId?: number
+   }
+ 
+   /**

@@ -81,11 +81,13 @@ https://youtube.com/shorts/7T5uEmk3q0k
 * NimBLE-Arduino
 
 #### デバイス
-* ESP32 -制御マイコンとして使用
-* HTU21D -温度湿度の計測に使用
-* DFPlayer Mini -発話時のMP3再生に使用
+* ESP32 - 制御マイコンとして使用
+* HTU21D - 温度・湿度の計測に使用
+* DFPlayer Mini - 発話時のMP3再生に使用
 
-以下回路略図
+* SwitchBot 温湿度計・プラス・防水・Pro・Pro CO2 - 上記自作デバイスの代替手段として使用
+
+以下は回路略図です。
 
 <img src="./images/device_circ.png" width="300" alt="制作したデバイスの回路図">
 
@@ -110,3 +112,12 @@ T_s = T - \Delta T
 
 * commit: [a1677c6](https://github.com/jphacks/tkb_2614/commit/a1677c68657ecc2ef9d2171393964e1b49d1df19), [38670d5](https://github.com/jphacks/tkb_2614/commit/38670d5d8e7c0c28340533c5875e9e2beb71fe8d)
 * 参考にした論文: Ojanen et al. (2010), [Mold Growth Modeling of Building Structures Using Sensitivity Classes of Materials](https://web.ornl.gov/sci/buildings/conf-archive/2010%20B11%20papers/104_Ojanen.pdf)
+
+## SwitchBot 温湿度計への対応について
+
+本アプリは SwitchBot 温湿度計が周囲に送信している BLE アドバタイズを受信して温湿度を読みます。SwitchBot のアカウント・クラウド API・公式アプリは使いません。
+
+* 本アプリは非公式のアプリであり、SwitchBot（Woan Technology (Shenzhen) Co., Ltd.）とは提携・推奨の関係にありません。
+* SwitchBot は Woan Technology (Shenzhen) Co., Ltd. の商標または登録商標です。
+* アドバタイズの読み方は、SwitchBot が公開している [OpenWonderLabs/SwitchBotAPI-BLE](https://github.com/OpenWonderLabs/SwitchBotAPI-BLE) と、[pySwitchbot](https://github.com/sblibs/pySwitchbot)（MIT License）を参考に独自に実装しました。
+* 他人の部屋の温湿度計を選ばないよう、自動で選ぶのはスマホのすぐそばにある端末だけです。選び直すときは、温湿度計をスマホに近づけてキャラを長押しします。

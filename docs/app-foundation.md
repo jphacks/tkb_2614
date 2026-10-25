@@ -2,7 +2,7 @@
 
 ## 今できること
 
-毎時の温湿度履歴を ESP32（chiikabi）から BLE でまとめて受け取り、計測時刻をキーにして端末のAsyncStorageに保存する（通信仕様は `docs/ble-protocol.md`）。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで1年分保持する。
+毎時の温湿度履歴を ESP32（chiikabi）から BLE でまとめて受け取り、計測時刻をキーにして端末のAsyncStorageに保存する（通信仕様は `docs/ble-protocol.md`）。chiikabi の代わりに SwitchBot 温湿度計も使える（後述）。起動時・バックグラウンドからの復帰時・pull-to-refresh・15分間隔で同期する。iOSのinactiveでは中断しない。履歴は起動をまたいで1年分保持する。
 
 画面は Figma（[アプリデザイン](https://www.figma.com/design/vLT0crJRcCHbFusl0AZodV)）の Material 3 ベースのデザインに沿う。`[グラフ] ← [メイン] → [部屋]` を横スワイプで行き来し、ボタンとナビゲーションバーは置かない。「不要なセカンダリラベルや説明を避け、レイアウトに説明させる」を原則とし、状態は文言ではなく配色（リスクごとの M3 配色）・キャラの表情・数字の濃さで表す。部屋ページは斜め上から見下ろした木の部屋（Figma の「Room 案A」）で、窓・棚・ベッドの前に、ページを開いたときにランダムに選んだ別々のキャラを1体ずつ立たせる。キャラの表情でスポットごとの予測（`predictSpots`）を見せるので、タップしなくてもどこが危ないかがひと目でわかる。窓が結露していればガラスに水滴を出す（結露は今の外気温で判定し、取れないときは月別の表で判定する）。部屋の横幅は最初から画面幅に合わせる。キャラは窓台の上・ベッドの掛け布団の上・棚の左の床（棚の陰から顔を出す）に立つ。2本指のピンチで拡大、2本指のドラッグで移動でき（最大3倍）、2本指が触れている間はページャーを止めるので、1本指の横スワイプとはぶつからない。ダブルタップでは拡大しない（キャラのタップと区別できないため）。ページを離れても拡大は戻さない（スワイプ中に戻すとページ送りが引っかかるため）。スワイプでページを送っている間は、全ページのキャラの動きを止める（部屋のキャラ3体と同時に動かすと JS の負荷でページ送りが引っかかるため）。
 
@@ -58,9 +58,13 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/domain/measurement.ts`: 計測時刻が主キーの履歴と、取得元（`fetchSince(since)`）の型。欠測は温度・湿度ごとにnull。
 - `src/data/ble/protocol.ts`: BLE 形式バージョン2のバイト形式（送信要求・データ通知・アドバタイズ判定・base64）。温度INT16_MIN・湿度0xFFFFはnullへ変換する。
 - `src/data/ble/BleMeasurementSource.ts`: 権限要求 → Bluetoothのオン待ち → フィルタなしスキャンで `chiikabi` を探す → 接続（Android は MTU 517）→ データを購読 → 送信要求を書く → 終了の印まで受信 → 切断。abort・タイムアウトでもスキャン停止と切断をする。途中で切れた分は捨て、次回同じ要求をし直す。1台前提。
-- `src/services/syncMeasurements.ts`: 保存済みの最新計測時刻を読み、その時刻以上をfetchSince → 計測時刻で上書きマージ → 1年より古い分を捨てて永続化。初回は全件。取得は既定15秒（BLEは60秒）でタイムアウトし、次回再試行。中断後の結果は使用しない。
+- `src/data/ble/manager.ts`: BleManager の共有（1つだけ作る）・Android の権限要求・Bluetoothのオン待ち付きのスキャン。Android は画面が消えているとフィルタなしのスキャンを始めない（`Cannot start unfiltered scan in screen-off`）。SwitchBot はサービス UUID の一覧を出さないので、ble-plx に Manufacturer Data の会社IDで絞る `manufacturerId` オプションを足した（`app/patches/react-native-ble-plx.patch`、`pnpm-workspace.yaml` の `patchedDependencies`）。取得のスキャンは SwitchBot が `0x0969`、chiikabi が `0xFFFF` で絞る。最初の端末選び（アプリを開いているときだけ）は絞らない。パッチを変えたら `app/android/build/generated/autolinking` を消してからビルドし直す（消さないと古い ble-plx のパスのままビルドされる）。
+- `src/data/ble/switchbot.ts`・`SwitchBotMeasurementSource.ts`: SwitchBot 温湿度計（温湿度計・プラス・防水・Pro・Pro CO2）のアドバタイズを読む。接続しない。温湿度は Manufacturer Data（会社ID `0x0969`、会社IDの後ろ8〜10バイト目）にあればそれを、なければサービスデータ（UUID `FD3D`／古いファームは `0D00`、3〜5バイト目）を使う。Hub 2 は並びが違うので扱わない。アドバタイズには今の値しかないので、同期のたびに1件を、その時台の始まりを計測時刻にしてためる。アプリを閉じている間は、Android ならバックグラウンドの同期（後述）で埋める。deviceId は `switchbot-<Device.id>`（Android は MAC、iOS は端末ごとの UUID）。
+- `src/data/ble/AutoMeasurementSource.ts`: どの温湿度計を使うかを決める。選ぶ画面は作らない。最初の同期でスキャンし、chiikabi があればそれを、なければ RSSI が -60dBm 以上（スマホのすぐそば）の SwitchBot のうち、見つけてから3秒のうちに一番強かったものを選んで（隣の部屋や会場の他人の端末を選ばないため。離れていると見つからず、同期がタイムアウトする） AsyncStorage（`sensor:v1`）に保存する。ホームのキャラを長押しすると保存した端末を忘れ、探し直す（VoiceOver/TalkBack ではカスタムアクション「温湿度計を探し直す」）。長押しが効いたら、探し直した同期が終わるまでキャラの下に回る同期アイコン（`src/ui/SyncIndicator.tsx`、ウィジェットと同じ形）を出す。非公式である旨と参考にした資料は README に書いた。
+- `src/services/backgroundSync.ts`: アプリを閉じている間も同期する（expo-background-task、Android の WorkManager）。間隔は最短の15分で、実際には OS が遅らせることがある。WorkManager の条件でネットにつながっていないと動かない（BLE しか使わなくても）。画面と同じ AppServices（`getAppServices`）を使うので、開いている間の同期とは直列になる。`index.ts` で App より前に定義・登録し、Expo Go（ネイティブモジュールなし）では読み込まない。iOS は実行の時期を OS が決めるので登録しない（バックグラウンドの BLE スキャンにはサービス UUID の指定が要るが、SwitchBot は出していない）。
+- `src/services/syncMeasurements.ts`: 取得元に `prepare` があれば先に呼んで端末を決め、保存済みの最新計測時刻を読み、その時刻以上をfetchSince → 計測時刻で上書きマージ → 1年より古い分を捨てて永続化。初回は全件。取得は既定15秒（BLEは60秒）でタイムアウトし、次回再試行。中断後の結果は使用しない。
 - `src/data/measurementStore.ts`: デバイスIDごとに履歴を保存（キーは `measurements:v2:`）。最新時刻は保存済み履歴の末尾から復元するため、別キーの更新不整合はない。破損・読み書き失敗を空データで隠さない。
-- `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。`EXPO_PUBLIC_MEASUREMENT_SOURCE=mock` でモック、それ以外はBLE。同一同期サービス内では手動更新や再開も直列化。
+- `src/services/createAppServices.ts`: 取得元・保存先・予測を生成する差し替え場所。`EXPO_PUBLIC_MEASUREMENT_SOURCE=mock` でモック、それ以外はBLE（`AutoMeasurementSource`）。同一同期サービス内では手動更新や再開も直列化。
 - `src/hooks/useMeasurements.ts`: 同期状態・AppStateとの連携。
 - `src/domain/moldModel.ts`: VTTモデル。月別のΔTで表面の温湿度を推定し、履歴を古い順に1時間ずつMを更新する。間隔はmeasuredAtの差で求め、3時間以内の欠測は直前の条件で埋め、それより長い欠測ではMを保持する。連続した観測が7日未満なら `isProvisional`。M=1までの日数は将来を1時間ずつシミュレーションして求める。月別ΔT・湿度オフセット・Cmatは `createVttMoldPredictor` の引数で調整する。
 - `src/hooks/useMoldPrediction.ts`: useMemoで同期的に予測。
@@ -88,7 +92,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 
 ## 今後の実装
 
-複数台の切り替えは未対応（deviceIdは `chiikabi` 固定）。ペアリングが入ったら、初回接続時のOSのダイアログで同期がタイムアウトしないかを確認する。
+chiikabi 同士の複数台の切り替えは未対応（chiikabi の deviceId は `chiikabi` 固定）。ペアリングが入ったら、初回接続時のOSのダイアログで同期がタイムアウトしないかを確認する。
 
 月別ΔTは地域・住宅の差を見ていない概算。外気温を取得できるようになったら、ΔT=(1−fRsi)(室温−外気温) で求める（[mold-model.md](mold-model.md)）。参考値（`isProvisional`）の画面での見せ方は未定。
 
@@ -101,6 +105,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - failEveryで失敗しても保存済み履歴が残り、次回同期で復旧する。
 - バックグラウンドで停止し、復帰直後に同期する。iOSの権限ダイアログやコントロールセンターによるinactiveでは中断しない。
 - 部屋ページで、冬のモックでは窓のキャラが危ない表情になり、ほかが穏やかな表情になることを確認する。2本指で拡大・移動したあとも、1本指の横スワイプでページを移動できることを確認する（iOS シミュレータでは Option を押しながらドラッグでピンチ、Option+Shift で2本指の平行移動）。縦横比の違う端末（タブレットを含む）で部屋とキャラが見切れないことを確認する。
+- Android のバックグラウンド同期: アプリをホームに下げ、`adb shell cmd jobscheduler run -f <パッケージ名> <JOB_ID>`（JOB_ID は `adb shell dumpsys jobscheduler` で探す）で今すぐ動かし、開き直すとグラフに点が増えている。画面を消した状態でも試す。
 - 実機の描画・ネイティブストレージ・BLEは自動テストでは検証していないため実機で確認する。
 
 ## 公式資料

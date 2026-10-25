@@ -10,6 +10,8 @@ export interface Measurement {
 export interface MeasurementSource {
   readonly label: string;
   readonly deviceId: string;
+  /** 取得元の端末を決める。決めるまで deviceId が定まらない取得元だけが持つ。同期は毎回これを呼んでから deviceId を読む。 */
+  prepare?(signal: AbortSignal): Promise<void>;
   /** since以上（nullなら全件）の履歴を古い順に返す。同じ記録を何度返してもよい。 */
   fetchSince(since: Date | null, signal: AbortSignal): Promise<readonly Measurement[]>;
 }

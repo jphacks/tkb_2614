@@ -9,6 +9,7 @@ import type { HomeState } from '../ui/homeState';
 import { characterNames, nextCharacter, type CharacterKind } from '../ui/mascot/types';
 import { MoldBackground } from '../ui/MoldBackground';
 import { SPEECH_BUBBLE_HEIGHT, SpeechBubble } from '../ui/SpeechBubble';
+import { SyncIndicator } from '../ui/SyncIndicator';
 import { ventilationMessage, type BubbleMessage } from '../ui/ventilationMessage';
 
 const previewStages = [null, 'fine', 'worried', 'worried', 'dizzy'] as const;
@@ -25,7 +26,7 @@ const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvi
 ];
 
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
-export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, character, onCharacterChange, active }: {
+export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, character, onCharacterChange, onRescan, rescanning, active }: {
   home: HomeState;
   moldIndex: number | null;
   /** 窓の開閉判定。null なら吹き出しを出さない（場所は空けたまま）。 */
@@ -34,6 +35,10 @@ export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, chara
   topInset: number;
   character: CharacterKind;
   onCharacterChange: (character: CharacterKind) => void;
+  /** キャラの長押しで温湿度計を探し直す。ボタンや文字は増やさない。 */
+  onRescan?: () => void;
+  /** 探し直している間。長押しが効いたことを、キャラの下の同期アイコンで伝える。 */
+  rescanning: boolean;
   active: boolean;
 }) {
   const scheme = useScheme();
@@ -98,8 +103,10 @@ export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, chara
         </Svg>
       </Pressable>
       <SpeechBubble message={shownBubble} live={active} />
-      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} stale={stale} />
-      {home.reading.kind === 'searching' && <ActivityIndicator color={scheme.primary} accessibilityLabel="デバイスを探しています" />}
+      <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} stale={stale} onLongPress={onRescan} />
+      {rescanning
+        ? <SyncIndicator />
+        : home.reading.kind === 'searching' && <ActivityIndicator color={scheme.primary} accessibilityLabel="デバイスを探しています" />}
     </View>
   );
 }
