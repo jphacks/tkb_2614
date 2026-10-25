@@ -24,7 +24,7 @@ function adviceText(advice: Exclude<VentilationAdvice, { kind: 'none' }>) {
   switch (advice.kind) {
     case 'open':
       return advice.brief
-        ? '外が寒いから、5〜10分だけ窓を開けよう'
+        ? '寒いけど、5〜10分だけ開けると湿気が抜けるよ'
         : `窓を開けよう！ ${Math.max(PREDICTED_RH_STEP, Math.round(advice.predictedIndoorRh / PREDICTED_RH_STEP) * PREDICTED_RH_STEP)}% くらいまで下がりそう`;
     case 'close':
       return '外のほうがジメジメ。窓は閉めておこう';
