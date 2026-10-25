@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "tkb2614",
     "plugins": [
       "expo-font",
       "expo-background-task",
@@ -130,6 +131,18 @@
               }
             }
           ]
+        }
+      ],
+      [
+        "./plugins/withAndroidWidgetResources",
+        {
+          "previews": {
+            "MoldCharacter": "assets/widget-previews/character.png",
+            "MoldHumidity": "assets/widget-previews/humidity.png",
+            "MoldTemperature": "assets/widget-previews/temperature.png",
+            "MoldSync": "assets/widget-previews/sync.png",
+            "MoldOverview": "assets/widget-previews/overview.png"
+          }
         }
       ],
       "expo-asset",

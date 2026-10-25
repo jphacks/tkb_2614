@@ -7,6 +7,29 @@ import { buildWidgetTimeline, deriveWidgetProps, type WidgetImages, type WidgetS
 // モックを Expo Go で確認できるよう、development build のときだけ読み込む。
 const widgetsAvailable = requireOptionalNativeModule('ExpoWidgets') !== null;
 
+// ボタンがあるのは同期とまとめのウィジェットだけで、どちらも押したら同期する。
+const syncSources = new Set(['MoldSync', 'MoldOverview']);
+
+/** ウィジェットの同期ボタンが押されたら listener を呼ぶ。アプリが動いていないときは、パッチを当てた expo-widgets がアプリを開く。 */
+export function addWidgetSyncListener(listener: () => void): () => void {
+  if (!widgetsAvailable) return () => {};
+  let removed = false;
+  let remove = () => {};
+  import('expo-widgets').then(({ addUserInteractionListener }) => {
+    if (removed) return;
+    const subscription = addUserInteractionListener((event) => {
+      if (syncSources.has(event.source)) listener();
+    });
+    remove = () => subscription.remove();
+  }).catch((error: unknown) => {
+    console.warn('ウィジェットの操作を受け取れませんでした。', error);
+  });
+  return () => {
+    removed = true;
+    remove();
+  };
+}
+
 /** ホーム画面のウィジェットを最新の履歴で描き直す。BLE はアプリだけが使うので、表示はアプリが最後に同期した値になる。 */
 export async function updateWidgets(source: WidgetSource, now = Date.now()): Promise<void> {
   if (!widgetsAvailable) return;

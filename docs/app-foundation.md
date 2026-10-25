@@ -80,6 +80,8 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`GraphPage`・`MainPage`・`RoomPage` が各ページ。
 - `src/widgets/`: ホーム画面ウィジェット（expo-widgets）。Figma の Widgets セクションと同じ5種類（キャラ・湿度・温度・同期時刻の小サイズと、それらをまとめた中サイズ）。レイアウトは `ios/`（`@expo/ui/swift-ui`）と `android/`（`@expo/ui/jetpack-compose`）に分かれ、`'widget'` の関数は別ランタイムで動くため外側の値やモジュールを参照できない。表示する値・配色は `widgetProps.ts` の純粋関数で文字列にして渡し、古さと表情は `deriveHomeState` と同じ判定にする。iOS は15分ごとのタイムラインで「◯分前」と古さを先回りして更新し、Android はスナップショットのみ。ウィジェットは BLE を使わず、アプリが最後に同期した値を表示する。
 - `scripts/renderWidgetImages.ts`: ウィジェットは SVG を描けないので、`assets/mascots` の5種類×危険度3段階のマスコットとアイコンを `assets/widgets/` に PNG で書き出す。マスコットの SVG を変えたら `pnpm render:widget-images` で作り直す。ウィジェットはメイン画面で選んでいるマスコットを表示し、計測値がないときはアプリと同じく low の絵を薄く出す。iOS はアプリが App Group の共有ディレクトリへ画像をコピーし、Android のリリースビルドは drawable 名をそのまま渡す。
+- Android のウィジェットを押したときの動き（Figma の Widget interactions セクション）: キャラはホーム、湿度・温度はグラフを開き（`tkb2614://home` / `tkb2614://graph`、`src/widgets/widgetLinks.ts`）、同期はその場で同期して終わるまでアイコンを回す。まとめは押した場所で変わる（キャラ側はホーム、数字側はグラフ、同期時刻は同期）。expo-widgets 単体ではできないので `patches/expo-widgets@58.0.23.patch` で次を足している: `widgetURL` モディファイア（SwiftUI と同名。押すとその URL でアプリを開く）、`remote-layout:<レイアウト名>` の Image（res/layout の RemoteViews をそのまま置く。同期中の回転アイコンに使う）、JS のリスナーがいないとき（アプリが動いていないとき）にボタンを押したらアプリを開くこと。expo-widgets を上げるときはパッチを当て直す。
+- `plugins/withAndroidWidgetResources.js`: expo-widgets が作らない Android のリソースを足す config plugin。ウィジェット追加画面のプレビュー（`assets/widget-previews/`。Figma の Widgets の Risk=low の行を3倍で書き出したもの。ないとアプリのアイコンとグリッドだけになる）と、同期中に回す ProgressBar のレイアウトを書き出す。
 - `tests/`: Node test runnerとtsxによる同期・デコード・保存・モックの回帰テスト。Node型はtests/tsconfig.jsonに限定。
 
 同期処理のabortとタイムアウトはアプリ側の待機を解除し、BLEアダプターはsignalでスキャン停止・切断する。abortを無視するネイティブ操作そのものの終了までは保証できない。
