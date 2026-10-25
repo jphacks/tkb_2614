@@ -85,7 +85,7 @@ https://youtube.com/shorts/7T5uEmk3q0k
 * HTU21D - 温度・湿度の計測に使用
 * DFPlayer Mini - 発話時のMP3再生に使用
 
-* SwitchBot 温湿度計・プラス・防水・Pro・Pro CO2 - HTU21D の代わりとして使用
+* SwitchBot 温湿度計・プラス・防水・Pro・Pro CO2 - 上記自作デバイスの代替手段として使用
 
 以下は回路略図です。
 
