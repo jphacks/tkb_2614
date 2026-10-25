@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureDetector, usePanGesture, usePinchGesture, useSimultaneousGestures, useTapGesture, type GestureTouchEvent } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { scheduleOnRN } from 'react-native-worklets';
 
 const MAX_SCALE = 3;
 /** ダブルタップで拡大するときの倍率。 */
@@ -10,7 +9,7 @@ const TAP_SCALE = 2;
 
 /**
  * 2本指のピンチで拡大し、2本指のドラッグで動かす。1本指の操作は受けないので、ページャーの横スワイプとぶつからない。
- * 2本指が触れている間は onTwoFingers(true) を呼ぶので、親はその間ページャーを止める。
+ * 2本指が触れたら onTwoFingers(true)、離れたら onTwoFingers(false) を UI スレッドで呼ぶ（worklet を渡す）。親はその間ページャーを止める。
  * ダブルタップで、等倍ならタップした所を拡大し、拡大中なら等倍に戻す。
  * ページを離れても拡大は戻さない。スワイプ中に戻すと、戻す動きとページ送りが重なって引っかかるため。
  */
@@ -43,7 +42,7 @@ export function ZoomView({ children, onTwoFingers }: { children: ReactNode; onTw
     const active = count >= 2;
     if (active === fingers.value) return;
     fingers.value = active;
-    scheduleOnRN(onTwoFingers, active);
+    onTwoFingers(active);
   };
 
   // 1本指ではページャーを止めないので、指が1本でも離れたら（2本指の操作の終わり）すぐ戻す。

@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { scrollTo, setNativeProps, useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { predictSpots } from '../domain/roomSpots';
@@ -46,13 +47,13 @@ export function HomeScreen({ services }: { services: AppServices }) {
   // スワイプ中は全ページのキャラの動きを止め、JS の負荷を下げてページ送りを滑らかにする。
   const [paging, setPaging] = useState(false);
   const activePageRef = useRef(MAIN_PAGE);
-  const pager = useRef<ComponentRef<typeof ScrollView>>(null);
+  const pager = useAnimatedRef<ScrollView>();
   const [initialOffset] = useState(() => ({ x: width * MAIN_PAGE, y: 0 }));
   useLayoutEffect(() => {
     const x = width * activePageRef.current;
     pager.current?.scrollTo({ x, animated: false });
     scrollX.setValue(x);
-  }, [width, scrollX]);
+  }, [width, scrollX, pager]);
   const settle = useCallback(() => {
     setActivePage(activePageRef.current);
     setPaging(false);
@@ -61,15 +62,15 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
   // 部屋ページで2本指が触れている間はページャーを止め、動きかけていたら部屋ページに戻す。
-  // 2本指の操作は部屋ページでしか始まらないので、戻す先は部屋ページに決め打ちする。起動直後は JS が予測の計算で
-  // 詰まり、スクロールのイベントが遅れて届くので、activePageRef がまだ前のページを指していることがある。
-  const [pagerLocked, setPagerLocked] = useState(false);
+  // UI スレッドで直接止める。JS を経由すると、起動直後のように JS が詰まっているときに止めるのが遅れ、
+  // その間に2本指のドラッグでページャーが動いてホームへ送られてしまう。
+  // 2本指の操作は部屋ページでしか始まらないので、戻す先は部屋ページに決め打ちする。
+  const roomX = width * ROOM_PAGE;
   const lockPager = useCallback((locked: boolean) => {
-    setPagerLocked(locked);
-    if (!locked) return;
-    activePageRef.current = ROOM_PAGE;
-    pager.current?.scrollTo({ x: width * ROOM_PAGE, animated: true });
-  }, [width]);
+    'worklet';
+    setNativeProps(pager, { scrollEnabled: !locked });
+    if (locked) scrollTo(pager, roomX, 0, true);
+  }, [pager, roomX]);
 
   return (
     <SchemeContext.Provider value={scheme}>
@@ -80,7 +81,6 @@ export function HomeScreen({ services }: { services: AppServices }) {
           ref={pager}
           horizontal
           pagingEnabled
-          scrollEnabled={!pagerLocked}
           showsHorizontalScrollIndicator={false}
           contentOffset={initialOffset}
           onLayout={() => {
