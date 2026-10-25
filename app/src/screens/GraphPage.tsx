@@ -4,7 +4,7 @@ import type { Measurement } from '../domain/measurement';
 import { space } from '../theme/theme';
 import { ChartCard } from '../ui/ChartCard';
 
-/** 湿度（メインの数字と同じ順で上）と温度の直近24h。 */
+/** 湿度（メインの数字と同じ順で上）と温度の直近24h。2枚のカードは画面の高さに合わせて伸縮し、上下中央に置く。 */
 export function GraphPage({ measurements, topInset, bottomInset }: {
   measurements: readonly Measurement[];
   topInset: number;
@@ -19,5 +19,5 @@ export function GraphPage({ measurements, topInset, bottomInset }: {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, paddingHorizontal: space.s16, gap: space.s16 },
+  page: { flex: 1, justifyContent: 'center', paddingHorizontal: space.s16, gap: space.s16 },
 });
