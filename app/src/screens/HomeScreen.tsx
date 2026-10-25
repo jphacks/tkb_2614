@@ -83,7 +83,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
+            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
             <ARPage risk={home.risk} mood={home.mood} character={character} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />
