@@ -70,10 +70,13 @@ https://youtube.com/shorts/o7meacB71Os
 * NimBLE-Arduino
 
 #### デバイス
+* ESP32 -制御マイコンとして使用
+* HTU21D -温度湿度の計測に使用
+* DFPlayer Mini -発話時のMP3再生に使用
 
-* ESP32
-* Si7021
-* DFPlayer Mini
+以下回路略図
+
+<img src="./images/device_circ.png" width="300" alt="制作したデバイスの回路図">
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
