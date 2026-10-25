@@ -6,6 +6,7 @@ import type { Mood } from './homeState';
 import { artwork } from './mascot/artwork';
 import { MotionGroup } from './mascot/MotionGroup';
 import { MascotClock } from './mascot/MascotClock';
+import { useTapSound } from './mascot/useTapSound';
 import { mascotViewBox } from './mascot/viewport';
 import { characterNames, type ArtworkNode, type CharacterKind } from './mascot/types';
 
@@ -32,6 +33,7 @@ export function Character({ mood, size, character = 'mimi', active = true }: {
   active?: boolean;
 }) {
   const [clock] = useState(() => new MascotClock(requestAnimationFrame, cancelAnimationFrame));
+  const playTapSound = useTapSound();
   const [appState, setAppState] = useState(AppState.currentState);
   const [reducedMotion, setReducedMotion] = useState(true);
   useEffect(() => {
@@ -48,10 +50,13 @@ export function Character({ mood, size, character = 'mimi', active = true }: {
   }, [clock, animate, character, mood]);
   return (
     <Pressable
-      onPress={() => { if (animate) clock.react(); }}
+      onPress={() => {
+        playTapSound();
+        if (animate) clock.react();
+      }}
       accessibilityRole="button"
       accessibilityLabel={`${characterNames[character]}、${moodLabels[mood]}`}
-      accessibilityHint="タップするとキャラクターが反応します"
+      accessibilityHint="タップするとキャラクターが音を出して反応します"
       style={{ width: size, height: size, opacity: mood === 'sleep' ? 0.45 : 1 }}
     >
       <Svg width={size} height={size} viewBox={mascotViewBox} preserveAspectRatio="xMidYMid meet" accessible={false}>
