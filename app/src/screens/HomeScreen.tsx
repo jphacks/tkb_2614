@@ -13,17 +13,15 @@ import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
-import { ARPage } from './ARPage';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 
 const MAIN_PAGE = 1;
-const AR_PAGE = 2;
-const PAGE_COUNT = 3;
+const PAGE_COUNT = 2;
 // インジケーター（高さ32）の上に空ける余白。
 const INDICATOR_AREA = 32 + space.s24;
 
-/** [グラフ] ← [メイン] → [AR] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
+/** [グラフ] ← [メイン] を横スワイプで行き来する。ボタンもナビゲーションバーも置かない。 */
 export function HomeScreen({ services }: { services: AppServices }) {
   const { measurements, status, lastSyncedAt } = useMeasurements(services);
   const { prediction } = useMoldPrediction(services.moldPredictor, measurements);
@@ -47,8 +45,6 @@ export function HomeScreen({ services }: { services: AppServices }) {
     scrollX.setValue(x);
   }, [width, scrollX]);
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
-  const [arVisible, setArVisible] = useState(false);
-  const [arSettled, setArSettled] = useState(false);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
 
@@ -65,19 +61,12 @@ export function HomeScreen({ services }: { services: AppServices }) {
           contentOffset={initialOffset}
           onLayout={() => {
             pager.current?.scrollTo({ x: width * activePageRef.current, animated: false });
-            setArVisible(activePageRef.current === AR_PAGE);
-            setArSettled(activePageRef.current === AR_PAGE);
           }}
           onScroll={(event) => {
             updateScroll(event);
             const next = Math.max(0, Math.min(PAGE_COUNT - 1, Math.round(event.nativeEvent.contentOffset.x / width)));
             activePageRef.current = next;
             setActivePage(next);
-            // Preserve AR startup while entering the page, and request camera
-            // permission only once it is fully in view.
-            const x = event.nativeEvent.contentOffset.x;
-            setArVisible(x > width * MAIN_PAGE + 1);
-            setArSettled(x >= width * AR_PAGE - 1);
           }}
           scrollEventThrottle={16}
         >
@@ -87,9 +76,6 @@ export function HomeScreen({ services }: { services: AppServices }) {
           <View style={{ width }}>
             <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE}
             />
-          </View>
-          <View style={{ width }}>
-            <ARPage risk={home.risk} mood={home.mood} character={character} isVisible={arVisible} isSettled={arSettled} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
