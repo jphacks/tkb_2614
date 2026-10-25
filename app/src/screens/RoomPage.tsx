@@ -56,7 +56,7 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
 
 /**
  * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
- * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動でき、ダブルタップで拡大と等倍を切り替える。
+ * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動できる。
  */
 export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
@@ -81,6 +81,11 @@ export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }:
   const offsetX = bounds ? (bounds.width - SCENE.width * scale) / 2 - SCENE.x * scale : 0;
   const offsetY = bounds ? (bounds.height - SCENE.height * scale) / 2 - SCENE.y * scale : 0;
   const size = CHARACTER_SIZE * scale;
+  // キャラの枠の左上（stage の座標）。
+  const boxOf = (id: SpotId) => {
+    const [x, y] = CHARACTER_ANCHORS[id];
+    return { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size };
+  };
 
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
@@ -91,12 +96,11 @@ export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }:
               <Layer index={index} scheme={scheme} isCondensing={spots.window?.isCondensing ?? false} />
               {bounds && layer.characters.map((id) => {
                 const prediction = spots[id];
-                const [x, y] = CHARACTER_ANCHORS[id];
                 const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
                 return (
                   <View
                     key={id}
-                    style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
+                    style={[styles.spot, { ...boxOf(id), width: size }]}
                     accessible
                     accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
                   >
