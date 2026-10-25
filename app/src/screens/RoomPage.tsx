@@ -60,8 +60,9 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
  */
 export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
-  /** キャラを動かすか。スワイプ中は止める。 */
+  /** 2本指が触れたら true、離れたら false。親はその間ページャーを止める。 */
   onTwoFingers: (active: boolean) => void;
+  /** キャラを動かすか。今のページでないときとスワイプ中は止める。 */
   active: boolean;
   topInset: number;
   bottomInset: number;
