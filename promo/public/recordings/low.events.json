@@ -1,0 +1,19 @@
+[
+  {
+    "kind": "tap",
+    "tMs": 7058,
+    "x": 540,
+    "y": 1360,
+    "referenceWidth": 1080,
+    "referenceHeight": 2400
+  },
+  {
+    "kind": "swipe",
+    "tMs": 11200,
+    "x": 200,
+    "y": 1500,
+    "x2": 900,
+    "y2": 1500,
+    "durationMs": 100
+  }
+]

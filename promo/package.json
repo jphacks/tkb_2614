@@ -1,0 +1,24 @@
+{
+  "name": "chiikabi-promo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render Promo out/chiikabi-promo.mp4",
+    "record": "bash record/record.sh"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/google-fonts": "4.0.538",
+    "@remotion/media": "4.0.538",
+    "@remotion/transitions": "4.0.538",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "agent-device": "0.21.31",
+    "typescript": "^6.0.3"
+  }
+}

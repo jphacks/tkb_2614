@@ -7,7 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 JPHACKS のチームリポジトリ。ESP32 と Si7021 で室内の温度・湿度を測り、BLE でスマホアプリに送って、部屋のカビやすさを可視化する。
 
 - `firmware/`: ESP32 の Arduino スケッチ（BLE peripheral）。Si7021 を I2C で読み、1時間ごとの温湿度を計測時刻を主キーにして LittleFS に1年分ためる。アプリが数分おきに接続し、開始時刻を指定して記録をまとめて Notify で受け取る（polling）。
-- `app/`: Expo（React Native, TypeScript）のアプリ（BLE central）。JS パッケージはこれ1つだけなので、pnpm workspace は作っていない。
+- `app/`: Expo（React Native, TypeScript）のアプリ（BLE central）。
+- `promo/`: 紹介動画（Remotion）。アプリをエミュレーターで操作して録画し、演出を付けて書き出す。手順は `promo/README.md`。
+
+JS パッケージは `app/` と `promo/` で依存を共有しないので、pnpm workspace は作らず、それぞれに lockfile を置いている。
 
 サーバーはなく、ESP32 とスマホが BLE で直接つながる。
 
