@@ -15,7 +15,6 @@ import { SchemeContext, schemeFor, space } from '../theme/theme';
 import { deriveHomeState } from '../ui/homeState';
 import { PageIndicator } from '../ui/PageIndicator';
 import type { CharacterKind } from '../ui/mascot/types';
-import { WeatherDebug } from '../ui/WeatherDebug';
 import { GraphPage } from './GraphPage';
 import { MainPage } from './MainPage';
 import { RoomPage } from './RoomPage';
@@ -102,8 +101,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <GraphPage measurements={measurements} topInset={insets.top} bottomInset={bottomInset} />
           </View>
           <View style={{ width }}>
-            <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
-              debugWeather={<WeatherDebug {...outdoor} label={services.weatherSource.label} />}
+            <MainPage home={home} moldIndex={prediction?.moldIndex ?? null} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={!paging && activePage === MAIN_PAGE}
             />
           </View>
           <View style={{ width }}>
