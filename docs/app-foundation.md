@@ -76,7 +76,7 @@ Personal Team で入れたアプリは7日で起動しなくなるので、そ�
 - `src/ui/homeState.ts`: 履歴・同期状態・予測から、表情（リスク→表情、データなし→眠り）と数字の状態（live / stale / empty / searching）を決める純粋関数。2時間より古い計測値と同期失敗中は stale。
 - `src/ui/roomGeometry.ts`: 部屋の絵の形状（Figma の「Room 案A」をアイソメトリックの投影 `project(x, y, z)` で起こしたもの）、スポット（`SpotId`）ごとのキャラの立ち位置と、窓の結露の水滴。色はテーマの色名か固定の木の色で持つ。
 - `src/ui/chartGeometry.ts`: 最新の計測時刻を右端とする直近24hのグラフ形状。欠測で線を切る。危険帯の下限 `HUMIDITY_DANGER_PERCENT` もここ。
-- `src/ui/`: Character（おむすび形のメインキャラ）・Reading・PageIndicator・ChartCard。
+- `src/ui/`: Character（`assets/mascots` の5種類のマスコットを描くメインキャラ）・Reading・PageIndicator・ChartCard。
 - `src/screens/HomeScreen.tsx`: 3ページのページャーと、固定のページインジケーター。`GraphPage`・`MainPage`・`RoomPage` が各ページ。
 - `src/widgets/`: ホーム画面ウィジェット（expo-widgets）。Figma の Widgets セクションと同じ5種類（キャラ・湿度・温度・同期時刻の小サイズと、それらをまとめた中サイズ）。レイアウトは `ios/`（`@expo/ui/swift-ui`）と `android/`（`@expo/ui/jetpack-compose`）に分かれ、`'widget'` の関数は別ランタイムで動くため外側の値やモジュールを参照できない。表示する値・配色は `widgetProps.ts` の純粋関数で文字列にして渡し、古さと表情は `deriveHomeState` と同じ判定にする。iOS は15分ごとのタイムラインで「◯分前」と古さを先回りして更新し、Android はスナップショットのみ。ウィジェットは BLE を使わず、アプリが最後に同期した値を表示する。
 - `scripts/renderWidgetImages.ts`: ウィジェットは SVG を描けないので、`assets/mascots` の5種類×危険度3段階のマスコットとアイコンを `assets/widgets/` に PNG で書き出す。マスコットの SVG を変えたら `pnpm render:widget-images` で作り直す。ウィジェットはメイン画面で選んでいるマスコットを表示し、計測値がないときはアプリと同じく low の絵を薄く出す。iOS はアプリが App Group の共有ディレクトリへ画像をコピーし、Android のリリースビルドは drawable 名をそのまま渡す。
