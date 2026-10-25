@@ -48,7 +48,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const [paging, setPaging] = useState(false);
   const activePageRef = useRef(MAIN_PAGE);
   const pager = useAnimatedRef<ScrollView>();
-  const [initialOffset] = useState(() => ({ x: width * MAIN_PAGE, y: 0 }));
+  // 最初のページ（メイン）へは contentOffset ではなくここで送る。Android は contentOffset を props の更新のたびに
+  // 適用し直すので、ページャーを描き直すたびにメインへ戻されてしまう。
   useLayoutEffect(() => {
     const x = width * activePageRef.current;
     pager.current?.scrollTo({ x, animated: false });
@@ -82,7 +83,6 @@ export function HomeScreen({ services }: { services: AppServices }) {
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          contentOffset={initialOffset}
           onLayout={() => {
             pager.current?.scrollTo({ x: width * activePageRef.current, animated: false });
           }}
