@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { saturationVaporPressureHpa, vaporPressureHpa } from '../src/domain/humidity';
 import { STALE_AFTER_MS, type Measurement } from '../src/domain/measurement';
 import { predictSpots } from '../src/domain/roomSpots';
-import { adviseVentilation, VAPOR_PRESSURE_THRESHOLD_HPA } from '../src/domain/ventilation';
+import { adviseVentilation, VAPOR_PRESSURE_THRESHOLD_HPA, WEATHER_STALE_AFTER_MS } from '../src/domain/ventilation';
 import type { OutdoorWeather } from '../src/domain/weather';
 
 const MINUTE_MS = 60000;
@@ -11,23 +11,26 @@ const MINUTE_MS = 60000;
 const january = (hour = 12, minute = 0) => new Date(2026, 0, 15, hour, minute).getTime();
 const july = (hour = 12, minute = 0) => new Date(2026, 6, 15, hour, minute).getTime();
 
-function weather(overrides: Partial<OutdoorWeather> = {}): OutdoorWeather {
-  return {
-    temperatureC: 10, relativeHumidityPercent: 70, precipitationMm: 0, windSpeedMps: 2, isDay: true,
-    observedAt: '2026-01-15T00:00:00.000Z', fetchedAt: '2026-01-15T00:00:00.000Z', ...overrides,
-  };
+/** 時刻を除いた外の天気。時刻は advise が判定する時刻から決める。 */
+type WeatherValues = Omit<OutdoorWeather, 'observedAt' | 'fetchedAt'>;
+
+function weather(overrides: Partial<WeatherValues> = {}): WeatherValues {
+  return { temperatureC: 10, relativeHumidityPercent: 70, precipitationMm: 0, windSpeedMps: 2, isDay: true, ...overrides };
 }
 
-/** now の ageMs 前に1件だけ計測した室内で判定する。spots は外気温を使って実際に求める。 */
+/** now の ageMs 前に1件だけ計測した室内と、now の weatherAgeMs 前に取得した天気で判定する。spots は外気温を使って実際に求める。 */
 function advise(
   indoor: { temperatureC: number | null; relativeHumidityPercent: number | null },
-  outdoor: OutdoorWeather | null,
+  outdoor: WeatherValues | null,
   now: number,
   ageMs = 30 * MINUTE_MS,
+  weatherAgeMs = 10 * MINUTE_MS,
 ) {
   const at = new Date(now - ageMs).toISOString();
   const measurements: Measurement[] = [{ deviceId: 'test', ...indoor, measuredAt: at, receivedAt: at }];
-  return adviseVentilation(measurements, predictSpots(measurements, outdoor?.temperatureC ?? null), outdoor, now);
+  const fetchedAt = new Date(now - weatherAgeMs).toISOString();
+  const current = outdoor === null ? null : { ...outdoor, observedAt: fetchedAt, fetchedAt };
+  return adviseVentilation(measurements, predictSpots(measurements, outdoor?.temperatureC ?? null), current, now);
 }
 
 /** その温度で、水蒸気圧が hPa になる相対湿度 [%]。 */
@@ -41,7 +44,18 @@ test('室内の計測値が古い、または外の天気がなければ何も�
   assert.deepEqual(advise(winterRoom, weather(), january(), STALE_AFTER_MS + 1), { kind: 'none' });
   assert.deepEqual(advise(winterRoom, null, january()), { kind: 'none' });
   assert.deepEqual(advise({ temperatureC: null, relativeHumidityPercent: null }, weather(), january()), { kind: 'none' });
-  assert.deepEqual(adviseVentilation([], predictSpots([], 10), weather(), january()), { kind: 'none' });
+  const fetchedAt = new Date(january()).toISOString();
+  assert.deepEqual(adviseVentilation([], predictSpots([], 10), { ...weather(), observedAt: fetchedAt, fetchedAt }, january()), { kind: 'none' });
+});
+
+test('取得から1時間を超えた外の天気は、天気がないときと同じに扱う', () => {
+  assert.equal(advise(winterRoom, weather(), january(), undefined, WEATHER_STALE_AFTER_MS).kind, 'open');
+  assert.deepEqual(advise(winterRoom, weather(), january(), undefined, WEATHER_STALE_AFTER_MS + 1), { kind: 'none' });
+  // 古い天気では、外のほうが湿っていても「閉めよう」と言わない。
+  assert.deepEqual(advise(winterRoom, weather({ temperatureC: 25, relativeHumidityPercent: 80 }), january(), undefined, 3 * 60 * MINUTE_MS), { kind: 'none' });
+  // 取得時刻が読めない天気も古いとみなす。
+  const measurements: Measurement[] = [{ deviceId: 'test', ...winterRoom, measuredAt: new Date(january()).toISOString(), receivedAt: '' }];
+  assert.deepEqual(adviseVentilation(measurements, predictSpots(measurements, 10), { ...weather(), observedAt: '', fetchedAt: '' }, january()), { kind: 'none' });
 });
 
 test('窓が結露せず、どのスポットも臨界湿度未満なら何も言わない', () => {
@@ -93,7 +107,7 @@ test('夜間は時計の22時から6時まで', () => {
 });
 
 test('外気温が5℃未満なら短時間だけ開け、雨や夜間ならそのまま', () => {
-  const cold = (temperatureC: number, overrides: Partial<OutdoorWeather> = {}) => weather({ temperatureC, relativeHumidityPercent: 60, ...overrides });
+  const cold = (temperatureC: number, overrides: Partial<WeatherValues> = {}) => weather({ temperatureC, relativeHumidityPercent: 60, ...overrides });
   assert.deepEqual(advise(winterRoom, cold(4.9), january()), { kind: 'open', brief: true });
   assert.equal(advise(winterRoom, cold(5), january()).kind, 'open');
   assert.ok(!(advise(winterRoom, cold(5), january()) as { brief: boolean }).brief);
