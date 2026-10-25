@@ -30,18 +30,18 @@ function adviceText(advice: Exclude<VentilationAdvice, { kind: 'none' }>) {
       return '外のほうがジメジメ。窓は閉めておこう';
     case 'keep':
       if (advice.reason === 'rain') return '雨だから窓はそのままで';
-      if (advice.reason === 'night') return '夜は窓を閉めて、朝に換気しよう';
       return '今日はエアコンや除湿機を使おう';
   }
 }
 
 /**
- * 窓の開閉判定を、キャラの吹き出しのひとことにする。none なら null（吹き出しを出さない）。
+ * 窓の開閉判定を、キャラの吹き出しのひとことにする。none と夜間（keep / night）なら null（吹き出しを出さない）。
+ * 夜は開けるよう勧めないだけで、言うことがないので出さない。
  * キャラの表情は部屋全体のカビのリスク（壁の隅）で決まるので、リスクが低いのに乾かすよう勧めるときは、
  * どのスポットが原因かを reason に出して、表情（危険度：低）と食い違わないようにする。
  */
 export function ventilationMessage(advice: VentilationAdvice, spots: SpotPredictions | null, risk: MoldRiskLevel | null): BubbleMessage | null {
-  if (advice.kind === 'none') return null;
+  if (advice.kind === 'none' || (advice.kind === 'keep' && advice.reason === 'night')) return null;
   const asksToDry = advice.kind === 'open' || (advice.kind === 'keep' && (advice.reason === 'wind' || advice.reason === 'hot'));
   const cause = asksToDry && risk !== 'medium' && risk !== 'high' && spots !== null ? riskySpots(spots)[0] : undefined;
   const reason = cause === undefined ? null : cause === 'window' && spots?.window?.isCondensing ? '窓が結露しているよ' : spotReasons[cause];

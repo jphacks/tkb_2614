@@ -21,7 +21,6 @@ const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvi
   ['少し開ける', { kind: 'open', brief: true }],
   ['閉める', { kind: 'close', reason: 'outdoorWetter' }],
   ['雨', { kind: 'keep', reason: 'rain' }],
-  ['夜', { kind: 'keep', reason: 'night' }],
   ['強風', { kind: 'keep', reason: 'wind' }],
   ['暑い', { kind: 'keep', reason: 'hot' }],
   ['なし', { kind: 'none' }],
