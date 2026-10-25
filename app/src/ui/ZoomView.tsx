@@ -83,6 +83,8 @@ export function ZoomView({ children, onTwoFingers }: { children: ReactNode; onTw
     onFinalize: release,
     minPointers: 2,
     maxPointers: 2,
+    // Android は既定で片方の指の動きを移動量にするので、ピンチと同じく2本の指の中心で測る（iOS は常に中心）。
+    averageTouches: true,
     onUpdate: (event) => {
       'worklet';
       x.value += event.changeX;
