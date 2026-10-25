@@ -1,7 +1,7 @@
 # カビのしらせ
 
 [![紹介動画のサムネイル](https://i.ytimg.com/vi/o7meacB71Os/sddefault.jpg)](https://youtube.com/shorts/7T5uEmk3q0k)
-https://youtube.com/shorts/o7meacB71Os
+https://youtube.com/shorts/7T5uEmk3q0k
 
 ## 製品概要
 
