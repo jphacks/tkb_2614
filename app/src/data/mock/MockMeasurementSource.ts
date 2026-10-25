@@ -7,6 +7,8 @@ interface MockSourceOptions {
   /** 0なら失敗なし。例: 4なら4回に1回失敗する。 */
   readonly failEvery?: number;
   readonly now?: () => number;
+  /** 最初の記録の時刻（UTCのミリ秒）。冬の挙動を見るときは1月にする。 */
+  readonly epoch?: number;
 }
 
 function abortError(): Error {
@@ -33,13 +35,12 @@ function wait(delayMs: number, signal: AbortSignal): Promise<void> {
 
 /** 固定の起点から毎時1件生成。再起動・再取得でも同じ時刻は同じ計測値。 */
 export function createMockMeasurementSource(
-  { samples = mockSamples, delayMs = 300, failEvery = 0, now = Date.now }: MockSourceOptions = {},
+  { samples = mockSamples, delayMs = 300, failEvery = 0, now = Date.now, epoch = Date.UTC(2026, 9, 1) }: MockSourceOptions = {},
 ): MeasurementSource {
   if (samples.length === 0) throw new Error('モックデータを1件以上設定してください。');
   if (!Number.isFinite(delayMs) || delayMs < 0) throw new Error('delayMsは0以上にしてください。');
   if (!Number.isInteger(failEvery) || failEvery < 0) throw new Error('failEveryは0以上の整数にしてください。');
   const deviceId = 'mock-room-01';
-  const epoch = Date.UTC(2026, 9, 1);
   const hour = 60 * 60 * 1000;
   let attempts = 0;
   return {

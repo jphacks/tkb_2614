@@ -14,11 +14,18 @@ const PROVISIONAL_HOURS = 7 * 24;
 const FORECAST_LIMIT_HOURS = 365 * 24;
 const HOUR_MS = 60 * 60 * 1000;
 
+/** surfaceConditionsの、100%で頭打ちにする前の表面の相対湿度。100以上なら表面で結露する。 */
+export function uncappedSurfaceRelativeHumidity(temperatureC: number, relativeHumidityPercent: number, deltaC: number, humidityOffsetPercent: number) {
+  const ratio = saturationVaporPressureHpa(temperatureC) / saturationVaporPressureHpa(temperatureC - deltaC);
+  return (relativeHumidityPercent + humidityOffsetPercent) * ratio;
+}
+
 /** 部屋の水蒸気量のまま、表面が部屋よりdeltaC℃低いと仮定した表面の温湿度。 */
 export function surfaceConditions(temperatureC: number, relativeHumidityPercent: number, deltaC: number, humidityOffsetPercent: number) {
-  const surfaceTemperatureC = temperatureC - deltaC;
-  const ratio = saturationVaporPressureHpa(temperatureC) / saturationVaporPressureHpa(surfaceTemperatureC);
-  return { temperatureC: surfaceTemperatureC, relativeHumidityPercent: Math.min((relativeHumidityPercent + humidityOffsetPercent) * ratio, 100) };
+  return {
+    temperatureC: temperatureC - deltaC,
+    relativeHumidityPercent: Math.min(uncappedSurfaceRelativeHumidity(temperatureC, relativeHumidityPercent, deltaC, humidityOffsetPercent), 100),
+  };
 }
 
 export function criticalHumidity(temperatureC: number) {
