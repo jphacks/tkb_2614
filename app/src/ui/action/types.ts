@@ -19,4 +19,4 @@ export interface ActionNode {
   children: ActionNode[];
   motion?: ActionMotion;
 }
-export type ActionArtwork = Record<ActionName, { label: string; viewBox: string; nodes: ActionNode[] }>;
+export type ActionArtwork = Record<ActionName, { viewBox: string; nodes: ActionNode[] }>;

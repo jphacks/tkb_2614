@@ -57,33 +57,27 @@ export function MainPage({ home, moldIndex, bubble, bottomInset, topInset, chara
     <View style={[styles.content, { paddingBottom: bottomInset, paddingTop: contentTop }]}>
       <MoldBackground moldIndex={backgroundIndex} character={character} stale={stale} />
       {__DEV__ && (
-        <Pressable
-          onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
-          accessibilityRole="button"
-          accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
-          accessibilityHint="自動、低、中のVTT 1、中のVTT 2、高の順にキャラクターと背景を切り替えます。実際の危険度には影響しません"
-          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
-            top: topInset + space.s8,
-            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
-          }]}
-        >
-          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
-        </Pressable>
-      )}
-      {__DEV__ && (
-        // 段階のボタンの下に置く。
-        <Pressable
-          onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
-          accessibilityRole="button"
-          accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
-          accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
-          style={({ pressed }) => [styles.cornerButton, styles.previewButton, {
-            top: topInset + space.s8 + 48 + space.s8,
-            backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh,
-          }]}
-        >
-          <Text style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
-        </Pressable>
+        // 横に並べ、キャラ切り替えのボタンと同じ高さに置く。下に置くと、上に詰まったときの吹き出し（上端 topInset + 56）に重なる。
+        <View style={[styles.previewRow, { top: topInset + space.s8, maxWidth: width - space.s16 * 2 - 48 - space.s8 }]}>
+          <Pressable
+            onPress={() => setPreviewStage((stage) => (stage + 1) % previewStages.length)}
+            accessibilityRole="button"
+            accessibilityLabel={`開発用マスコット段階：${previewLabels[previewStage]}`}
+            accessibilityHint="自動、低、中のVTT 1、中のVTT 2、高の順にキャラクターと背景を切り替えます。実際の危険度には影響しません"
+            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
+          >
+            <Text numberOfLines={1} style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewLabels[previewStage]}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setBubblePreview((index) => (index + 1) % (bubblePreviews.length + 1))}
+            accessibilityRole="button"
+            accessibilityLabel={`開発用吹き出し：${previewAdvice?.[0] ?? '自動'}`}
+            accessibilityHint="窓の開閉判定の種類ごとに吹き出しを切り替えます。実際の判定には影響しません"
+            style={({ pressed }) => [styles.previewButton, { backgroundColor: pressed ? scheme.primaryContainer : scheme.surfaceContainerHigh }]}
+          >
+            <Text numberOfLines={1} style={[styles.previewLabel, { color: scheme.onSurfaceVariant }]}>DEV · {previewAdvice?.[0] ?? '自動'}</Text>
+          </Pressable>
+        </View>
       )}
       <Pressable
         onPress={() => onCharacterChange(nextCharacter(character, 1))}
@@ -114,6 +108,8 @@ const styles = StyleSheet.create({
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.s16, overflow: 'hidden' },
   cornerButton: { position: 'absolute', height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', zIndex: 1 },
   switchButton: { right: space.s16, width: 48 },
-  previewButton: { left: space.s16, paddingHorizontal: space.s16 },
+  // 折り返すと2段目が吹き出しに重なるので、折り返さずにラベルを縮める。
+  previewRow: { position: 'absolute', left: space.s16, flexDirection: 'row', gap: space.s8, zIndex: 1 },
+  previewButton: { flexShrink: 1, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.s16 },
   previewLabel: { fontSize: 12, fontWeight: '600' },
 });

@@ -55,7 +55,7 @@ function Drawing({ nodes, clock }: { nodes: ActionNode[]; clock: MascotClock }) 
 /**
  * 窓の開閉などのアクションを、assets/actions の SVG のとおりに繰り返し動かす。
  * active でないとき（メインページを見ていない）・バックグラウンド・視差効果を減らす設定では止める。
- * 絵は飾りで、伝えたいことは吹き出しの文に書くので、読み上げない。
+ * 絵は読み上げない。読み上げは SpeechBubble が ventilationMessage のひとことで行う。
  */
 export function ActionAnimation({ name, size, active }: { name: ActionName; size: number; active: boolean }) {
   const [clock] = useState(() => new MascotClock(requestAnimationFrame, cancelAnimationFrame));

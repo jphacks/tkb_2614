@@ -37,8 +37,8 @@ export function HomeScreen({ services }: { services: AppServices }) {
   // 窓の結露は今の外気温で判定する。取れないとき（権限拒否・オフライン）は月別の表で判定する。
   const outdoorTemperatureC = outdoor.weather?.temperatureC ?? null;
   const spots = useMemo(() => predictSpots(measurements, outdoorTemperatureC), [measurements, outdoorTemperatureC]);
-  const ventilation = useVentilationAdvice(measurements, outdoor.weather, now);
-  const bubble = ventilationMessage(ventilation.advice, ventilation.spots, home.risk);
+  const advice = useVentilationAdvice(measurements, spots, outdoor.weather, now);
+  const bubble = ventilationMessage(advice, spots, home.risk);
   const scheme = schemeFor(home.risk);
 
   const { width } = useWindowDimensions();

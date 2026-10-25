@@ -3,7 +3,6 @@ import type { ActionArtwork } from './types';
 
 export const artwork: ActionArtwork = {
   "window-open": {
-    "label": "窓を開けて換気する",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
@@ -809,7 +808,6 @@ export const artwork: ActionArtwork = {
     ]
   },
   "window-open-brief": {
-    "label": "窓を少しだけ開けて短時間換気する",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
@@ -1653,7 +1651,6 @@ export const artwork: ActionArtwork = {
     ]
   },
   "window-close-rain": {
-    "label": "雨のため窓を開けない",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
@@ -2136,7 +2133,6 @@ export const artwork: ActionArtwork = {
     ]
   },
   "window-close-wind": {
-    "label": "強風のため窓を開けない",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
@@ -2487,7 +2483,6 @@ export const artwork: ActionArtwork = {
     ]
   },
   "window-close-pollen": {
-    "label": "花粉のため窓を開けない",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
@@ -3104,7 +3099,6 @@ export const artwork: ActionArtwork = {
     ]
   },
   "aircon-dry": {
-    "label": "エアコンで除湿する",
     "viewBox": "0 0 240 240",
     "nodes": [
       {
