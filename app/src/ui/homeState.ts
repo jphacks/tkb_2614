@@ -22,7 +22,7 @@ const moods: Record<MoldRiskLevel, Mood> = { low: 'fine', medium: 'worried', hig
 
 /**
  * 画面に文言を出さない代わりに、配色・表情・数字の濃さへ状態を割り当てる。
- * 例外は窓の開閉判定の吹き出し（ventilationMessage）だけで、行動を勧めるときに短いひとことを出す。
+ * 窓の開閉判定の吹き出しも、文言ではなくアニメーションで伝える（ventilationMessage）。
  */
 export function deriveHomeState(
   measurements: readonly Measurement[],

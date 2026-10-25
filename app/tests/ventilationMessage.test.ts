@@ -22,7 +22,7 @@ test('判定の種類ごとにひとことと絵を出し、none と夜間なら
   // とても乾いた外気でも、40% より下は出さない。
   assert.equal(shown({ kind: 'open', brief: false, predictedIndoorRh: 22.4 })?.[0], '窓を開けよう！ 40% くらいまで下がりそう');
   assert.deepEqual(shown({ kind: 'open', brief: true }), ['外が寒いから、5〜10分だけ窓を開けよう', 'window-open-brief']);
-  assert.deepEqual(shown({ kind: 'close', reason: 'outdoorWetter' }), ['外のほうがジメジメ。窓は閉めておこう', 'aircon-dry']);
+  assert.deepEqual(shown({ kind: 'close', reason: 'outdoorWetter' }), ['外のほうがジメジメ。エアコンや除湿機を使おう', 'aircon-dry']);
   assert.deepEqual(shown({ kind: 'keep', reason: 'rain' }), ['雨だから窓を閉めよう', 'window-close-rain']);
   assert.deepEqual(shown({ kind: 'keep', reason: 'wind' }), ['風が強いから窓を閉めよう', 'window-close-wind']);
   assert.deepEqual(shown({ kind: 'keep', reason: 'hot' }), ['今日はエアコンや除湿機を使おう', 'aircon-dry']);

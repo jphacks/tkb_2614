@@ -8,16 +8,14 @@ import { Character } from '../ui/Character';
 import type { HomeState } from '../ui/homeState';
 import { characterNames, nextCharacter, type CharacterKind } from '../ui/mascot/types';
 import { Reading } from '../ui/Reading';
-import { SpeechBubble, speechBubbleHeight } from '../ui/SpeechBubble';
+import { SPEECH_BUBBLE_HEIGHT, SpeechBubble } from '../ui/SpeechBubble';
 import { ventilationMessage, type BubbleMessage } from '../ui/ventilationMessage';
 import { weatherDebugHeight } from '../ui/WeatherDebug';
 
 const previewStages = [null, 'fine', 'worried', 'dizzy'] as const;
 const previewLabels = ['自動', '低', '中', '高'] as const;
-// 3つ目は理由（1行目）。理由が出て吹き出しが一番高くなるときの見た目も確かめる。
-const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvice, reason?: string])[] = [
+const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvice])[] = [
   ['開ける', { kind: 'open', brief: false, predictedIndoorRh: 42 }],
-  ['開ける・理由', { kind: 'open', brief: false, predictedIndoorRh: 42 }, '窓が結露しているよ'],
   ['少し開ける', { kind: 'open', brief: true }],
   ['閉める', { kind: 'close', reason: 'outdoorWetter' }],
   ['雨', { kind: 'keep', reason: 'rain' }],
@@ -29,7 +27,7 @@ const bubblePreviews: readonly (readonly [label: string, advice: VentilationAdvi
 /** The top-right button cycles mascots; horizontal gestures navigate pages. */
 export function MainPage({ home, bubble, bottomInset, topInset, character, onCharacterChange, active, debugWeather }: {
   home: HomeState;
-  /** 窓の開閉判定のひとこと。null なら吹き出しを出さない（場所は空けたまま）。 */
+  /** 窓の開閉判定。null なら吹き出しを出さない（場所は空けたまま）。 */
   bubble: BubbleMessage | null;
   bottomInset: number;
   topInset: number;
@@ -47,15 +45,14 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
   const [bubblePreview, setBubblePreview] = useState(0);
   const previewAdvice = __DEV__ && bubblePreview > 0 ? bubblePreviews[bubblePreview - 1] : null;
   const previewBubble = previewAdvice && ventilationMessage(previewAdvice[1], null, null);
-  const shownBubble = previewAdvice ? previewBubble && { ...previewBubble, reason: previewAdvice[2] ?? null } : bubble;
+  const shownBubble = previewAdvice ? previewBubble : bubble;
   const { width, height, fontScale } = useWindowDimensions();
   // Give the mascot nearly the full screen width, reserving room for the
   // reading, top button, and movement during a tap reaction.
   const contentTop = topInset + 56;
-  const bubbleHeight = speechBubbleHeight(fontScale);
   // TODO(#34): 天気の仮表示を消すときに、この分も消す。空けないと中身があふれて上にずれ、吹き出しが上のボタンに重なる。
   const debugHeight = debugWeather ? weatherDebugHeight(fontScale) + space.s16 : 0;
-  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + bubbleHeight + space.s16 + debugHeight;
+  const reservedHeight = typography.reading.lineHeight * fontScale + space.s16 + 32 + SPEECH_BUBBLE_HEIGHT + space.s16 + debugHeight;
   const size = Math.max(120, Math.min(440, width - space.s24, height - bottomInset - contentTop - reservedHeight));
 
   return (
@@ -101,7 +98,7 @@ export function MainPage({ home, bubble, bottomInset, topInset, character, onCha
           <Path d="M10.5 13.3q1.5 1.4 3 0" fill="none" stroke={scheme.onSurfaceVariant} strokeWidth={1.2} strokeLinecap="round" />
         </Svg>
       </Pressable>
-      <SpeechBubble message={shownBubble} height={bubbleHeight} maxWidth={width - space.s24 * 2} live={active} />
+      <SpeechBubble message={shownBubble} live={active} />
       <Character mood={previewMood ?? home.mood} size={size} character={character} active={active} />
       <Reading state={home.reading} />
       {debugWeather}
