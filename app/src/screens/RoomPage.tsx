@@ -9,7 +9,7 @@ import { moods } from '../ui/homeState';
 import { characterKinds, type CharacterKind } from '../ui/mascot/types';
 import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, DRAW_ORDER, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
 
-const CHARACTER_SIZE = 86;
+const CHARACTER_SIZE = 104;
 const SPOT_LABELS: Record<SpotId, string> = { window: '窓', bed: 'ベッド', shelf: '棚' };
 
 function paint(scheme: ColorScheme, value: Paint | undefined) {
