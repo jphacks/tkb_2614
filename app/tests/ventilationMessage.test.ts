@@ -37,8 +37,10 @@ test('リスクが低いのに乾かすよう勧めるときだけ、原因の�
   assert.equal(ventilationMessage(open, condensing, 'medium')?.reason, null);
   assert.equal(ventilationMessage({ kind: 'close', reason: 'outdoorWetter' }, condensing, 'low')?.reason, null);
   assert.equal(ventilationMessage({ kind: 'keep', reason: 'night' }, condensing, 'low')?.reason, null);
-  // 外気 25℃ なら窓は結露しないが、1月の表で窓のまわりの表面 RH が臨界湿度を超える。
-  const damp = spotsOf(20, 60, 25);
+  // 外気 12℃ なら窓は結露しないが、窓のまわりの表面 RH（約 88%）が臨界湿度を超える。
+  const damp = spotsOf(20, 60, 12);
   assert.equal(damp.window!.isCondensing, false);
   assert.equal(ventilationMessage(open, damp, 'low')?.reason, '窓のまわりが湿っているよ');
+  // 外気 25℃ なら窓のまわりは湿らず、1月の表で家具の裏の表面 RH が臨界湿度を超える。
+  assert.equal(ventilationMessage(open, spotsOf(20, 60, 25), 'low')?.reason, '家具の裏が湿っているよ');
 });

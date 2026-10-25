@@ -70,6 +70,15 @@ test('窓の結露は外気温があればそれで、なければ月別の表�
   assert.equal(predictSpots(history([{ temperatureC: 20, relativeHumidityPercent: 60 }], Date.UTC(2026, 6, 15)), null).window!.isCondensing, false);
 });
 
+test('窓の今の表面 RH は、結露判定と同じ ΔT で求める', () => {
+  // 1月・20℃・60%・外気 15℃ は ΔT = 0.75 × 5 = 3.75℃ で結露しない。月別の表（10℃）なら表面 RH は 100% になる。
+  const { window } = predictSpots(history([{ temperatureC: 20, relativeHumidityPercent: 60 }]), 15);
+  assert.equal(window!.isCondensing, false);
+  assertClose(window!.currentSurface.temperatureC, 16.25);
+  assert.ok(window!.currentSurface.relativeHumidityPercent < 100);
+  assert.equal(predictSpots(history([{ temperatureC: 20, relativeHumidityPercent: 60 }]), 0).window!.currentSurface.relativeHumidityPercent, 100);
+});
+
 test('最新の計測が欠測なら、その前の有効な計測で結露を判定する', () => {
   const records = history([{ temperatureC: 20, relativeHumidityPercent: 60 }, { temperatureC: null, relativeHumidityPercent: null }]);
   assert.equal(predictSpots(records, 0).window!.isCondensing, true);
