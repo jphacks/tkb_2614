@@ -24,8 +24,10 @@ export function useTapSound() {
   return useCallback(() => {
     const count = players.current.length;
     if (count === 0) return;
-    let index = Math.floor(Math.random() * (count - 1));
-    if (index >= last.current) index += 1;
+    // 初回はすべてから選び、2回目以降は直前の音を除いて選ぶ。
+    const first = last.current < 0;
+    let index = Math.floor(Math.random() * (first ? count : count - 1));
+    if (!first && index >= last.current) index += 1;
     last.current = index;
     const player = players.current[index];
     // 連打したときも頭から鳴らし直す。
