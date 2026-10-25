@@ -1,3 +1,4 @@
+import { saturationVaporPressureHpa } from './humidity';
 import type { Measurement } from './measurement';
 import type { MoldPredictor, MoldRiskLevel } from './prediction';
 
@@ -12,11 +13,6 @@ const MAX_FILL_HOURS = 3;
 const PROVISIONAL_HOURS = 7 * 24;
 const FORECAST_LIMIT_HOURS = 365 * 24;
 const HOUR_MS = 60 * 60 * 1000;
-
-/** Magnus式の飽和水蒸気圧 [hPa]。 */
-export function saturationVaporPressureHpa(temperatureC: number) {
-  return 6.112 * Math.exp((17.62 * temperatureC) / (243.12 + temperatureC));
-}
 
 /** surfaceConditionsの、100%で頭打ちにする前の表面の相対湿度。100以上なら表面で結露する。 */
 export function uncappedSurfaceRelativeHumidity(temperatureC: number, relativeHumidityPercent: number, deltaC: number, humidityOffsetPercent: number) {

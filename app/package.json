@@ -8,9 +8,11 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~58.0.19",
     "expo-asset": "~58.0.18",
+    "expo-audio": "~58.0.10",
     "expo-camera": "~58.0.12",
     "expo-file-system": "~58.0.11",
     "expo-font": "~58.0.10",
+    "expo-location": "~58.0.19",
     "expo-status-bar": "~58.0.4",
     "expo-widgets": "~58.0.23",
     "react": "19.3.0",
@@ -38,7 +40,8 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "lint": "expo lint",
     "test": "tsx --test tests/*.test.ts tests/*.test.mjs",
-    "render:widget-images": "tsx scripts/renderWidgetImages.ts"
+    "render:widget-images": "tsx scripts/renderWidgetImages.ts",
+    "render:tap-sounds": "tsx scripts/renderTapSounds.ts"
   },
   "private": true
 }
