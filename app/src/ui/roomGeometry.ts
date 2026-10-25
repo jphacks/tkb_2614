@@ -129,9 +129,9 @@ export const CONDENSATION_SHAPES: readonly Shape[] = ([
   return { d: `M${round(cx)} ${round(cy - 6)} Q${round(cx + 4)} ${round(cy)} ${round(cx)} ${round(cy + 3)} Q${round(cx - 4)} ${round(cy)} ${round(cx)} ${round(cy - 6)} Z`, fill: 'surfaceContainerLowest', opacity: 0.9 };
 });
 
-/** キャラの足元を置く床の位置。家具を隠しすぎないよう、スポットの手前に立たせる。 */
+/** キャラの足元の位置。窓は水滴を隠さないよう窓の下の床、ベッドは掛け布団の上（枕寄り）、棚は天板の上。 */
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
-  window: P(2.5, 0.8, 0),
-  bed: P(6.5, 9.2, 0),
-  shelf: P(9.6, 2.4, 0),
+  window: P(2.2, 1.0, 0),
+  bed: P(2.6, 7.6, 1.95),
+  shelf: P(8.2, 0.85, 7.2),
 };

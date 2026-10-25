@@ -7,6 +7,7 @@ import { useScheme, type ColorScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
 import { moods } from '../ui/homeState';
 import { characterKinds, type CharacterKind } from '../ui/mascot/types';
+import { ZoomView } from '../ui/ZoomView';
 import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, DRAW_ORDER, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
 
 const CHARACTER_SIZE = 104;
@@ -44,10 +45,11 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
 
 /**
  * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
- * 窓が結露していればガラスに水滴を出す。
+ * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動できる。
  */
-export function RoomPage({ spots, active, topInset, bottomInset }: {
+export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
+  onTwoFingers: (active: boolean) => void;
   active: boolean;
   topInset: number;
   bottomInset: number;
@@ -70,26 +72,28 @@ export function RoomPage({ spots, active, topInset, bottomInset }: {
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <View style={styles.stage} onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}>
-        <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false}>
-          <Shapes shapes={ROOM_SHAPES} scheme={scheme} />
-          {DRAW_ORDER.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
-          {spots.window?.isCondensing && <Shapes shapes={CONDENSATION_SHAPES} scheme={scheme} />}
-        </Svg>
-        {bounds && DRAW_ORDER.map((id) => {
-          const prediction = spots[id];
-          const [x, y] = CHARACTER_ANCHORS[id];
-          const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
-          return (
-            <View
-              key={id}
-              style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
-              accessible
-              accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
-            >
-              <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
-            </View>
-          );
-        })}
+        <ZoomView onTwoFingers={onTwoFingers}>
+          <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false}>
+            <Shapes shapes={ROOM_SHAPES} scheme={scheme} />
+            {DRAW_ORDER.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
+            {spots.window?.isCondensing && <Shapes shapes={CONDENSATION_SHAPES} scheme={scheme} />}
+          </Svg>
+          {bounds && DRAW_ORDER.map((id) => {
+            const prediction = spots[id];
+            const [x, y] = CHARACTER_ANCHORS[id];
+            const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
+            return (
+              <View
+                key={id}
+                style={[styles.spot, { left: x * scale + offsetX - size / 2, top: y * scale + offsetY - size, width: size }]}
+                accessible
+                accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
+              >
+                <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
+              </View>
+            );
+          })}
+        </ZoomView>
       </View>
     </View>
   );
@@ -97,6 +101,6 @@ export function RoomPage({ spots, active, topInset, bottomInset }: {
 
 const styles = StyleSheet.create({
   page: { flex: 1, overflow: 'hidden' },
-  stage: { flex: 1 },
+  stage: { flex: 1, overflow: 'hidden' },
   spot: { position: 'absolute', alignItems: 'center' },
 });

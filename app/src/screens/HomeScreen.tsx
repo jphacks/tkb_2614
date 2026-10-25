@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useLayoutEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -50,6 +50,12 @@ export function HomeScreen({ services }: { services: AppServices }) {
   const updateScroll = useMemo(() => Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false }), [scrollX]);
   const page = useMemo(() => scrollX.interpolate({ inputRange: [0, width], outputRange: [0, 1] }), [scrollX, width]);
   const bottomInset = insets.bottom + space.s16 + INDICATOR_AREA;
+  // 部屋ページで2本指が触れている間はページャーを止め、動きかけていたら今のページに戻す。
+  const [pagerLocked, setPagerLocked] = useState(false);
+  const lockPager = useCallback((locked: boolean) => {
+    setPagerLocked(locked);
+    if (locked) pager.current?.scrollTo({ x: width * activePageRef.current, animated: true });
+  }, [width]);
 
   return (
     <SchemeContext.Provider value={scheme}>
@@ -60,6 +66,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
           ref={pager}
           horizontal
           pagingEnabled
+          scrollEnabled={!pagerLocked}
           showsHorizontalScrollIndicator={false}
           contentOffset={initialOffset}
           onLayout={() => {
@@ -80,7 +87,7 @@ export function HomeScreen({ services }: { services: AppServices }) {
             <MainPage home={home} bottomInset={bottomInset} topInset={insets.top} character={character} onCharacterChange={setCharacter} active={activePage === MAIN_PAGE} />
           </View>
           <View style={{ width }}>
-            <RoomPage spots={spots} active={activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
+            <RoomPage spots={spots} onTwoFingers={lockPager} active={activePage === ROOM_PAGE} topInset={insets.top} bottomInset={bottomInset} />
           </View>
         </Animated.ScrollView>
         <View style={[styles.indicator, { bottom: insets.bottom + space.s16 }]} pointerEvents="none">
