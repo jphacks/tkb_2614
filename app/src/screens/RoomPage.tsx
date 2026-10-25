@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { AppState, StyleSheet, Text, View } from 'react-native';
+import { AppState, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import type { SpotId, SpotPredictions } from '../domain/roomSpots';
-import { schemeFor, type, useScheme, type ColorScheme } from '../theme/theme';
+import { useScheme, type ColorScheme } from '../theme/theme';
 import { Character } from '../ui/Character';
 import { moods } from '../ui/homeState';
 import { characterKinds, type CharacterKind } from '../ui/mascot/types';
 import { CHARACTER_ANCHORS, CONDENSATION_SHAPES, DRAW_ORDER, ROOM_SHAPES, SCENE, SPOT_SHAPES, type Paint, type Shape } from '../ui/roomGeometry';
 
-const CHARACTER_SIZE = 72;
+const CHARACTER_SIZE = 86;
 const SPOT_LABELS: Record<SpotId, string> = { window: '窓', bed: 'ベッド', shelf: '棚' };
 
 function paint(scheme: ColorScheme, value: Paint | undefined) {
@@ -43,8 +43,8 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
 }
 
 /**
- * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情と配色、足元の数字（カビ指数 M）で、
- * どこが危ないかをタップせずにひと目で見せる。窓が結露していればガラスに水滴を出す。
+ * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
+ * 窓が結露していればガラスに水滴を出す。
  */
 export function RoomPage({ spots, active, topInset, bottomInset }: {
   spots: SpotPredictions;
@@ -77,8 +77,6 @@ export function RoomPage({ spots, active, topInset, bottomInset }: {
         </Svg>
         {bounds && DRAW_ORDER.map((id) => {
           const prediction = spots[id];
-          // 配色もスポットのリスクで選ぶ。データがなければ眠らせ、メイン画面と同じく low の配色にする。
-          const spotScheme = schemeFor(prediction?.riskLevel ?? null);
           const [x, y] = CHARACTER_ANCHORS[id];
           const value = prediction ? prediction.moldIndex.toFixed(1) : '–';
           return (
@@ -89,10 +87,6 @@ export function RoomPage({ spots, active, topInset, bottomInset }: {
               accessibilityLabel={`${SPOT_LABELS[id]}、カビ指数 ${prediction ? value : '不明'}${prediction?.isProvisional ? '（参考値）' : ''}`}
             >
               <Character mood={prediction ? moods[prediction.riskLevel] : 'sleep'} size={size} character={characters[id]} active={active && isActive} />
-              <View style={[styles.badge, { backgroundColor: spotScheme.primaryContainer }]}>
-                {/* 参考値はメイン画面の古い値と同じく、色を落とすだけにする。 */}
-                <Text style={[type.label, { color: prediction && !prediction.isProvisional ? spotScheme.onPrimaryContainer : spotScheme.outline }]}>{value}</Text>
-              </View>
             </View>
           );
         })}
@@ -105,5 +99,4 @@ const styles = StyleSheet.create({
   page: { flex: 1, overflow: 'hidden' },
   stage: { flex: 1 },
   spot: { position: 'absolute', alignItems: 'center' },
-  badge: { marginTop: -6, minWidth: 40, paddingHorizontal: 8, borderRadius: 9999, alignItems: 'center' },
 });

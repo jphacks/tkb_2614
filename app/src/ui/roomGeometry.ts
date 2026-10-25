@@ -133,5 +133,5 @@ export const CONDENSATION_SHAPES: readonly Shape[] = ([
 export const CHARACTER_ANCHORS: Readonly<Record<SpotId, Point>> = {
   window: P(2.5, 0.8, 0),
   bed: P(6.5, 9.2, 0),
-  shelf: P(9.0, 2.8, 0),
+  shelf: P(9.6, 2.4, 0),
 };
