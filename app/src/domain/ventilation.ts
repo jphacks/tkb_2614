@@ -37,6 +37,13 @@ export const NIGHT_START_HOUR = 22;
 export const NIGHT_END_HOUR = 6;
 /** これを超える外気は、乾くとしても入れると暑すぎる [℃]。 */
 export const HOT_OUTDOOR_C = 33;
+/**
+ * 取得からこれより経った外の天気は使わず、天気がないときと同じに扱う。雨・気温・湿度は1時間もあれば変わる。
+ * 取得元のキャッシュは30分で、useOutdoorWeather は起動時とフォアグラウンド復帰時にしか取り直さないので、
+ * アプリを開いたままにすると、何時間も前の天気で「開けよう」と言ってしまう。
+ * 観測時刻（observedAt）は Open-Meteo では15分ごと、モックでは正時に切り下げられるので、取得時刻（fetchedAt）で測る。
+ */
+export const WEATHER_STALE_AFTER_MS = 60 * 60 * 1000;
 /** これ未満の外気なら短時間だけ開ける [℃]。冬の冷たい外気は水蒸気が少なく、短時間でも入れ替えれば結露を減らすのに一番効く。 */
 export const BRIEF_BELOW_OUTDOOR_C = 5;
 
@@ -83,9 +90,10 @@ export function adviseVentilation(
   weather: OutdoorWeather | null,
   now: number,
 ): VentilationAdvice {
-  // 1. 室内の計測値が古い、または外の天気がない。
+  // 1. 室内の計測値が古い、または外の天気がない（古い）。取得時刻が読めない天気も古いとみなす。
   const indoor = latestValid(measurements);
   if (indoor === null || weather === null || now - Date.parse(indoor.measuredAt) > STALE_AFTER_MS) return { kind: 'none' };
+  if (!(now - Date.parse(weather.fetchedAt) <= WEATHER_STALE_AFTER_MS)) return { kind: 'none' };
   // 2. 窓が結露しておらず、どのスポットでもカビが育たない。
   if (riskySpots(spots).length === 0) return { kind: 'none' };
   // 3. 外と室内を水蒸気圧で比べる。温度の違う空気の絶対湿度は、温めると体積が増えて下がるので、そのままは比べられない。
