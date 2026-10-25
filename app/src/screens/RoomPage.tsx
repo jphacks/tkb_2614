@@ -45,7 +45,7 @@ function pickCharacters(): Record<SpotId, CharacterKind> {
 
 /**
  * 部屋の絵と、窓・ベッド・棚のそれぞれに立つキャラ。キャラの表情で、どこが危ないかをタップせずにひと目で見せる。
- * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動できる。
+ * 窓が結露していればガラスに水滴を出す。2本指で拡大・移動でき、ダブルタップで拡大と等倍を切り替える。
  */
 export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }: {
   spots: SpotPredictions;
@@ -72,7 +72,7 @@ export function RoomPage({ spots, active, topInset, bottomInset, onTwoFingers }:
   return (
     <View style={[styles.page, { backgroundColor: scheme.surface, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <View style={styles.stage} onLayout={({ nativeEvent: { layout } }) => setBounds({ width: layout.width, height: layout.height })}>
-        <ZoomView onTwoFingers={onTwoFingers}>
+        <ZoomView active={active} onTwoFingers={onTwoFingers}>
           <Svg style={StyleSheet.absoluteFill} viewBox={`${SCENE.x} ${SCENE.y} ${SCENE.width} ${SCENE.height}`} preserveAspectRatio="xMidYMid meet" accessible={false}>
             <Shapes shapes={ROOM_SHAPES} scheme={scheme} />
             {DRAW_ORDER.map((id) => <Shapes key={id} shapes={SPOT_SHAPES[id]} scheme={scheme} />)}
