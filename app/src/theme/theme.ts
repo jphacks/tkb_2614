@@ -23,10 +23,8 @@ export const fonts = {
   semiBold: 'Roboto_600SemiBold',
 } as const;
 
-/** M3 の type scale のうち使うものだけ。reading は Display Large emphasized を Expressive に拡大したもの。 */
+/** M3 の type scale のうち使うものだけ。 */
 export const type = {
-  reading: { fontFamily: fonts.semiBold, fontSize: 128, lineHeight: 140, letterSpacing: -4 },
-  readingUnit: { fontFamily: fonts.medium, fontSize: 45, lineHeight: 52 },
   /** グラフのカードに出す最新値。 */
   headline: { fontFamily: fonts.semiBold, fontSize: 32, lineHeight: 40 },
   body: { fontFamily: fonts.medium, fontSize: 16, lineHeight: 24, letterSpacing: 0.5 },
